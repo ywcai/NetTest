@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">多维网络分析</string>
+    <string name="password">密码</string>
+    <string name="username">用户名</string>
+    <string name="userReg">注册新用户</string>
+    <string name="forgetPassword"><u>忘记密码?</u></string>
+    <string name="bot_menu1">工具</string>
+    <string name="bot_menu2">记录</string>
+    <string name="bot_menu3">好友</string>
+    <string name="bot_menu4">设置</string>
+    <string name="menu1">分享结果</string>
+    <string name="menu2">版本更新</string>
+    <string name="menu3">使用帮助</string>
+    <string name="menu4">赞助作者</string>
+</resources>

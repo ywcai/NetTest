@@ -1,0 +1,49 @@
+<!--<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--android:id="@+id/toolbar_main"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:minHeight="?attr/actionBarSize"--><!--android:background="#DBEEF4"--><!--app:popupTheme="@style/ToolbarPopupTheme">-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="#ffffff"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/bot_nav_1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="@string/bot_menu1"
+        android:textColor="#666967" />
+
+    <TextView
+        android:id="@+id/bot_nav_2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="@string/bot_menu2"
+        android:textAlignment="center"
+        android:textColor="#666967" />
+
+    <TextView
+        android:id="@+id/bot_nav_3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="@string/bot_menu3"
+        android:textAlignment="center"
+        android:textColor="#666967" />
+
+    <TextView
+        android:id="@+id/bot_nav_4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="@string/bot_menu4"
+        android:textAlignment="center" />
+</LinearLayout><!--</android.support.v7.widget.Toolbar>-->

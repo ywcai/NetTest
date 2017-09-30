@@ -1,0 +1,53 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <!--标题栏背景-->
+        <item name="colorPrimary">#FF00D900</item>
+        <!--状态栏背景-->
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <!--选择后颜色-->
+        <item name="colorAccent">@android:color/white</item>
+
+        <!-- 选择的底线颜色 -->
+        <item name="colorControlNormal">@android:color/white</item>
+        <!-- 选择的底线颜色 -->
+
+    </style>
+
+    <style name="LsToolBar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="LsAppBarOverlay" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="overlapAnchor">false</item>
+    </style>
+    <style name="TitleStyle" parent="TextAppearance.AppCompat.Large">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="LsCounter" parent="TextAppearance.Design.Counter">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="LsHint" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="TitleSmall" parent="TextAppearance.AppCompat.Large">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+    <style name="ToolbarTitleSize" parent="Base.TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+
+    </style>
+    <style name="ExpandedTitleSize" parent="Base.TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textStyle">bold</item>
+
+    </style>
+
+
+</resources>

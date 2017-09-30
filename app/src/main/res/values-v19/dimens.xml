@@ -1,0 +1,5 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="toolbar_height">68dp</dimen>
+    <dimen name="toolbar_top">15dp</dimen>
+</resources>
