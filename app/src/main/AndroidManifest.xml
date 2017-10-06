@@ -16,26 +16,28 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="ywcai.ls.mobileutil.welcome.view.WelComeActivity"
+            android:name=".welcome.view.WelComeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="ywcai.ls.mobileutil.main.view.MainActivity"
+            android:name=".main.view.MainActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name="ywcai.ls.mobileutil.login.view.LoginActivity"
+            android:name=".login.view.LoginActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
+        <service
+            android:name=".service.PingService" />
         <activity
             android:name=".tools.Ping.view.PingActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"/>
     </application>
 
 </manifest>

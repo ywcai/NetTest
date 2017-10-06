@@ -25,6 +25,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.model.GlobalEvent;
+import ywcai.ls.mobileutil.global.util.statics.SetTitle;
 import ywcai.ls.mobileutil.login.Presenter.Login;
 import ywcai.ls.mobileutil.global.presenter.ActivityRouter;
 import ywcai.ls.mobileutil.global.presenter.inf.RouterInf;
@@ -35,8 +36,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
+//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        SetTitle.setTitleTransparent(getWindow());
         setContentView(R.layout.activity_login);
         InitToolBar();
         InitActionEvent();

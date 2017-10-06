@@ -6,7 +6,7 @@ import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 import ywcai.ls.mobileutil.global.model.User;
 import ywcai.ls.mobileutil.login.Presenter.inf.LoginInf;
 import ywcai.ls.mobileutil.login.cfg.LoginInfoT;
-import ywcai.ls.mobileutil.login.model.HttpRequest;
+import ywcai.ls.mobileutil.http.model.HttpLogin;
 import ywcai.ls.mobileutil.login.model.LoginEventT;
 import ywcai.ls.mobileutil.login.model.LoginResult;
 
@@ -27,7 +27,7 @@ public class Login implements LoginInf{
         new Thread(new Runnable() {
             @Override
             public void run() {
-                HttpRequest httpRequest = new HttpRequest();
+                HttpLogin httpRequest = new HttpLogin();
                 LoginResult result = httpRequest.requestAuth(tempUser);
                 backResult(result);
             }

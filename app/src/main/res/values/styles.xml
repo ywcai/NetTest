@@ -4,7 +4,8 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <!--标题栏背景-->
-        <item name="colorPrimary">#FF00D900</item>
+        <item name="colorPrimary">@android:color/holo_blue_light</item>
+        <!--<item name="colorPrimary">#FF00D900</item>-->
         <!--状态栏背景-->
         <item name="colorPrimaryDark">@android:color/transparent</item>
         <!--选择后颜色-->
