@@ -1,27 +1,39 @@
 package ywcai.ls.mobileutil.tools.Ping.presenter;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 import android.view.View;
 
 import java.util.List;
 
-import ywcai.ls.mobileutil.global.model.GlobalEventT;
-import ywcai.ls.mobileutil.global.model.instance.MainApplication;
-import ywcai.ls.mobileutil.global.presenter.CacheProcess;
+import rx.functions.Action1;
+import ywcai.ls.mobileutil.global.cfg.AppConfig;
+import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
+import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
+import ywcai.ls.mobileutil.global.util.statics.InStallService;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 import ywcai.ls.mobileutil.http.present.HttpRequest;
 import ywcai.ls.mobileutil.http.present.HttpRequestInf;
+import ywcai.ls.mobileutil.results.model.LogIndex;
+import ywcai.ls.mobileutil.service.LsConnection;
 import ywcai.ls.mobileutil.service.PingService;
 import ywcai.ls.mobileutil.tools.Ping.model.PingState;
 import ywcai.ls.mobileutil.tools.Ping.presenter.inf.PingActionInf;
 
 public class PingAction implements PingActionInf {
-    CacheProcess cacheProcess = new CacheProcess();
+    CacheProcess cacheProcess = CacheProcess.getInstance();
     private PingService pingService;
+    //Connection内部已经阻塞过了，放心使用。
+    LsConnection lsConnection = new LsConnection(new Action1() {
+        @Override
+        public void call(Object o) {
+            if (o != null) {
+                pingService = (PingService) o;
+                InStallService.waitService(pingService);
+                invokeTask();
+            } else {
+                pingService = null;
+            }
+        }
+    });
 
     private void setBar1Size(int packageCount) {
         MsgHelper.sendEvent(GlobalEventT.ping_set_bar_size_package, "", packageCount);
@@ -40,7 +52,7 @@ public class PingAction implements PingActionInf {
     }
 
     private void repairLine(String startTime) {
-        List<Float> list = cacheProcess.getPingResult("PING" + startTime);
+        List<Float> list = cacheProcess.getPingResult(AppConfig.INDEX_PING + "-" + startTime);
         if (list != null) {
             MsgHelper.sendEvent(GlobalEventT.ping_repair_chart_line, "", list);//修复曲线数据
         }
@@ -177,6 +189,8 @@ public class PingAction implements PingActionInf {
         PingState initState = cacheProcess.getCachePingState();
         addDataIndex(initState);//创建日志的索引
         resetChart(initState);
+        List list = cacheProcess.getCacheLogIndex();
+        closeLoadingWindow("数据成功保存到本地:");
     }
 
     @Override
@@ -222,8 +236,7 @@ public class PingAction implements PingActionInf {
     //如果需要运行任务，则启动后台任务并绑定他，调用任务处理进程处理。
     private void startPingService() {
         if (pingService == null) {
-            LsServiceConnection lsServiceConnection = new LsServiceConnection();
-            bindService(lsServiceConnection);
+            InStallService.bindService(PingService.class, lsConnection);
         } else {
             invokeTask();
         }
@@ -238,48 +251,6 @@ public class PingAction implements PingActionInf {
         }
     }
 
-    class LsServiceConnection implements ServiceConnection {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            //这里系统是异步，不会被阻塞
-            int i = 0;
-            while (pingService == null) {
-                pingService = ((PingService.MyBinder) service).getPingService();
-                if (pingService != null) {
-                    break;
-                }
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                i++;
-                if (i >= 25) {
-                    //避免service为空，如果一直没获取到就不启动任务。默认刷新5秒钟
-                    return;
-                }
-            }
-            invokeTask();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            pingService = null;
-        }
-    }
-
-    void startService() {
-        Intent i = new Intent(MainApplication.getInstance().getApplicationContext(), PingService.class);
-        MainApplication.getInstance().getApplicationContext()
-                .startService(i);
-    }
-
-    private void bindService(ServiceConnection sc) {
-        Intent i = new Intent(MainApplication.getInstance().getApplicationContext(), PingService.class);
-        MainApplication.getInstance().getApplicationContext()
-                .bindService(i, sc, Context.BIND_AUTO_CREATE);
-    }
-
     private void repairBaseData(PingState pingState) {
         setBar1Size(pingState.packageCount);
         setBar2Size(pingState.threadCount);
@@ -290,7 +261,7 @@ public class PingAction implements PingActionInf {
 
     private void manualStart(String ip) {
         PingState pingState = cacheProcess.getCachePingState();
-        cacheProcess.setPingResult("PING" + pingState.startTime, null);//清除上一次产生的结果数据，起始可以不自动清除，只是会造成日志文件无法被清理。
+        cacheProcess.setPingResult(AppConfig.INDEX_PING + "-" + pingState.startTime, null);//清除上一次产生的结果数据，起始可以不自动清除，只是会造成日志文件无法被清理。
         pingState.setNewRunningState(ip);
         cacheProcess.setCachePingState(pingState);
         activityResume();
@@ -311,11 +282,16 @@ public class PingAction implements PingActionInf {
 
     private void deleteLastData(String startTime) {
         //若在启动下一次任务前未处理这次任务的结果，系统将默认删除本次测试的数据结果，必须在处理之前运行删除，否则会找不到文件名字早就永久缓存为垃圾文件
-        cacheProcess.setPingResult("PING" + startTime, null);
+        cacheProcess.setPingResult(AppConfig.INDEX_PING + "-" + startTime, null);
     }
 
     private void addDataIndex(PingState initState) {
-
+        LogIndex logIndex = new LogIndex();
+        logIndex.cacheTypeIndex = AppConfig.INDEX_PING;
+        logIndex.cacheFileName = AppConfig.INDEX_PING + "-" + initState.startTime;
+        logIndex.aliasFileName = logIndex.cacheFileName;
+        logIndex.remarks = initState.getFormatMarks();
+        logIndex.logTime = initState.startTime;
+        cacheProcess.addCacheLogIndex(logIndex);
     }
-
 }

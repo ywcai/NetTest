@@ -1,39 +1,32 @@
 package ywcai.ls.mobileutil.service;
 
-
-import android.app.Notification;
 import android.app.NotificationManager;
-
-import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
-import android.os.Binder;
+import android.content.IntentFilter;
+import android.graphics.BitmapFactory;
 import android.os.IBinder;
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
-import android.support.v7.widget.GridLayout;
-
 import ywcai.ls.mobileutil.R;
-import ywcai.ls.mobileutil.global.model.GlobalEventT;
-import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
-import ywcai.ls.mobileutil.main.view.MainActivity;
+import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.tools.Ping.presenter.PingProcess;
 import ywcai.ls.mobileutil.tools.Ping.presenter.inf.PingProcessInf;
-import ywcai.ls.mobileutil.tools.Ping.view.PingActivity;
 
 
-public class PingService extends Service {
-    private static final String TAG = "PING_SERVICE";
-    private static final int PID = 7733;
-    private final IBinder binder = new MyBinder();
+public class PingService extends Service implements ServiceControlInf {
+    final String TAG =AppConfig.TITLE_PING;
+    final int PID = AppConfig.INT_NOTIFICATION_PID_PING;
+    MyBinder binder = new MyBinder();
     public PingProcessInf pingProcessInf = null;
-
-    NotificationCompat.Builder builder2;
+    NotificationCompat.Builder progressBuilder;
+    LsPendingIntent lsPendingIntent;
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        binder.setService(PingService.this);
         return binder;
     }
 
@@ -41,82 +34,72 @@ public class PingService extends Service {
     public void onCreate() {
         super.onCreate();
         pingProcessInf = new PingProcess();
-        initNotification();
+        lsPendingIntent = new LsPendingIntent();
+        progressBuilder = new NotificationCompat.Builder(this);
+        progressBuilder
+                .setContentIntent(lsPendingIntent.getPendingForStartActivity(this, AppConfig.PING_ACTIVITY_PATH))
+        .setAutoCancel(true)
+        .setOngoing(false);
+//        regBroadCastForStop();
     }
 
-    private void initNotification() {
-        NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.homepage_menu_ping)
-                .setContentTitle("PING测试")
-                .setContentText("任务运行")
-                .setProgress(100, 0, false)
-                .setDefaults(Notification.DEFAULT_SOUND)
-                .setTicker("PING测试任务开启");
-        startForeground(PID, builder.build());
-        builder2 = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.homepage_menu_ping)
-                .setContentTitle("PING测试");
+    @Override
+    public void regBroadCastForStop() {
+        NotificationBroadcastReceiver receiver = new NotificationBroadcastReceiver(this);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(NotificationBroadcastReceiver.BROADCAST_ACTION_FLAG);
+        registerReceiver(receiver, filter);
     }
 
-
-    public void setProgress(int pos, int max) {
-        builder2
-                .setContentText("任务进度 " + pos + "/" + max + " " + pos * 100 / max + "%")
+    @Override
+    public void setTaskProgress(int pos, int max) {
+        progressBuilder
+                .setSmallIcon(R.drawable.homepage_menu_ping)
+                .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.mipmap.nav))
+                .setContentTitle(TAG + "任务正在执行")
+                .setContentText("任务进度 " + pos + ":" + max + " " + pos * 100 / max + "%")
                 .setProgress(max, pos, false)
-                .setContentIntent(getPendingIntent("PING"));
-        startForeground(PID, builder2.build());
-    }
-    public PendingIntent getPendingIntent(String extras) {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.setAction(Intent.ACTION_MAIN);//非常重要，没加则在通知栏无法调其Activity
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent mainPendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        return mainPendingIntent;
-    }
-
-    public void taskComplete(int flag, String tip) {
-        NotificationManager notifyManager=(NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        switch (flag) {
-            //任务完成
-            case 0:
-                NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.homepage_menu_ping)
-                        .setContentTitle("PING测试")
-                        .setContentText("任务完成")
-                        .setProgress(100, 100, false)
-                        .setDefaults(Notification.DEFAULT_SOUND)
-                        .setTicker("PING测试任务完成")
-                        .setContentIntent(getPendingIntent("PING"));
-                startForeground(PID, builder.build());
-                break;
-            //暂停任务
-            case 1:
-                String context = builder2.mContentText.toString();
-                builder2
-                        .setContentText(builder2.mContentText.toString() + tip)
-                        .setAutoCancel(true)
-                        .setOngoing(false)
-                        .setContentIntent(getPendingIntent("PING"));
-                stopForeground(true);
-                notifyManager.notify(PID, builder2.build());
-                break;
-            //手动终止任务
-            case 2:
-                stopForeground(true);
-                notifyManager.cancel(PID);
-                break;
-        }
+                .setAutoCancel(true)
+                .setOngoing(false);
+        NotificationManager notificationManager=(NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(PID, progressBuilder.build());
     }
 
     @Override
     public void onDestroy() {
-        stopForeground(true);
+        NotificationManager notificationManager=(NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
         super.onDestroy();
     }
 
-    public class MyBinder extends Binder {
-        public PingService getPingService() {
-            return PingService.this;
+    @Override
+    public void setTaskCompleteTip(int completeType) {
+        NotificationManager notificationManager=(NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        switch (completeType) {
+            //任务完成
+            case 0:
+                NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.homepage_menu_ping)
+                        .setContentTitle(TAG + "测试完成")
+                        .setContentText("开启新任务前，数据会临时存储！")
+                        .setTicker(TAG + "测试完成")
+                        .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.mipmap.nav))
+                        .setContentIntent(lsPendingIntent.getPendingForStartActivity(this,AppConfig.PING_ACTIVITY_PATH))
+                        .setAutoCancel(true)
+                        .setOngoing(false);
+                notificationManager.notify(PID,builder.build());
+                break;
+            //暂停任务
+            case 1:
+                String context = progressBuilder.mContentText.toString();
+                progressBuilder
+                        .setContentText(progressBuilder.mContentText.toString() + " 手动暂停任务");
+                notificationManager.notify(PID,progressBuilder.build());
+                break;
+            //手动终止任务
+            case 2:
+                notificationManager.cancelAll();
+                break;
         }
     }
 }

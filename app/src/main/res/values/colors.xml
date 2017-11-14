@@ -2,8 +2,18 @@
 <resources>
     <color name="colorPrimary">#FF3f51b5</color>
     <color name="colorPrimaryDark">#FF303F9F</color>
-    <color name="colorAccent">#ff4081</color>
-    <!--<color name="colorMainBg">#FFDFEAF7</color>-->
+    <color name="colorAccent">#FFff4081</color>
     <color name="colorMainBg">#EEEEEEEE</color>
+    <color name="colorWifiBg">#FF606582</color>
 
+    <color name="chartLineColor0">#FFff4081</color>
+    <color name="chartLineColor1">#FF00D900</color>
+    <color name="chartLineColor2">#FFFF26FF</color>
+    <color name="chartLineColor3">#FF73B9FF</color>
+    <color name="chartLineColor4">#FFFFC926</color>
+    <color name="chartLineColor5">#FF9673FF</color>
+    <color name="chartLineColor6">#FFFF9999</color>
+    <color name="chartLineColor7">#FFFFBFFF</color>
+    <color name="chartLineColor8">#FF3162ea</color>
+    <color name="chartLineColor9">#FF99FFFF</color>
 </resources>

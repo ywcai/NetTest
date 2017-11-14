@@ -1,10 +1,10 @@
 package ywcai.ls.mobileutil.global.model.instance;
 
-import ywcai.ls.mobileutil.global.model.User;
+import ywcai.ls.mobileutil.identity.model.User;
 
 public class CoreInstance {
     private static Object lock = new Object();
-    public static CoreInstance socketObject = null;
+    private static CoreInstance socketObject = null;
     public User loginUser;
     private CoreInstance() {
 

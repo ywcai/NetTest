@@ -1,15 +1,12 @@
 package ywcai.ls.mobileutil.tools.Ping.model;
 
-import android.view.View;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import ywcai.ls.mobileutil.global.model.GlobalEventT;
-import ywcai.ls.mobileutil.global.presenter.CacheProcess;
-import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
+import ywcai.ls.mobileutil.global.cfg.AppConfig;
+import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.tools.Ping.presenter.inf.PingProcessInf;
 
 
@@ -19,7 +16,7 @@ import ywcai.ls.mobileutil.tools.Ping.presenter.inf.PingProcessInf;
 public class PingCmd implements Runnable {
     private PingState pingState;
     private PingProcessInf pingProcessInf;
-    private CacheProcess cacheProcess = new CacheProcess();
+    private CacheProcess cacheProcess = CacheProcess.getInstance();
     private List<Float> listResult = new ArrayList<Float>();
 
    public PingCmd(PingProcessInf _pingProcessInf,List _list)
@@ -78,7 +75,7 @@ public class PingCmd implements Runnable {
             }
             temp.copy(pingState);
             if(temp.send <= temp.packageCount) {
-                cacheProcess.setPingResult("PING"+pingState.startTime,listResult);
+                cacheProcess.setPingResult(AppConfig.INDEX_PING+"-"+pingState.startTime,listResult);
                 pingProcessInf.refreshRunningTask(temp);
             }
             if (temp.send == temp.packageCount) {

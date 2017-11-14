@@ -4,9 +4,11 @@ import android.view.View;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import ywcai.ls.mobileutil.global.model.GlobalEventT;
-import ywcai.ls.mobileutil.global.presenter.CacheProcess;
-import ywcai.ls.mobileutil.global.presenter.LsThreadFactory;
+
+import ywcai.ls.mobileutil.global.cfg.AppConfig;
+import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
+import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
+import ywcai.ls.mobileutil.global.model.LsThreadFactory;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 import ywcai.ls.mobileutil.service.PingService;
 import ywcai.ls.mobileutil.tools.Ping.model.PingCmd;
@@ -17,7 +19,7 @@ import ywcai.ls.mobileutil.tools.Ping.presenter.inf.PingProcessInf;
 
 public class PingProcess implements PingProcessInf {
     ExecutorService executorService = null;
-    CacheProcess cacheProcess = new CacheProcess();
+    CacheProcess cacheProcess = CacheProcess.getInstance();
     PingService pingService;
 
     @Override
@@ -25,7 +27,7 @@ public class PingProcess implements PingProcessInf {
         cacheProcess.setCachePingState(pingState);
         MsgHelper.sendEvent(GlobalEventT.ping_update_chart_point, pingState.send + "", pingState.nowDelay);
         MsgHelper.sendEvent(GlobalEventT.ping_update_chart_desc, "", pingState);
-        pingService.setProgress(pingState.send,pingState.packageCount);
+        pingService.setTaskProgress(pingState.send,pingState.packageCount);
     }
 
     @Override
@@ -57,7 +59,7 @@ public class PingProcess implements PingProcessInf {
         pingState.setStopState();
         cacheProcess.setCachePingState(pingState);
         actionInf.activityResume();
-        pingService.taskComplete(2,"任务手动终止!");
+        pingService.setTaskCompleteTip(2);
     }
 
     @Override
@@ -67,7 +69,7 @@ public class PingProcess implements PingProcessInf {
         cacheProcess.setCachePingState(pingState);
         MsgHelper.sendEvent(GlobalEventT.ping_set_form_free, "", null);
         MsgHelper.sendEvent(GlobalEventT.ping_set_float_btn_visible, "", View.VISIBLE);
-        pingService.taskComplete(0,"任务完成，进入应用查看结果!");
+        pingService.setTaskCompleteTip(0);
     }
 
     //恢复和重启一个任务是同一个方法，只是读取到的缓存不同
@@ -82,14 +84,14 @@ public class PingProcess implements PingProcessInf {
         pingState.setPauseState();
         cacheProcess.setCachePingState(pingState);
         actionInf.activityResume();
-        pingService.taskComplete(1,"手动暂停任务!");
+        pingService.setTaskCompleteTip(1);
 
     }
 
     private void executeTask(PingState pingState) {
         LsThreadFactory threadFactory = new LsThreadFactory();
         executorService = Executors.newFixedThreadPool(pingState.threadCount, threadFactory);
-        List list = cacheProcess.getPingResult("PING" + pingState.startTime);
+        List list = cacheProcess.getPingResult(AppConfig.INDEX_PING +"-"+ pingState.startTime);
         PingCmd pingCmd = new PingCmd(this, list);
         int pos = 0;
         if (list != null) {

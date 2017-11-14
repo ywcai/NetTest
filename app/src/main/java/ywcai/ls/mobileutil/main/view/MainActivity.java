@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,63 +12,51 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
-
+import com.alibaba.android.arouter.facade.annotation.Autowired;
+import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import java.util.ArrayList;
 import java.util.List;
-
 import ywcai.ls.mobileutil.R;
-import ywcai.ls.mobileutil.global.util.statics.LsLog;
 import ywcai.ls.mobileutil.global.util.statics.SetTitle;
-import ywcai.ls.mobileutil.menu.presenter.LoadUserCache;
 import ywcai.ls.mobileutil.menu.view.MenuFragment;
+import ywcai.ls.mobileutil.results.view.ResultFragment;
 
-
+@Route(path = "/main/view/MainActivity")
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private List<Fragment> fragments = new ArrayList<>();
     private List<TextView> nav = new ArrayList<>();
-    private int currentPage = 3;
+    public int currentPage = 3;
+    @Autowired()
+    public String ROUTER_PAGE;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){//4.4 全透明状态栏
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//        }
-//
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//5.0 全透明实现
-//            Window window = getWindow();
-//            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-//            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//            window.setStatusBarColor(Color.TRANSPARENT);//calculateStatusColor(Color.WHITE, (int) alphaValue)
-//        }
+        ARouter.getInstance().inject(this);
         SetTitle.setTitleTransparent(getWindow());
         setContentView(R.layout.activity_main);
-        if(savedInstanceState!=null) {
-            currentPage=savedInstanceState.getInt("nowPage");
-            selectFragment(currentPage);
-            LsLog.saveLog("MainActivity : 恢复Fragment nowPage="+currentPage);
-        }
-        else
-        {
-            LsLog.saveLog("MainActivity : 新建fragment");
-            InstallFragment();
-            selectFragment(0);
-        }
-
-        new LoadUserCache();
-
+        InstallFragment();
+        selectFragment(0);
+        startCacheActivity();
     }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt("nowPage",currentPage);
+    private void startCacheActivity() {
+        //如果不是从桌面第一次打开，则根据缓存的页面进行跳转，暂时没有引用
+        if(!ROUTER_PAGE.equals("First"))
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    ARouter.getInstance().build(ROUTER_PAGE)
+                            .navigation();
+                }
+            }).start();
     }
-
     @Override
     public void onBackPressed() {
 
@@ -78,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onDestroy() {
-        LsLog.saveLog("exit activity run the destroy");
         super.onDestroy();
     }
 
@@ -122,19 +107,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         MenuFragment netWorkFragment = new MenuFragment();
-        Fragment reserveFragment = new Fragment();
+        ResultFragment resultFragment = new ResultFragment();
         Fragment reserveFragment2 = new Fragment();
         Fragment reserveFragment3 = new Fragment();
         transaction.add(R.id.main_fragment_container, netWorkFragment);
-        transaction.add(R.id.main_fragment_container, reserveFragment);
+        transaction.add(R.id.main_fragment_container, resultFragment);
         transaction.add(R.id.main_fragment_container, reserveFragment2);
         transaction.add(R.id.main_fragment_container, reserveFragment3);
         fragments.add(netWorkFragment);
-        fragments.add(reserveFragment);
+        fragments.add(resultFragment);
         fragments.add(reserveFragment2);
         fragments.add(reserveFragment3);
         transaction.hide(netWorkFragment);
-        transaction.hide(reserveFragment);
+        transaction.hide(resultFragment);
         transaction.hide(reserveFragment2);
         transaction.hide(reserveFragment3);
         transaction.commit();

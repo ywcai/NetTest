@@ -1,7 +1,7 @@
 package ywcai.ls.mobileutil.http.model;
 
-import ywcai.ls.mobileutil.global.model.User;
-import ywcai.ls.mobileutil.login.model.LoginResult;
+import ywcai.ls.mobileutil.identity.model.User;
+import ywcai.ls.mobileutil.identity.model.LoginResult;
 
 /**
  * Created by zmy_11 on 2017/7/15.

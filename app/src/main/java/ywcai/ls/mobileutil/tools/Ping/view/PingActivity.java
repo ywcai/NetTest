@@ -5,24 +5,22 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.appyvet.rangebar.RangeBar;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.XAxis.XAxisPosition;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -41,13 +39,14 @@ import me.drakeet.materialdialog.MaterialDialog;
 import mehdi.sakout.fancybuttons.FancyButton;
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.model.GlobalEvent;
-import ywcai.ls.mobileutil.global.model.GlobalEventT;
+import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.util.statics.InputValidate;
 import ywcai.ls.mobileutil.global.util.statics.SetTitle;
 import ywcai.ls.mobileutil.tools.Ping.model.PingState;
 import ywcai.ls.mobileutil.tools.Ping.presenter.PingAction;
 import ywcai.ls.mobileutil.tools.Ping.presenter.inf.PingActionInf;
 
+@Route(path = "/tools/Ping/view/PingActivity")
 public class PingActivity extends AppCompatActivity {
     private final float yMax = 230;
     private LineChart pingResultChart;
@@ -89,7 +88,7 @@ public class PingActivity extends AppCompatActivity {
     private void InitBottomDialog() {
         bottomDialog = new MaterialDialog(this);
         bottomDialog.setCanceledOnTouchOutside(false);
-        View view = LayoutInflater.from(this).inflate(R.layout.ping_dialog_pop, null);
+        View view = LayoutInflater.from(this).inflate(R.layout.pop_dialog_ping, null);
         bottomDialog.setContentView(view);
         Button save_local = (Button) view.findViewById(R.id.ping_save_local);
         Button save_remote = (Button) view.findViewById(R.id.ping_save_remote);
@@ -183,11 +182,9 @@ public class PingActivity extends AppCompatActivity {
                 if (InputValidate.isIpAddr(ipAddress)) {
                     pingTest.setEnabled(true);
                 } else {
-                    ipAddress = "";
                     ipAddText.setError("请按IP地址格式输入");
                     pingTest.setEnabled(false);
                 }
-//                action.changeEditText(ipAddress);
             }
         });
         pingTest.setOnClickListener(new View.OnClickListener() {
@@ -431,6 +428,4 @@ public class PingActivity extends AppCompatActivity {
     private void popLoadingDialog(String tip) {
         //// TODO: 2017/10/3 加载窗口
     }
-
-
 }

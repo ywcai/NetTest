@@ -2,7 +2,7 @@ package ywcai.ls.mobileutil.http.model;
 
 import java.util.List;
 
-import ywcai.ls.mobileutil.global.presenter.CacheProcess;
+import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.tools.Ping.model.PingState;
 
 /**
@@ -10,7 +10,7 @@ import ywcai.ls.mobileutil.tools.Ping.model.PingState;
  */
 
 public class HttpPing {
-    CacheProcess cacheProcess=new CacheProcess();
+    CacheProcess cacheProcess=CacheProcess.getInstance();
     public boolean execute()
     {
         PingState state=cacheProcess.getCachePingState();

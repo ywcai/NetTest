@@ -10,6 +10,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_above="@+id/main_bot_nav"
+        android:paddingBottom="1dp"
         android:background="@color/colorMainBg"/>
     <RelativeLayout
         android:id="@+id/main_bot_nav"
