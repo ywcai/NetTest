@@ -9,6 +9,7 @@ import java.util.List;
 
 import ywcai.ls.mobileutil.tools.Wifi.presenter.inf.MainWifiActionInf;
 import ywcai.ls.mobileutil.tools.Wifi.view.WifiFragmentOne;
+import ywcai.ls.mobileutil.tools.Wifi.view.WifiFragmentThree;
 import ywcai.ls.mobileutil.tools.Wifi.view.WifiFragmentTwo;
 
 
@@ -20,7 +21,8 @@ public class WifiPageAdapter extends FragmentStatePagerAdapter {
         ((WifiFragmentOne)fragment1).setGlobalAction(mainWifiActionInf);
         Fragment fragment2 = new WifiFragmentTwo();
         ((WifiFragmentTwo)fragment2).setGlobalAction(mainWifiActionInf);
-        Fragment fragment3 = new Fragment();
+        Fragment fragment3 = new WifiFragmentThree();
+        ((WifiFragmentThree)fragment3).setGlobalAction(mainWifiActionInf);
         Fragment fragment4 = new Fragment();
         pageList.add(fragment1);
         pageList.add(fragment2);

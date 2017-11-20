@@ -50,10 +50,13 @@ public  class GlobalEventT {
     public static final int wifi_refresh_two_chart_line=90030;
     public static final int wifi_set_item_btn_hide_status=90031;
     public static final int wifi_notify_top_notification=90032;
+    public static final int wifi_refresh_three_bar=90033;
+    public static final int wifi_refresh_three_pie=90034;
 
     public static final int station_set_entry_change=90050;
     public static final int station_set_cell_change=90051;
     public static final int station_set_cell_change1=90052;
+
 
 
 }

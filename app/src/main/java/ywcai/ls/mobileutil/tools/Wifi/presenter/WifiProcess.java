@@ -76,6 +76,8 @@ public class WifiProcess implements Action1 {
             updateFragmentOne.loadSignalChangeData(allList, channelSum);
             updateFragmentTwo.refreshList(allList);
             updateFragmentTwo.refreshChart();
+            updateFragmentThree.refreshChannelCurrent(channelSum);
+            updateFragmentThree.refreshChannelForPieChart(channelSum);
         }
     }
 
@@ -86,6 +88,8 @@ public class WifiProcess implements Action1 {
         updateFragmentOne.showSelectEntryInfo(lockEntry);
         updateFragmentTwo.refreshChart();
         updateFragmentTwo.refreshList(allList);
+        updateFragmentThree.refreshChannelCurrent(channelSum);
+        updateFragmentThree.refreshChannelForPieChart(channelSum);
     }
 
     private void operatorDraw() {
@@ -214,7 +218,6 @@ public class WifiProcess implements Action1 {
         clearLastData();
         if (!checkPermission()) {
             sendMsgTitleTip("没有赋予应用使用Wifi权限");
-
             return;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -328,6 +331,7 @@ public class WifiProcess implements Action1 {
         sendMsgTopBtnStatus();
         updateFragmentOne.loadChannelTagStatus();
         updateFragmentOne.loadSignalChangeData(allList, channelSum);
+        updateFragmentThree.refreshChannelCurrent(channelSum);
     }
 
     //点击锁定按钮

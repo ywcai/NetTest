@@ -15,5 +15,8 @@
     <color name="chartLineColor6">#FFFF9999</color>
     <color name="chartLineColor7">#FFFFBFFF</color>
     <color name="chartLineColor8">#FF3162ea</color>
-    <color name="chartLineColor9">#FF99FFFF</color>
+    <color name="chartLineColor9">#FFFFFC99</color>
+    <color name="chartLineColor10">#FFC4FF99</color>
+    <color name="chartLineColor11">#FFDFB82B</color>
+    <color name="chartLineColor12">#FFA9F5F5</color>
 </resources>

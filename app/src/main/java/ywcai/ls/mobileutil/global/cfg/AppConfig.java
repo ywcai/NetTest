@@ -65,7 +65,10 @@ public class AppConfig {
             R.color.chartLineColor6,
             R.color.chartLineColor7,
             R.color.chartLineColor8,
-            R.color.chartLineColor9
+            R.color.chartLineColor9,
+            R.color.chartLineColor10,
+            R.color.chartLineColor11,
+            R.color.chartLineColor12
     };
 
 //    public static final String[] menuString = new String[]
