@@ -28,6 +28,8 @@ import java.util.List;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import mehdi.sakout.fancybuttons.FancyButton;
+import ywcai.ls.control.flex.FlexButtonLayout;
+import ywcai.ls.control.flex.OnFlexButtonClickListener;
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
@@ -46,6 +48,8 @@ public class ResultFragment extends Fragment {
     private ResultPresenterInf resultPresenterInf = new ResultPresenter();
     private List<LogIndex> listCurrent;
     private ResultAdapter resultAdapter;
+    private FlexButtonLayout flexButtonLayout;
+    private FancyButton btnType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,8 +59,10 @@ public class ResultFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        resultPresenterInf.refreshData();
+        //从缓存初始化恢复Tag选择状态
         resultPresenterInf.initTagStatus();
+        //刷新业务数据
+        resultPresenterInf.refreshData();
     }
 
     @Override
@@ -66,7 +72,7 @@ public class ResultFragment extends Fragment {
         //安装网格化选择菜单
         InitImage();
         InitBtn();
-        addTagClickListener();
+        createTag();
         initDataList();
         setTitleText();
         return view;
@@ -97,7 +103,7 @@ public class ResultFragment extends Fragment {
     private void InitBtn() {
         final FancyButton btnLocal = (FancyButton) view.findViewById(R.id.select_local);
         final FancyButton btnRemote = (FancyButton) view.findViewById(R.id.select_remote);
-        final FancyButton btnType = (FancyButton) view.findViewById(R.id.select_test_type);
+
         btnLocal.setEnabled(false);
         btnLocal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +122,8 @@ public class ResultFragment extends Fragment {
                 btnLocal.setEnabled(true);
             }
         });
+
+        btnType = (FancyButton) view.findViewById(R.id.select_test_type);
         btnType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,16 +150,11 @@ public class ResultFragment extends Fragment {
     }
 
     private void recoveryTag(ResultState status) {
-        final FlexboxLayout flexboxLayout = (FlexboxLayout) view.findViewById(R.id.flowLayout);
-        final FancyButton btnType = (FancyButton) view.findViewById(R.id.select_test_type);
-        String[] menuTextStr = AppConfig.getMenuTextStr();
-        int flag = 0;
-        for (int i = 0; i < menuTextStr.length; i++) {
-            FancyButton tag = (FancyButton) flexboxLayout.getChildAt(i);
-            tag.setGhost(status.isShow[i] == 0 ? true : false);
-            flag += status.isShow[i];
-        }
-        if (flag >= menuTextStr.length) {
+        flexButtonLayout.setSelectIndex(status.isShow);
+    }
+
+    private void setSelectAllBtnStatus(boolean isCurrentSelectAll) {
+        if (isCurrentSelectAll) {
             btnType.setText("取消");
             btnType.setGhost(false);
         } else {
@@ -160,28 +163,28 @@ public class ResultFragment extends Fragment {
         }
     }
 
-    private void addTagClickListener() {
-        final FlexboxLayout flexboxLayout = (FlexboxLayout) view.findViewById(R.id.flowLayout);
+
+    private void createTag() {
+        flexButtonLayout = (FlexButtonLayout) view.findViewById(R.id.flowLayout);
         String[] menuTextStr = AppConfig.getMenuTextStr();
+        List<String> tagStrings = new ArrayList<>();
         for (int i = 0; i < menuTextStr.length; i++) {
-            FancyButton tag = (FancyButton) flexboxLayout.getChildAt(i);
-            tag.setOnClickListener(new TagClickListener(i));
-            tag.setText(menuTextStr[i]);
+            tagStrings.add(menuTextStr[i]);
         }
+        flexButtonLayout.setDataAdapter(tagStrings);
+        flexButtonLayout.setOnFlexButtonClickListener(new OnFlexButtonClickListener() {
+            @Override
+            public void clickItem(int i, boolean b) {
+                resultPresenterInf.selectDataType(i, b);
+            }
+
+            @Override
+            public void clickAllBtn(int[] ints, boolean b) {
+                //这里在外部构建了全选按钮，因此不做处理
+            }
+        });
     }
 
-    class TagClickListener implements View.OnClickListener {
-        private int pos;
-
-        public TagClickListener(int pos) {
-            this.pos = pos;
-        }
-
-        @Override
-        public void onClick(View v) {
-            resultPresenterInf.selectDataType(pos);
-        }
-    }
 
     private void setTitleText() {
         CollapsingToolbarLayout toolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar_result);
@@ -200,9 +203,11 @@ public class ResultFragment extends Fragment {
                 updateRecordList((List<LogIndex>) event.obj);
                 break;
             case GlobalEventT.result_update_tag_status:
-                recoveryTag((ResultState)event.obj);
+                recoveryTag((ResultState) event.obj);
                 break;
-
+            case GlobalEventT.result_update_top_btn_status:
+                setSelectAllBtnStatus((boolean) event.obj);
+                break;
         }
     }
 

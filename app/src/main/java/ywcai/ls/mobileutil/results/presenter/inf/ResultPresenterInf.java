@@ -15,6 +15,6 @@ public interface ResultPresenterInf {
 
 
     void selectDataTypeAll();
-    void selectDataType(int index);
+    void selectDataType(int index, boolean b);
     void initTagStatus();
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
@@ -63,47 +64,58 @@ public class ResultPresenter implements ResultPresenterInf {
 
     @Override
     public void selectDataTypeAll() {
-        Observable.from(resultState.isShow)
-                .all(new Func1<Integer, Boolean>() {
-                    @Override
-                    public Boolean call(Integer integer) {
-                        return integer == 1;
-                    }
-                })
-                .subscribe(new Action1<Boolean>() {
-                    @Override
-                    public void call(Boolean aBoolean) {
-                        if (!aBoolean) {
-                            //全选
-                            resultState.isShow = new Integer[]{
-                                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-
-                        } else
-
-                        {
-                            resultState.isShow = new Integer[]{
-                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-                        }
-                        cacheProcess.setResultState(resultState);
-                        recoveryTag();
-                        refreshData();
-                    }
-                });
-    }
-
-    @Override
-    public void selectDataType(int typeIndex) {
-        resultState.isShow[typeIndex] = resultState.isShow[typeIndex] == 1 ? 0 : 1;
+        //检测当前数据选择情况
+        boolean isSelectAll = isSelectAll();
+        //先将所有数据至未0;
+        resultState.isShow = new int[AppConfig.getMenuTextStr().length];
+        //如果当前没有选择所有，则选择所有
+        if (!isSelectAll) {
+            for (int i = 0; i < resultState.isShow.length; i++) {
+                resultState.isShow[i] = 1;
+            }
+        }
+        isSelectAll = !isSelectAll;
         cacheProcess.setResultState(resultState);
+        //切换全选按钮属性
+        sendMsgRecoverySelectAllBtn(isSelectAll);
+        //重新设置TAG的选择状态
         recoveryTag();
+        //刷新数据
         refreshData();
     }
+
     @Override
-    public void initTagStatus()
-    {
-        recoveryTag();
+    public void selectDataType(int typeIndex, boolean b) {
+        resultState.isShow[typeIndex] = b ? 1 : 0;
+        cacheProcess.setResultState(resultState);
+        //点击当个数据时候，检测是否已经全选了数据
+        boolean isSelectAll = isSelectAll();
+        //更新全选按钮状态
+        sendMsgRecoverySelectAllBtn(isSelectAll);
+        refreshData();//更新数据
     }
 
+    private boolean isSelectAll() {
+        boolean isSelectAll = false;
+        //响应外部按钮点击事件
+        for (int i = 0; i < resultState.isShow.length; i++) {
+            if (resultState.isShow[i] == 0) {
+                isSelectAll = false;
+                break;
+            }
+            isSelectAll = true;
+        }
+        return isSelectAll;
+    }
+
+
+    @Override
+    public void initTagStatus() {
+        recoveryTag();
+        //更新全选按钮状态
+        boolean isSelectAll = isSelectAll();
+        sendMsgRecoverySelectAllBtn(isSelectAll);
+    }
 
 
     private void reqLocalData() {
@@ -147,4 +159,9 @@ public class ResultPresenter implements ResultPresenterInf {
     private void recoveryTag() {
         MsgHelper.sendEvent(GlobalEventT.result_update_tag_status, "", resultState);
     }
+
+    private void sendMsgRecoverySelectAllBtn(boolean isSelectAll) {
+        MsgHelper.sendEvent(GlobalEventT.result_update_top_btn_status, "", isSelectAll);
+    }
+
 }

@@ -32,7 +32,8 @@ public  class GlobalEventT {
 //    public static final int menu_synchronise_cache=90015;
 
     public static final int result_update_list=90016;//更新结果记录列表
-    public static final int result_update_tag_status=90015;//更新Tag的选择状态
+    public static final int result_update_tag_status=90015;//初始化时恢复Tag的选择状态
+    public static final int result_update_top_btn_status=91000;//更新顶部全选按钮状态
 
     public static final int wifi_set_main_title_tip=90017;
     public static final int wifi_refresh_first_info=90018;//更新首页的结果记录列表
