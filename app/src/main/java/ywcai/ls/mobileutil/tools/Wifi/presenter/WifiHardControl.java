@@ -49,7 +49,7 @@ public class WifiHardControl {
 
             //第一次休眠5秒，隋饶如果已经有自动增加的标记，则同步增加休眠周期
             try {
-                Thread.sleep(timeout + scanAutoFlag * 1000);
+                Thread.sleep(timeout + scanAutoFlag * 200);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -53,6 +53,11 @@ public  class GlobalEventT {
     public static final int wifi_notify_top_notification=90032;
     public static final int wifi_refresh_three_bar=90033;
     public static final int wifi_refresh_three_pie=90034;
+    public static final int wifi_refresh_three_line=90035;
+    public static final int wifi_switch_2d4g=90036;
+    public static final int wifi_refresh_channel_level=90037;
+    public static final int wifi_refresh_frequency_level=90038;
+    public static final int wifi_main_bottom_tip=90039;
 
     public static final int station_set_entry_change=90050;
     public static final int station_set_cell_change=90051;

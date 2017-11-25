@@ -1,5 +1,6 @@
 package ywcai.ls.mobileutil.tools.Wifi.presenter.inf;
 
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.highlight.Highlight;
 
 import java.util.ArrayList;
@@ -27,16 +28,25 @@ public interface MainWifiActionInf {
 
     void set2d4G(boolean choose2d4G);
 
-    void setChannelFilter(int index);
+    void setChannelFilter(int index, boolean isSelect);
+
+    void setAllTagSelectOrCancal(int[] allTagStatus);
 
     void saveLogForLocal(int pos);
+
     void saveLogForRemote(int pos);
+
     void clearLog(int pos);
 
     void saveAllLogForLocal();
+
     void saveAllLogForRemote();
+
     void clearAllLog();
 
     void clickTaskItem();
+
     void showChartLine(int popTaskPos);
+
+    void saveBitmap(LineChart wifiChannelRecord);
 }

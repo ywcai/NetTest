@@ -7,16 +7,25 @@
     <color name="colorWifiBg">#FF606582</color>
 
     <color name="chartLineColor0">#FFff4081</color>
-    <color name="chartLineColor1">#FF00D900</color>
+    <color name="chartLineColor1">#FFCDCF42</color>
     <color name="chartLineColor2">#FFFF26FF</color>
-    <color name="chartLineColor3">#FF73B9FF</color>
+    <color name="chartLineColor3">#FFE9FACC</color>
     <color name="chartLineColor4">#FFFFC926</color>
-    <color name="chartLineColor5">#FF9673FF</color>
+    <color name="chartLineColor5">#FF73B9FF</color>
     <color name="chartLineColor6">#FFFF9999</color>
     <color name="chartLineColor7">#FFFFBFFF</color>
-    <color name="chartLineColor8">#FF3162ea</color>
+    <color name="chartLineColor8">#FF3162EA</color>
     <color name="chartLineColor9">#FFFFFC99</color>
-    <color name="chartLineColor10">#FFC4FF99</color>
+    <color name="chartLineColor10">#FF00D900</color>
     <color name="chartLineColor11">#FFDFB82B</color>
     <color name="chartLineColor12">#FFA9F5F5</color>
+
+    <color name="chartLineColor149">#FFFFFC99</color>
+    <color name="chartLineColor153">#FFff4081</color>
+    <color name="chartLineColor157">#FFA9F5F5</color>
+    <color name="chartLineColor161">#FFa125e9</color>
+    <color name="chartLineColor165">#FFFF26FF</color>
+
+    <color name="tipSuccess">#FF2EC12E</color>
+    <color name="tipFail">#FFF50606</color>
 </resources>

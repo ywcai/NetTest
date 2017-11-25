@@ -13,18 +13,12 @@
         android:orientation="vertical"
         android:padding="5dp">
 
-        <android.support.v7.widget.CardView
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/wifi_task_chart"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:clickable="true"
-            android:visibility="visible">
-
-            <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/wifi_task_chart"
-                android:layout_width="match_parent"
-                android:background="@android:color/transparent"
-                android:layout_height="match_parent" />
-        </android.support.v7.widget.CardView>
+            android:layout_marginRight="10dp"
+            android:background="@android:color/transparent" />
 
         <RelativeLayout
             android:layout_width="match_parent"

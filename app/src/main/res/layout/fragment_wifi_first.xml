@@ -4,389 +4,63 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWifiBg">
+
     <RelativeLayout
         android:id="@+id/channel_tag"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.google.android.flexbox.FlexboxLayout
+        <ywcai.ls.control.flex.FlexButtonLayout
             android:id="@+id/channel_list_2d4g"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:padding="2dp"
             android:visibility="invisible"
-            app:justifyContent="flex_start"
+            app:btnBgColor="@color/LOrange"
+            app:btnBorderColor="@color/LOrange"
+            app:btnBorderSize="2"
+            app:btnMarginBottom="10"
+            app:btnMarginLeft="0"
+            app:btnMarginRight="10"
+            app:btnMarginTop="10"
+            app:btnPaddingBottom="10"
+            app:btnPaddingLeft="15"
+            app:btnPaddingRight="15"
+            app:btnPaddingTop="10"
+            app:btnRadius="8"
+            app:btnTextSize="12"
+            app:btnUnSelectTextColor="@android:color/white"
             app:flexDirection="row"
-            app:flexWrap="wrap">
+            app:flexWrap="wrap"
+            app:justifyContent="flex_start"></ywcai.ls.control.flex.FlexButtonLayout>
 
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_width="45dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_margin="2dp"
-                android:visibility="visible"
-                app:fb_borderColor="@android:color/white"
-                app:fb_borderWidth="1dp"
-                app:fb_defaultColor="@android:color/holo_orange_light"
-                app:fb_disabledColor="#CACAD9"
-                app:fb_disabledTextColor="@android:color/white"
-                app:fb_focusColor="#CACAD9"
-                app:fb_ghost="false"
-                app:fb_radius="4dp"
-                app:fb_text="CH1"
-                app:fb_textColor="@android:color/white"
-                app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_margin="2dp"
-                android:layout_width="45dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="visible"
-                app:fb_borderColor="@android:color/white"
-                app:fb_borderWidth="1dp"
-                app:fb_defaultColor="@android:color/holo_orange_light"
-                app:fb_disabledColor="#CACAD9"
-                app:fb_disabledTextColor="@android:color/white"
-                app:fb_focusColor="#CACAD9"
-                app:fb_ghost="false"
-                app:fb_radius="4dp"
-                app:fb_text="C2"
-                app:fb_textColor="@android:color/white"
-                app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
-
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_margin="2dp"
-                android:layout_width="45dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="visible"
-                app:fb_borderColor="@android:color/white"
-                app:fb_borderWidth="1dp"
-                app:fb_defaultColor="@android:color/holo_orange_light"
-                app:fb_disabledColor="#CACAD9"
-                app:fb_disabledTextColor="@android:color/white"
-                app:fb_focusColor="#CACAD9"
-                app:fb_ghost="false"
-                app:fb_radius="4dp"
-                app:fb_text="C3"
-                app:fb_textColor="@android:color/white"
-                app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
-
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_margin="2dp"
-                android:layout_width="45dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="visible"
-                app:fb_borderColor="@android:color/white"
-                app:fb_borderWidth="1dp"
-                app:fb_defaultColor="@android:color/holo_orange_light"
-                app:fb_disabledColor="#CACAD9"
-                app:fb_disabledTextColor="@android:color/white"
-                app:fb_focusColor="#CACAD9"
-                app:fb_ghost="false"
-                app:fb_radius="4dp"
-                app:fb_text="C4"
-                app:fb_textColor="@android:color/white"
-                app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
-
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_margin="2dp"
-                android:layout_width="45dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="visible"
-                app:fb_borderColor="@android:color/white"
-                app:fb_borderWidth="1dp"
-                app:fb_defaultColor="@android:color/holo_orange_light"
-                app:fb_disabledColor="#CACAD9"
-                app:fb_disabledTextColor="@android:color/white"
-                app:fb_focusColor="#CACAD9"
-                app:fb_ghost="false"
-                app:fb_radius="4dp"
-                app:fb_text="C5"
-                app:fb_textColor="@android:color/white"
-                app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
-
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_margin="2dp"
-                android:layout_width="45dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="visible"
-                app:fb_borderColor="@android:color/white"
-                app:fb_borderWidth="1dp"
-                app:fb_defaultColor="@android:color/holo_orange_light"
-                app:fb_disabledColor="#CACAD9"
-                app:fb_disabledTextColor="@android:color/white"
-                app:fb_focusColor="#CACAD9"
-                app:fb_ghost="false"
-                app:fb_radius="4dp"
-                app:fb_text="C6"
-                app:fb_textColor="@android:color/white"
-                app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
-
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_margin="2dp"
-                android:layout_width="45dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="visible"
-                app:fb_borderColor="@android:color/white"
-                app:fb_borderWidth="1dp"
-                app:fb_defaultColor="@android:color/holo_orange_light"
-                app:fb_disabledColor="#CACAD9"
-                app:fb_disabledTextColor="@android:color/white"
-                app:fb_focusColor="#CACAD9"
-                app:fb_ghost="false"
-                app:fb_radius="4dp"
-                app:fb_text="C7"
-                app:fb_textColor="@android:color/white"
-                app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
-
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_margin="2dp"
-                android:layout_width="45dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="visible"
-                app:fb_borderColor="@android:color/white"
-                app:fb_borderWidth="1dp"
-                app:fb_defaultColor="@android:color/holo_orange_light"
-                app:fb_disabledColor="#CACAD9"
-                app:fb_disabledTextColor="@android:color/white"
-                app:fb_focusColor="#CACAD9"
-                app:fb_ghost="false"
-                app:fb_radius="4dp"
-                app:fb_text="C8"
-                app:fb_textColor="@android:color/white"
-                app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
-
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_margin="2dp"
-                android:layout_width="45dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="visible"
-                app:fb_borderColor="@android:color/white"
-                app:fb_borderWidth="1dp"
-                app:fb_defaultColor="@android:color/holo_orange_light"
-                app:fb_disabledColor="#CACAD9"
-                app:fb_disabledTextColor="@android:color/white"
-                app:fb_focusColor="#CACAD9"
-                app:fb_ghost="false"
-                app:fb_radius="4dp"
-                app:fb_text="C9"
-                app:fb_textColor="@android:color/white"
-                app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
-
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_margin="2dp"
-                android:layout_width="45dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="visible"
-                app:fb_borderColor="@android:color/white"
-                app:fb_borderWidth="1dp"
-                app:fb_defaultColor="@android:color/holo_orange_light"
-                app:fb_disabledColor="#CACAD9"
-                app:fb_disabledTextColor="@android:color/white"
-                app:fb_focusColor="#CACAD9"
-                app:fb_ghost="false"
-                app:fb_radius="4dp"
-                app:fb_text="C10"
-                app:fb_textColor="@android:color/white"
-                app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
-
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_margin="2dp"
-                android:layout_width="45dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="visible"
-                app:fb_borderColor="@android:color/white"
-                app:fb_borderWidth="1dp"
-                app:fb_defaultColor="@android:color/holo_orange_light"
-                app:fb_disabledColor="#CACAD9"
-                app:fb_disabledTextColor="@android:color/white"
-                app:fb_focusColor="#CACAD9"
-                app:fb_ghost="false"
-                app:fb_radius="4dp"
-                app:fb_text="C11"
-                app:fb_textColor="@android:color/white"
-                app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
-
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_margin="2dp"
-                android:layout_width="45dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="visible"
-                app:fb_borderColor="@android:color/white"
-                app:fb_borderWidth="1dp"
-                app:fb_defaultColor="@android:color/holo_orange_light"
-                app:fb_disabledColor="#CACAD9"
-                app:fb_disabledTextColor="@android:color/white"
-                app:fb_focusColor="#CACAD9"
-                app:fb_ghost="false"
-                app:fb_radius="4dp"
-                app:fb_text="C12"
-                app:fb_textColor="@android:color/white"
-                app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
-
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_margin="2dp"
-                android:layout_width="45dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="visible"
-                app:fb_borderColor="@android:color/white"
-                app:fb_borderWidth="1dp"
-                app:fb_defaultColor="@android:color/holo_orange_light"
-                app:fb_disabledColor="#CACAD9"
-                app:fb_disabledTextColor="@android:color/white"
-                app:fb_focusColor="#CACAD9"
-                app:fb_ghost="false"
-                app:fb_radius="4dp"
-                app:fb_text="C13"
-                app:fb_textColor="@android:color/white"
-                app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
-
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_margin="2dp"
-                android:layout_width="45dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="visible"
-                app:fb_borderColor="@android:color/white"
-                app:fb_borderWidth="1dp"
-                app:fb_defaultColor="@android:color/holo_orange_light"
-                app:fb_disabledColor="#CACAD9"
-                app:fb_disabledTextColor="@android:color/white"
-                app:fb_focusColor="#CACAD9"
-                app:fb_ghost="false"
-                app:fb_radius="4dp"
-                app:fb_text="全选"
-                app:fb_textColor="@android:color/white"
-                app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
-
-
-        </com.google.android.flexbox.FlexboxLayout>
-
-        <com.google.android.flexbox.FlexboxLayout
+        <ywcai.ls.control.flex.FlexButtonLayout
             android:id="@+id/channel_list_5g"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:padding="5dp"
+            android:padding="2dp"
             android:visibility="invisible"
-            app:alignContent="flex_end"
-            app:justifyContent="space_around">
-
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="visible"
-                app:fb_borderColor="@android:color/white"
-                app:fb_borderWidth="1dp"
-                app:fb_defaultColor="@android:color/holo_orange_light"
-                app:fb_disabledColor="#CACAD9"
-                app:fb_disabledTextColor="@android:color/white"
-                app:fb_focusColor="#CACAD9"
-                app:fb_ghost="false"
-                app:fb_radius="4dp"
-                app:fb_text="C149"
-                app:fb_textColor="@android:color/white"
-                app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
-
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="visible"
-                app:fb_borderColor="@android:color/white"
-                app:fb_borderWidth="1dp"
-                app:fb_defaultColor="@android:color/holo_orange_light"
-                app:fb_disabledColor="#CACAD9"
-                app:fb_disabledTextColor="@android:color/white"
-                app:fb_focusColor="#CACAD9"
-                app:fb_ghost="false"
-                app:fb_radius="4dp"
-                app:fb_text="C153"
-                app:fb_textColor="@android:color/white"
-                app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
-
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="visible"
-                app:fb_borderColor="@android:color/white"
-                app:fb_borderWidth="1dp"
-                app:fb_defaultColor="@android:color/holo_orange_light"
-                app:fb_disabledColor="#CACAD9"
-                app:fb_disabledTextColor="@android:color/white"
-                app:fb_focusColor="#CACAD9"
-                app:fb_ghost="false"
-                app:fb_radius="4dp"
-                app:fb_text="C157"
-                app:fb_textColor="@android:color/white"
-                app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
-
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="visible"
-                app:fb_borderColor="@android:color/white"
-                app:fb_borderWidth="1dp"
-                app:fb_defaultColor="@android:color/holo_orange_light"
-                app:fb_disabledColor="#CACAD9"
-                app:fb_disabledTextColor="@android:color/white"
-                app:fb_focusColor="#CACAD9"
-                app:fb_ghost="false"
-                app:fb_radius="4dp"
-                app:fb_text="C161"
-                app:fb_textColor="@android:color/white"
-                app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
-
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="visible"
-                app:fb_borderColor="@android:color/white"
-                app:fb_borderWidth="1dp"
-                app:fb_defaultColor="@android:color/holo_orange_light"
-                app:fb_disabledColor="#CACAD9"
-                app:fb_disabledTextColor="@android:color/white"
-                app:fb_focusColor="#CACAD9"
-                app:fb_ghost="false"
-                app:fb_radius="4dp"
-                app:fb_text="C165"
-                app:fb_textColor="@android:color/white"
-                app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
-
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="visible"
-                app:fb_borderColor="@android:color/white"
-                app:fb_borderWidth="1dp"
-                app:fb_defaultColor="@android:color/holo_orange_light"
-                app:fb_disabledColor="#CACAD9"
-                app:fb_disabledTextColor="@android:color/white"
-                app:fb_focusColor="#CACAD9"
-                app:fb_ghost="false"
-                app:fb_radius="4dp"
-                app:fb_text="全选"
-                app:fb_textColor="@android:color/white"
-                app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
-        </com.google.android.flexbox.FlexboxLayout>
+            app:btnBgColor="@color/LOrange"
+            app:btnBorderColor="@color/LOrange"
+            app:btnBorderSize="2"
+            app:btnMarginBottom="10"
+            app:btnMarginLeft="0"
+            app:btnMarginRight="10"
+            app:btnMarginTop="10"
+            app:btnPaddingBottom="10"
+            app:btnPaddingLeft="15"
+            app:btnPaddingRight="15"
+            app:btnPaddingTop="10"
+            app:btnRadius="8"
+            app:btnTextSize="12"
+            app:btnUnSelectTextColor="@android:color/white"
+            app:flexDirection="row"
+            app:flexWrap="wrap"
+            app:justifyContent="space_around"></ywcai.ls.control.flex.FlexButtonLayout>
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/main_select_entry"
         android:layout_width="match_parent"
@@ -394,7 +68,6 @@
         android:layout_below="@+id/channel_tag">
 
         <TextView
-            android:visibility="visible"
             android:id="@+id/main_select_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -404,7 +77,8 @@
             android:maxLines="20"
             android:text=""
             android:textColor="@android:color/holo_orange_light"
-            android:textSize="10sp" />
+            android:textSize="10sp"
+            android:visibility="visible" />
     </RelativeLayout>
 
     <com.github.mikephil.charting.charts.RadarChart
@@ -421,26 +95,26 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:padding="5dp">
+
         <ImageButton
             android:id="@+id/btn_lock"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:scaleType="fitXY"
             android:layout_alignParentRight="true"
-            android:src="@drawable/lock"
-            android:background="@android:color/transparent"
             android:layout_marginBottom="5dp"
-           ></ImageButton>
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            android:src="@drawable/lock"></ImageButton>
+
         <ImageButton
             android:id="@+id/btn_save"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginRight="20dp"
-            android:scaleType="fitXY"
-            android:layout_toLeftOf="@+id/btn_lock"
-            android:src="@drawable/add"
-            android:background="@android:color/transparent"
             android:layout_marginBottom="5dp"
-            ></ImageButton>
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@+id/btn_lock"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            android:src="@drawable/add"></ImageButton>
     </RelativeLayout>
 </RelativeLayout>

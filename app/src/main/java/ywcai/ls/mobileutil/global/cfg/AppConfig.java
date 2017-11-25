@@ -24,12 +24,13 @@ public class AppConfig {
 
     public static final String ROUTER_FLAG = "ROUTER_PAGE";
 
-    public static long INT_WIFI_AUTO_SCAN_REFRESH = 10000;//如果没有自动接收到wifi事件，程序启动循环监听事件的间隔。
+    public static long INT_WIFI_AUTO_SCAN_REFRESH = 5000;//如果没有自动接收到wifi事件，程序启动循环监听事件的间隔。
     public static long INT_CHECK_WIFI_AUTO_SCAN_COUNT = 5;//如果自动接收到了5次wifi事件，则判断该手机系统会自动刷新进行监听。
 
 
-    public static final int INT_NOTIFICATION_PID_PING=7294;
-    public static final int INT_NOTIFICATION_PID_WIFI=7295;
+    public static final int INT_NOTIFICATION_PID_PING = 7294;
+    public static final int INT_NOTIFICATION_PID_WIFI = 7295;
+    public static final int INT_NOTIFICATION_PID_STATION = 7296;
 
     public static final String TITLE_PING = "PING";
     public static final String TITLE_WIFI = "WIFI";
@@ -55,6 +56,7 @@ public class AppConfig {
     public static final int[] INTS_CHANNEL_2D4G = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
     public static final int[] INTS_CHANNEL_5G = new int[]{149, 153, 157, 161, 165};
 
+
     public static final int[] colors = new int[]{
             R.color.chartLineColor0,
             R.color.chartLineColor1,
@@ -69,6 +71,14 @@ public class AppConfig {
             R.color.chartLineColor10,
             R.color.chartLineColor11,
             R.color.chartLineColor12
+    };
+    public static final int[] colors2 = new int[]{
+            R.color.chartLineColor1,
+            R.color.chartLineColor3,
+            R.color.chartLineColor6,
+            R.color.chartLineColor9,
+            R.color.chartLineColor0,
+
     };
 
 //    public static final String[] menuString = new String[]

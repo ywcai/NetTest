@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.LocationManager;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
@@ -11,6 +12,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Parcelable;
 
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.highlight.Highlight;
 
 import java.util.ArrayList;
@@ -18,17 +20,14 @@ import java.util.List;
 
 
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.functions.Func2;
-import rx.schedulers.Schedulers;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.global.model.instance.MainApplication;
 import ywcai.ls.mobileutil.global.util.statics.ConvertUtil;
-import ywcai.ls.mobileutil.global.util.statics.LsLog;
+
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 import ywcai.ls.mobileutil.global.util.statics.MyTime;
 import ywcai.ls.mobileutil.results.model.LogIndex;
@@ -76,20 +75,30 @@ public class WifiProcess implements Action1 {
             updateFragmentOne.loadSignalChangeData(allList, channelSum);
             updateFragmentTwo.refreshList(allList);
             updateFragmentTwo.refreshChart();
-            updateFragmentThree.refreshChannelCurrent(channelSum);
-            updateFragmentThree.refreshChannelForPieChart(channelSum);
+
+//            updateFragmentThree.refreshChannelLineRecord(channelSum);
+            updateFragmentThree.refreshChannelBarChart(channelSum);
+//            updateFragmentThree.refreshChannelPieChart(channelSum);
+
+
         }
     }
 
-    //被其他方法调用，不能单独被外部类使用
+    //被WIFI核心处理方法调用，不能单独被外部类使用
     private void coreDraw() {
         sendMsgTitleTip("共" + allList.size() + "个信号");
         updateFragmentOne.loadSignalChangeData(allList, channelSum);
         updateFragmentOne.showSelectEntryInfo(lockEntry);
+
         updateFragmentTwo.refreshChart();
         updateFragmentTwo.refreshList(allList);
-        updateFragmentThree.refreshChannelCurrent(channelSum);
-        updateFragmentThree.refreshChannelForPieChart(channelSum);
+
+        updateFragmentThree.refreshFrequencyLevel(channelSum);
+        updateFragmentThree.refreshChannelBarChart(channelSum);
+
+        updateFragmentFour.refreshChannelLineRecord(channelSum);
+        updateFragmentFour.switchLineChartSelect();
+
     }
 
     private void operatorDraw() {
@@ -315,23 +324,31 @@ public class WifiProcess implements Action1 {
         }
     }
 
-    public void setChannelFilter(int index) {
+    public void setChannelFilter(int index, boolean isSelect) {
         synchronized (allList) {
-            wifiState.setChannelFilter(index);
+            wifiState.setChannelFilter(index, isSelect);
             cacheProcess.setWifiState(wifiState);
-            updateFragmentOne.loadChannelTagStatus();
             updateFragmentOne.loadSignalChangeData(allList, channelSum);
         }
     }
 
+    public void setAllTagSelectOrCancal(int[] index) {
+        synchronized (allList) {
+            wifiState.setAllChannelStatus(index);
+            cacheProcess.setWifiState(wifiState);
+            updateFragmentOne.loadSignalChangeData(allList, channelSum);
+        }
+    }
 
     public void set2d4G(boolean is2d4G) {
         wifiState.choose2d4G = is2d4G;
         cacheProcess.setWifiState(wifiState);
         sendMsgTopBtnStatus();
-        updateFragmentOne.loadChannelTagStatus();
         updateFragmentOne.loadSignalChangeData(allList, channelSum);
-        updateFragmentThree.refreshChannelCurrent(channelSum);
+        //Bar内容需要重新加载
+        updateFragmentThree.refreshChannelBarChart(channelSum);
+        //切换显示内容
+        updateFragmentFour.switchLineChartSelect();
     }
 
     //点击锁定按钮
@@ -479,4 +496,8 @@ public class WifiProcess implements Action1 {
     }
 
 
+    public void saveBitMap(LineChart wifiChannelRecord) {
+        updateFragmentFour.saveBitMap(wifiChannelRecord);
+
+    }
 }

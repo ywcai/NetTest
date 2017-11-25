@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -41,6 +42,7 @@ import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.model.GlobalEvent;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.util.statics.InputValidate;
+import ywcai.ls.mobileutil.global.util.statics.LsSnack;
 import ywcai.ls.mobileutil.global.util.statics.SetTitle;
 import ywcai.ls.mobileutil.tools.Ping.model.PingState;
 import ywcai.ls.mobileutil.tools.Ping.presenter.PingAction;
@@ -50,8 +52,9 @@ import ywcai.ls.mobileutil.tools.Ping.presenter.inf.PingActionInf;
 public class PingActivity extends AppCompatActivity {
     private final float yMax = 230;
     private LineChart pingResultChart;
-    private PingActionInf action=new PingAction();
+    private PingActionInf action = new PingAction();
     private MaterialDialog bottomDialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,14 +72,13 @@ public class PingActivity extends AppCompatActivity {
         InitFloatingEvent();
     }
 
-    private void setFloatingBtnVisible(int visible)
-    {
-        FloatingActionButton showResultBtn=(FloatingActionButton)findViewById(R.id.f_btn_show_task);
+    private void setFloatingBtnVisible(int visible) {
+        FloatingActionButton showResultBtn = (FloatingActionButton) findViewById(R.id.f_btn_show_task);
         showResultBtn.setVisibility(visible);
     }
-    private void InitFloatingEvent()
-    {
-        FloatingActionButton showResultBtn=(FloatingActionButton)findViewById(R.id.f_btn_show_task);
+
+    private void InitFloatingEvent() {
+        FloatingActionButton showResultBtn = (FloatingActionButton) findViewById(R.id.f_btn_show_task);
         showResultBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,14 +133,16 @@ public class PingActivity extends AppCompatActivity {
         super.onResume();
 
     }
+
     private void popBottomDialog() {
         bottomDialog.show();
     }
+
     private void updateCacheChartData(List<Float> list) {
         LineData lineData = pingResultChart.getLineData();
         ILineDataSet iLineDataSet = lineData.getDataSetByIndex(0);
         if (list != null) {
-            int min=iLineDataSet.getEntryCount()<list.size()?iLineDataSet.getEntryCount():list.size();
+            int min = iLineDataSet.getEntryCount() < list.size() ? iLineDataSet.getEntryCount() : list.size();
             for (int i = 0; i < min; i++) {
                 Entry entry = iLineDataSet.getEntryForIndex(i);
                 entry.setY(list.get(i));
@@ -178,7 +182,7 @@ public class PingActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String ipAddress=s.toString();
+                String ipAddress = s.toString();
                 if (InputValidate.isIpAddr(ipAddress)) {
                     pingTest.setEnabled(true);
                 } else {
@@ -231,6 +235,7 @@ public class PingActivity extends AppCompatActivity {
         ipAddText.setEnabled(true);
         ipAddText.setShowClearButton(true);
     }
+
     private void updateFormUIPause() {
         FancyButton pingTest = (FancyButton) findViewById(R.id.test_start);
         FancyButton pauseAndResume = (FancyButton) findViewById(R.id.pause_resume);
@@ -247,21 +252,21 @@ public class PingActivity extends AppCompatActivity {
     }
 
 
-    private void setSeekBar1Pos(int value)
-    {
+    private void setSeekBar1Pos(int value) {
         RangeBar rangeBar = (RangeBar) findViewById(R.id.packageCounts);
         rangeBar.setSeekPinByValue(value);
     }
-    private void setSeekBar2Pos(int value)
-    {
+
+    private void setSeekBar2Pos(int value) {
         RangeBar rangeBar2 = (RangeBar) findViewById(R.id.threadCounts);
         rangeBar2.setSeekPinByValue(value);
     }
-    private void setInputValue(String input)
-    {
+
+    private void setInputValue(String input) {
         MaterialEditText ipAddText = (MaterialEditText) findViewById(R.id.ping_ipaddr);
         ipAddText.setText(input);
     }
+
     private void InitToolBar() {
         Toolbar mToolbar = (Toolbar) findViewById(R.id.ping_toolbar);
         mToolbar.setTitleMarginStart(0);
@@ -298,7 +303,7 @@ public class PingActivity extends AppCompatActivity {
         pingResultChart.getAxisRight().setEnabled(false);
     }
 
-    private void updateChartData(int pos,float y) {
+    private void updateChartData(int pos, float y) {
         LineData lineData = pingResultChart.getLineData();
         ILineDataSet iLineDataSet = lineData.getDataSetByIndex(0);
         Entry entry = iLineDataSet.getEntryForIndex(pos - 1);
@@ -313,7 +318,7 @@ public class PingActivity extends AppCompatActivity {
         String des_minDelay = " MIN:" + realTimeState.min;
         String des_avgDelay = " AVG:" + realTimeState.average;
         String des_loss = " LOSS:" + realTimeState.loss;
-        String des_per = " " + realTimeState.per+"%";
+        String des_per = " " + realTimeState.per + "%";
         String des_send = " TOTAL:" + realTimeState.send;
         String des_all = des_ipAdd
                 + des_maxDelay
@@ -364,32 +369,33 @@ public class PingActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         return false;
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void update(GlobalEvent event) {
         switch (event.type) {
             case GlobalEventT.ping_update_chart_point:
-                int pos=Integer.parseInt(event.tip);
+                int pos = Integer.parseInt(event.tip);
                 Float y = (Float) event.obj;
-                updateChartData(pos,y);//更新曲线图
+                updateChartData(pos, y);//更新曲线图
                 break;
             case GlobalEventT.ping_update_chart_desc:
                 PingState temp2 = (PingState) event.obj;
                 drawDes(temp2);//更新描述
                 break;
             case GlobalEventT.ping_set_bar_size_package:
-                setSeekBar1Pos((int)event.obj);
+                setSeekBar1Pos((int) event.obj);
                 break;
             case GlobalEventT.ping_set_bar_size_thread:
-                setSeekBar2Pos((int)event.obj);
+                setSeekBar2Pos((int) event.obj);
                 break;
             case GlobalEventT.ping_set_input_text_ip:
                 setInputValue(event.obj.toString());
                 break;
             case GlobalEventT.ping_set_chart_data_size:
-                setLineBase((int)event.obj);
+                setLineBase((int) event.obj);
                 break;
             case GlobalEventT.ping_repair_chart_line:
-                List<Float> list=(List<Float>)event.obj;
+                List<Float> list = (List<Float>) event.obj;
                 updateCacheChartData(list);
                 break;
             case GlobalEventT.ping_set_form_free:
@@ -411,7 +417,7 @@ public class PingActivity extends AppCompatActivity {
                 closeLoadingDialog(event.tip);
                 break;
             case GlobalEventT.ping_set_float_btn_visible:
-                setFloatingBtnVisible((int)event.obj);
+                setFloatingBtnVisible((int) event.obj);
                 break;
             default:
                 break;
@@ -419,10 +425,9 @@ public class PingActivity extends AppCompatActivity {
     }
 
 
-
     private void closeLoadingDialog(String tip) {
         //// TODO: 2017/10/3 加载窗口
-        Toast.makeText(this,tip,Toast.LENGTH_SHORT).show();
+        LsSnack.show(this, findViewById(R.id.ping_snack_container), tip);
     }
 
     private void popLoadingDialog(String tip) {

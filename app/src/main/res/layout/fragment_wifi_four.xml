@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWifiBg"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/wifi_channel_current_tip"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:gravity="right|center_vertical"
+        android:text="信道占用变化趋势"
+        android:textColor="@android:color/white"
+        android:textSize="10sp"
+        android:textStyle="bold" />
+
+    <mehdi.sakout.fancybuttons.FancyButton
+        android:id="@+id/wifi_record_bitmap_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:visibility="visible"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        app:fb_borderColor="@android:color/holo_orange_light"
+        app:fb_borderWidth="1dp"
+        app:fb_defaultColor="@android:color/holo_orange_light"
+        app:fb_disabledColor="#CACAD9"
+        app:fb_disabledTextColor="@android:color/white"
+        app:fb_focusColor="#CACAD9"
+        app:fb_ghost="false"
+        app:fb_radius="4dp"
+        app:fb_text="保存位图到本地"
+        app:fb_textColor="@android:color/white"
+        app:fb_textSize="10sp"></mehdi.sakout.fancybuttons.FancyButton>
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/wifi_channel_record_chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/wifi_record_bitmap_save"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="10dp"
+        android:background="@android:color/transparent"
+        android:visibility="visible" />
+
+</RelativeLayout>
+
+
+

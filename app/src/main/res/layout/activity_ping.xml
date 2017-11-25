@@ -16,6 +16,7 @@
         app:popupTheme="@style/LsAppBarOverlay"
         app:titleTextAppearance="@style/ToolbarTitleSize"
         app:titleTextColor="@android:color/white" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -142,11 +143,12 @@
                 app:met_floatingLabelTextColor="#8805ad"
                 app:met_primaryColor="#2196F3"
                 app:met_textColorHint="#9797A6" />
+
             <mehdi.sakout.fancybuttons.FancyButton
-                android:layout_marginRight="5dp"
                 android:id="@+id/pause_resume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
                 android:layout_toLeftOf="@+id/test_start"
                 android:gravity="center_vertical"
                 android:paddingBottom="13dp"
@@ -162,6 +164,7 @@
                 app:fb_radius="5dp"
                 app:fb_text=""
                 app:fb_textColor="@android:color/white" />
+
             <mehdi.sakout.fancybuttons.FancyButton
                 android:id="@+id/test_start"
                 android:layout_width="wrap_content"
@@ -196,6 +199,13 @@
         app:backgroundTint="@android:color/holo_orange_light"
         app:elevation="5dp"
         app:fabSize="normal" />
+
+    <RelativeLayout
+        android:layout_alignParentBottom="true"
+        android:id="@+id/ping_snack_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></RelativeLayout>
+
 </RelativeLayout>
 
 

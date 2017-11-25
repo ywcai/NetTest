@@ -2,13 +2,19 @@ package ywcai.ls.mobileutil.tools.Wifi.presenter;
 
 
 import android.content.Context;
+import android.graphics.Color;
 
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.highlight.Highlight;
 
 import rx.functions.Action1;
+import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.MainApplication;
 import ywcai.ls.mobileutil.global.util.statics.InStallService;
+import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
+import ywcai.ls.mobileutil.global.util.statics.MyTime;
 import ywcai.ls.mobileutil.service.LsConnection;
+import ywcai.ls.mobileutil.service.StationService;
 import ywcai.ls.mobileutil.service.WifiService;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiEntry;
 import ywcai.ls.mobileutil.tools.Wifi.presenter.inf.MainWifiActionInf;
@@ -29,7 +35,7 @@ public class MainWifiAction implements MainWifiActionInf {
                 }
             }
         });
-        InStallService.bindService(context, WifiService.class, lsConnection);
+        InStallService.bindService(context, StationService.class, lsConnection);
     }
 
     @Override
@@ -84,11 +90,18 @@ public class MainWifiAction implements MainWifiActionInf {
     }
 
     @Override
-    public void setChannelFilter(int index) {
+    public void setChannelFilter(int index, boolean isSelect) {
         if (wifiService != null) {
-            wifiService.wifiDataProcess.setChannelFilter(index);
+            wifiService.wifiDataProcess.setChannelFilter(index, isSelect);
         }
 //        wifiDataProcess.setChannelFilter(index);
+    }
+
+    @Override
+    public void setAllTagSelectOrCancal(int[] allTagStatus) {
+        if (wifiService != null) {
+            wifiService.wifiDataProcess.setAllTagSelectOrCancal(allTagStatus);
+        }
     }
 
 
@@ -119,6 +132,14 @@ public class MainWifiAction implements MainWifiActionInf {
             wifiService.wifiDataProcess.setLineHide(popTaskPos);
         }
 //        wifiDataProcess.setLineHide(popTaskPos);
+    }
+
+    @Override
+    public void saveBitmap(LineChart wifiChannelRecord) {
+
+        if (wifiService != null) {
+            wifiService.wifiDataProcess.saveBitMap(wifiChannelRecord);
+        }
     }
 
 

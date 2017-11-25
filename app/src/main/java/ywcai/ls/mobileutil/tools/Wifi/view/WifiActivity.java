@@ -1,13 +1,17 @@
 package ywcai.ls.mobileutil.tools.Wifi.view;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,8 +30,11 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import ywcai.ls.mobileutil.R;
+import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.GlobalEvent;
+import ywcai.ls.mobileutil.global.util.statics.LsLog;
+import ywcai.ls.mobileutil.global.util.statics.LsSnack;
 import ywcai.ls.mobileutil.global.util.statics.SetTitle;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiPageAdapter;
 import ywcai.ls.mobileutil.tools.Wifi.presenter.MainWifiAction;
@@ -38,6 +45,7 @@ public class WifiActivity extends AppCompatActivity {
     private int nowPage = 1;
     private List<ImageView> list = new ArrayList<>();
     private MainWifiActionInf mainWifiActionInf;
+    private RelativeLayout snack_container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,13 +77,14 @@ public class WifiActivity extends AppCompatActivity {
                 mainWifiActionInf.set2d4G(false);
             }
         });
+        snack_container = (RelativeLayout) findViewById(R.id.snack_container);
     }
 
 
     private void InitMainAction() {
         mainWifiActionInf = new MainWifiAction();
         Observable.just(mainWifiActionInf)
-                .delay(1, TimeUnit.SECONDS)
+                .delay(1, TimeUnit.SECONDS)//延迟一秒启动服务非常重要，否则有可能前台未启动Fragment收不到扫描完成的通知.
                 .subscribeOn(Schedulers.newThread()).subscribe(new Action1<MainWifiActionInf>() {
             @Override
             public void call(MainWifiActionInf mainWifiActionInf) {
@@ -125,7 +134,7 @@ public class WifiActivity extends AppCompatActivity {
         list.add(icon4);
         WifiPageAdapter wifiPageAdapter = new WifiPageAdapter(this.getSupportFragmentManager(), mainWifiActionInf);
         ViewPager wifiViewPager = (ViewPager) findViewById(R.id.wifiViewPager);
-        wifiViewPager.setOffscreenPageLimit(4);
+        wifiViewPager.setOffscreenPageLimit(3);
         wifiViewPager.setAdapter(wifiPageAdapter);
         wifiViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -163,11 +172,13 @@ public class WifiActivity extends AppCompatActivity {
             case GlobalEventT.wifi_set_channel_btn_status:
                 set2d4gBtnStatus((Boolean) event.obj);
                 break;
+            case GlobalEventT.wifi_main_bottom_tip:
+                showBottomTip(event.tip, ((int) event.obj));
+                break;
         }
     }
 
-    public void set2d4gBtnStatus(Boolean a2d4gBtnStatus) {
-
+    private void set2d4gBtnStatus(Boolean a2d4gBtnStatus) {
         FancyButton btn2d4G = (FancyButton) findViewById(R.id.btn_2d4g);
         FancyButton btn5G = (FancyButton) findViewById(R.id.btn_5g);
         btn2d4G.setGhost(a2d4gBtnStatus);
@@ -176,5 +187,9 @@ public class WifiActivity extends AppCompatActivity {
         btn5G.setEnabled(a2d4gBtnStatus);
         btn2d4G.setVisibility(View.VISIBLE);
         btn5G.setVisibility(View.VISIBLE);
+    }
+
+    private void showBottomTip(String tip, int color) {
+        LsSnack.show(this, snack_container, tip, color);
     }
 }

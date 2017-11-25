@@ -194,35 +194,44 @@ public class WifiFragmentTwo extends Fragment {
         wifiTaskChart = (LineChart) view.findViewById(R.id.wifi_task_chart);
         wifiTaskChart.getAxisRight().setEnabled(false);
         wifiTaskChart.setDrawGridBackground(false);
-        wifiTaskChart.setNoDataText("暂时没有添加任何后台任务");
+        wifiTaskChart.setNoDataText("请在第一页雷达图中选择您要记录的信号");
         wifiTaskChart.setTouchEnabled(true);
         wifiTaskChart.setDragEnabled(true);
         wifiTaskChart.setScaleEnabled(true);
         wifiTaskChart.setDoubleTapToZoomEnabled(false);
         wifiTaskChart.setHighlightPerTapEnabled(false);
         wifiTaskChart.setHighlightPerDragEnabled(false);
-        LimitLine ll2 = new LimitLine(-155, "信号丢失");
-        ll2.setLineWidth(1f);
+        LimitLine ll2 = new LimitLine(-160, "LOSS");
+        ll2.setTextColor(Color.WHITE);
+        ll2.setLineWidth(2f);
+        ll2.enableDashedLine(10, 20f, 0);
         ll2.setTextSize(8);
-        ll2.setLineColor(Color.BLACK);
+        ll2.setLineColor(Color.DKGRAY);
         YAxis leftAxis = wifiTaskChart.getAxisLeft();
         leftAxis.addLimitLine(ll2);
         leftAxis.setAxisMaximum(-20);
         leftAxis.setAxisMinimum(-160);
         leftAxis.setLabelCount(5, false);
-        leftAxis.setTextSize(6);
-        leftAxis.enableGridDashedLine(10, 20f, 0);
+        leftAxis.setTextSize(10);
+        leftAxis.setDrawGridLines(false);
+        leftAxis.setDrawAxisLine(false);
+        leftAxis.setTextColor(Color.WHITE);
+//        leftAxis.enableGridDashedLine(10, 20f, 0);
         XAxis xAxis = wifiTaskChart.getXAxis();
         xAxis.removeAllLimitLines();
         xAxis.setAxisMaximum(baseMaxX);
         xAxis.setLabelCount(10, false);
         xAxis.setAxisMinimum(0);
         xAxis.setDrawGridLines(false);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setTextColor(Color.WHITE);
         Description des = new Description();
         des.setText("");
         wifiTaskChart.setDescription(des);
         wifiTaskChart.getLegend().setWordWrapEnabled(true);
         wifiTaskChart.getLegend().setTextSize(6);
+        wifiTaskChart.getLegend().setTextColor(Color.WHITE);
+        wifiTaskChart.setAutoScaleMinMaxEnabled(true);
         recoveryBaseData();
     }
 
@@ -249,6 +258,7 @@ public class WifiFragmentTwo extends Fragment {
                         List data = CacheProcess.getInstance().getWifiTaskResult(wifiEntry.logFlag);
                         if (maxX < data.size()) {
                             wifiTaskChart.getXAxis().setAxisMaximum((maxX + baseMaxX));
+                            wifiTaskChart.setScaleX(1);
                         }
                         if (data.size() > 0) {
                             for (int i = 0; i < data.size(); i++) {
@@ -306,9 +316,6 @@ public class WifiFragmentTwo extends Fragment {
         });
     }
 
-    private void showToast(String tip) {
-        Toast.makeText(this.getActivity(), tip, Toast.LENGTH_SHORT).show();
-    }
 
     private void popOperatorMenu() {
         bottomDialog.show();

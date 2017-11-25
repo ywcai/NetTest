@@ -9,8 +9,10 @@ import ywcai.ls.mobileutil.tools.Wifi.model.WifiEntry;
  */
 
 public interface UpdateFragmentThreeInf {
-    void refreshChannelCurrent(int[] channelSum);
-    void refreshChannelRecord(int[] channelSum);
-    void refreshChannelForPieChart(int[] channelSum);
+
+//    void refreshChannelPieChart(int[] channelSum);
+
+    void refreshChannelBarChart(int[] channelSum);
+    void refreshFrequencyLevel(int[] channelSum);
 }
 

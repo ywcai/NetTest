@@ -1,12 +1,16 @@
 package ywcai.ls.mobileutil.tools.Wifi.presenter;
 
+import android.support.v4.content.ContextCompat;
+
 import java.util.List;
 
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
+import ywcai.ls.mobileutil.global.util.statics.LsLog;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 import ywcai.ls.mobileutil.tools.Wifi.model.one.WifiDrawDetail;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiEntry;
@@ -22,11 +26,8 @@ public class UpdateFragmentOne implements UpdateFragmentOneInf {
 
     @Override
     public void loadChannelTagStatus() {
-        if (wifiState.choose2d4G) {
-            sendMsgRecovery2d4gTag();
-        } else {
-            sendMsgRecovery5gTag();
-        }
+        sendMsgRecovery2d4gTag();
+        sendMsgRecovery5gTag();
     }
 
 
@@ -61,6 +62,7 @@ public class UpdateFragmentOne implements UpdateFragmentOneInf {
                 });
     }
 
+
     @Override
     public void loadSignalChangeData(List<WifiEntry> allList, final int[] channelSum) {
         final WifiDrawDetail wifiDrawDetail = new WifiDrawDetail();
@@ -68,9 +70,19 @@ public class UpdateFragmentOne implements UpdateFragmentOneInf {
                 filter(new Func1<WifiEntry, Boolean>() {
                     @Override
                     public Boolean call(WifiEntry wifiEntry) {
-                        return wifiEntry.is2G == (wifiState.choose2d4G)
-                                && (wifiState.select2d4GList.contains(wifiEntry.channel)
-                                || wifiState.select5GList.contains(wifiEntry.channel));
+
+                        return wifiState.choose2d4G == wifiEntry.is2G;
+                    }
+                })
+                .filter(new Func1<WifiEntry, Boolean>() {
+                    @Override
+                    public Boolean call(WifiEntry wifiEntry) {
+                        if (wifiState.choose2d4G) {
+                            LsLog.saveLog(wifiEntry.channel+"");
+                            return wifiState.select2d4G[wifiEntry.channel - 1] == 1;
+                        } else {
+                            return wifiState.select5G[(wifiEntry.channel - 149) / 4] == 1;
+                        }
                     }
                 })
                 .map(new Func1<WifiEntry, WifiEntry>() {
@@ -100,13 +112,12 @@ public class UpdateFragmentOne implements UpdateFragmentOneInf {
     }
 
     @Override
-    public void addTaskEnd(String tip,boolean success) {
-        if(success)
-        {
+    public void addTaskEnd(String tip, boolean success) {
+        if (success) {
+            sendMsgPopBottomSnack(tip, -1);
             sendMsgNotification(tip);
-        }
-        else {
-            popToast(tip);
+        } else {
+            sendMsgPopBottomSnack(tip, R.color.tipFail);
         }
     }
 
@@ -132,23 +143,22 @@ public class UpdateFragmentOne implements UpdateFragmentOneInf {
         }
     }
 
-
     //
-    private void popToast(String tip) {
-        MsgHelper.sendEvent(GlobalEventT.wifi_set_first_main_toast, tip, null);
+    private void sendMsgPopBottomSnack(String tip,int color) {
+        MsgHelper.sendEvent(GlobalEventT.wifi_main_bottom_tip, tip, color);
     }
 
     private void sendMsgNotification(String tip) {
-        MsgHelper.sendEvent(GlobalEventT.wifi_notify_top_notification, tip,null);
+        MsgHelper.sendEvent(GlobalEventT.wifi_notify_top_notification, tip, null);
     }
 
 
     private void sendMsgRecovery2d4gTag() {
-        MsgHelper.sendEvent(GlobalEventT.wifi_recovery_channel_select_2d4g, "", wifiState.select2d4GList);
+        MsgHelper.sendEvent(GlobalEventT.wifi_recovery_channel_select_2d4g, "", wifiState.select2d4G);
     }
 
     private void sendMsgRecovery5gTag() {
-        MsgHelper.sendEvent(GlobalEventT.wifi_recovery_channel_select_5g, "", wifiState.select5GList);
+        MsgHelper.sendEvent(GlobalEventT.wifi_recovery_channel_select_5g, "", wifiState.select5G);
     }
 
 

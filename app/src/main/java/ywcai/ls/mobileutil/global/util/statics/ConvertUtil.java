@@ -69,7 +69,7 @@ public class ConvertUtil {
                 channel = 165;
                 break;
             default:
-                channel = 0;
+                channel = 1;
                 break;
         }
         return channel;

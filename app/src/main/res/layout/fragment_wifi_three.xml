@@ -7,76 +7,85 @@
     android:background="@color/colorWifiBg"
     android:padding="5dp">
 
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/wifi_channel_count_current_chart"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/colorWifiBg" />
+
     <TextView
         android:id="@+id/wifi_channel_current_tip"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:gravity="right|center_vertical"
-        android:text="信道实时分布"
+        android:text="信道占用分布"
         android:textColor="@android:color/white"
-        android:textSize="14sp"
+        android:textSize="10sp"
         android:textStyle="bold" />
 
-    <com.google.android.flexbox.FlexboxLayout
-        android:id="@+id/wifi_three_flex_box"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_below="@+id/wifi_channel_current_tip"
-        android:layout_marginBottom="5dp"
-        android:background="@color/colorWifiBg"
-        android:visibility="visible"
-        app:flexDirection="row"
-        app:flexWrap="nowrap"
-        app:justifyContent="space_around">
-
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/wifi_three_pie_left"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/wifi_three_pie_right"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </com.google.android.flexbox.FlexboxLayout>
-
-
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/wifi_channel_count_current_chart"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_below="@+id/wifi_three_flex_box"
-        android:layout_marginBottom="5dp"
-        android:background="@color/colorWifiBg" />
-
-    <android.support.v7.widget.CardView
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/wifi_frequency_level"
+        android:layout_marginBottom="20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
         android:layout_below="@+id/wifi_channel_count_current_chart"
-        android:layout_marginBottom="10dp"
-        android:clickable="true"
-        android:visibility="visible"
-        app:cardBackgroundColor="@android:color/white">
+        android:background="@android:color/transparent"
+        android:visibility="visible" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:gravity="right|center_vertical"
+        android:layout_below="@+id/wifi_channel_count_current_chart"
+        android:text="2.4G频点分布（影响该频点的信号总数）"
+        android:textColor="@android:color/white"
+        android:textSize="10sp"
+        android:textStyle="bold" />
+    <!--<com.google.android.flexbox.FlexboxLayout-->
+    <!--android:id="@+id/wifi_three_flex_box"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="180dp"-->
+    <!--android:layout_below="@+id/wifi_channel_record_chart"-->
+    <!--android:background="@color/colorWifiBg"-->
+    <!--android:visibility="gone"-->
+    <!--app:flexDirection="row"-->
+    <!--app:flexWrap="nowrap"-->
+    <!--app:justifyContent="space_around">-->
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/wifi_channel_record_chart"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent" />
-    </android.support.v7.widget.CardView>
+    <!--<com.github.mikephil.charting.charts.PieChart-->
+    <!--android:id="@+id/wifi_three_pie_left"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" />-->
 
-    <ImageButton
-        android:id="@+id/wifi_channel_record_save"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/save" />
+    <!--<com.github.mikephil.charting.charts.PieChart-->
+    <!--android:id="@+id/wifi_three_pie_right"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" />-->
+    <!--</com.google.android.flexbox.FlexboxLayout>-->
+
+
+    <!--<ImageView-->
+    <!--android:id="@+id/wifi_channel_record_save"-->
+    <!--android:layout_width="40dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_marginBottom="15dp"-->
+    <!--android:layout_marginRight="5dp"-->
+    <!--android:scaleType="fitCenter"-->
+    <!--android:src="@drawable/save"-->
+    <!--android:visibility="invisible" />-->
+    <!--<ImageView-->
+    <!--android:id="@+id/wifi_channel_record_start"-->
+    <!--android:layout_width="40dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_marginBottom="15dp"-->
+    <!--android:layout_marginRight="5dp"-->
+    <!--android:scaleType="fitCenter"-->
+    <!--android:src="@drawable/start_wifi" />-->
+
 </RelativeLayout>
 
 

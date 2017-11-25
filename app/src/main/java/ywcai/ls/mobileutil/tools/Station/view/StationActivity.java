@@ -16,20 +16,23 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.concurrent.TimeUnit;
+
 import rx.Observable;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import ywcai.ls.mobileutil.R;
+import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.GlobalEvent;
 import ywcai.ls.mobileutil.global.util.statics.SetTitle;
-import ywcai.ls.mobileutil.tools.Station.presenter.StationAction;
-import ywcai.ls.mobileutil.tools.Station.presenter.inf.StationActionInf;
+import ywcai.ls.mobileutil.tools.Station.presenter.MainStationAction;
+import ywcai.ls.mobileutil.tools.Station.presenter.inf.MainStationActionInf;
 
 @Route(path = "/tools/Station/view/StationActivity")
 public class StationActivity extends AppCompatActivity {
 
-    private StationActionInf action;
+    private MainStationActionInf mainStationActionInf;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,7 +41,7 @@ public class StationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_station);
         InitToolBar();
         InitView();
-        RegListener();
+        InitAction();
     }
 
     private void InitView() {
@@ -50,8 +53,17 @@ public class StationActivity extends AppCompatActivity {
         text3.setMovementMethod(ScrollingMovementMethod.getInstance());
     }
 
-    private void RegListener() {
-        action = new StationAction();
+    private void InitAction() {
+        mainStationActionInf = new MainStationAction();
+        Observable.just(mainStationActionInf)
+                .delay(1, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(new Action1<MainStationActionInf>() {
+                    @Override
+                    public void call(MainStationActionInf mainStationActionInf) {
+                        mainStationActionInf.startWork();
+                    }
+                });
     }
 
     @Override
@@ -62,7 +74,7 @@ public class StationActivity extends AppCompatActivity {
     private void InitToolBar() {
         Toolbar mToolbar = (Toolbar) findViewById(R.id.station_toolbar);
         mToolbar.setTitleMarginStart(0);
-        mToolbar.setTitle("基站信号");
+        mToolbar.setTitle(AppConfig.TITLE_STATION);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {

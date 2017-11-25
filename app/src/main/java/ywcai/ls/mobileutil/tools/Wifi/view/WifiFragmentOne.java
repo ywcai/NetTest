@@ -40,6 +40,8 @@ import java.util.concurrent.TimeUnit;
 import mehdi.sakout.fancybuttons.FancyButton;
 import rx.Observable;
 import rx.functions.Action1;
+import ywcai.ls.control.flex.FlexButtonLayout;
+import ywcai.ls.control.flex.OnFlexButtonClickListener;
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
@@ -54,7 +56,7 @@ public class WifiFragmentOne extends Fragment {
     private View view;
     private RadarChart mChart;
     private MainWifiActionInf mainWifiActionInf;
-    private FlexboxLayout chooseChannel2d4G, chooseChannel5G;
+    private FlexButtonLayout chooseChannel2d4G, chooseChannel5G;
 
     public void setGlobalAction(MainWifiActionInf _mainWifiActionInf) {
         this.mainWifiActionInf = _mainWifiActionInf;
@@ -99,10 +101,12 @@ public class WifiFragmentOne extends Fragment {
                 setLockBtnStatus((Boolean) event.obj);
                 break;
             case GlobalEventT.wifi_recovery_channel_select_2d4g:
-                recovery2d4GTags((List<Integer>) event.obj);
+
+                recovery2d4GTags((int[])event.obj);
                 break;
             case GlobalEventT.wifi_recovery_channel_select_5g:
-                recovery5GTags((List<Integer>) event.obj);
+
+                recovery5GTags((int[])event.obj);
                 break;
             case GlobalEventT.wifi_set_channel_btn_status:
                 refreshChannelTagVisible((Boolean) event.obj);
@@ -198,30 +202,43 @@ public class WifiFragmentOne extends Fragment {
     }
 
     private void create2d4GTags() {
-        chooseChannel2d4G = (FlexboxLayout) view.findViewById(R.id.channel_list_2d4g);
-        for (int i = 0; i < chooseChannel2d4G.getChildCount(); i++) {
-            chooseChannel2d4G.getChildAt(i).setOnClickListener(new TagListener(i));
+        chooseChannel2d4G = (FlexButtonLayout) view.findViewById(R.id.channel_list_2d4g);
+        List<String> tag2d4g = new ArrayList<>();
+        for (int i = 0; i < AppConfig.INTS_CHANNEL_2D4G.length; i++) {
+            tag2d4g.add("CH" + AppConfig.INTS_CHANNEL_2D4G[i]);
         }
+        chooseChannel2d4G.setDataAdapter(tag2d4g);
+        chooseChannel2d4G.setOnFlexButtonClickListener(new OnFlexButtonClickListener() {
+            @Override
+            public void clickItem(int i, boolean b) {
+                mainWifiActionInf.setChannelFilter(i,b);
+            }
+
+            @Override
+            public void clickAllBtn(int[] ints, boolean b) {
+                mainWifiActionInf.setAllTagSelectOrCancal(ints);
+            }
+        });
     }
 
     private void create5GTags() {
-        chooseChannel5G = (FlexboxLayout) view.findViewById(R.id.channel_list_5g);
-        for (int i = 0; i < chooseChannel5G.getChildCount(); i++) {
-            chooseChannel5G.getChildAt(i).setOnClickListener(new TagListener(i));
+        chooseChannel5G = (FlexButtonLayout) view.findViewById(R.id.channel_list_5g);
+        List<String> tag5g = new ArrayList<>();
+        for (int i = 0; i < AppConfig.INTS_CHANNEL_5G.length; i++) {
+            tag5g.add("CH" + AppConfig.INTS_CHANNEL_5G[i]);
         }
-    }
+        chooseChannel5G.setDataAdapter(tag5g);
+        chooseChannel5G.setOnFlexButtonClickListener(new OnFlexButtonClickListener() {
+            @Override
+            public void clickItem(int i, boolean b) {
+                mainWifiActionInf.setChannelFilter(i,b);
+            }
 
-    class TagListener implements View.OnClickListener {
-        private int index;
-
-        public TagListener(int _index) {
-            index = _index;
-        }
-
-        @Override
-        public void onClick(View v) {
-            mainWifiActionInf.setChannelFilter(index);
-        }
+            @Override
+            public void clickAllBtn(int[] ints, boolean b) {
+                mainWifiActionInf.setAllTagSelectOrCancal(ints);
+            }
+        });
     }
 
     private void updateChart(final WifiDrawDetail wifiDrawDetail) {
@@ -307,72 +324,18 @@ public class WifiFragmentOne extends Fragment {
         }
     }
 
-    private void recovery2d4GTags(List<Integer> obj) {
-//        refreshChannelTagVisible(true);
-        for (int i = 0; i < chooseChannel2d4G.getChildCount(); i++) {
-            if (obj.contains(i + 1)) {
-                set2d4gTagStatus(i, true);
-            } else {
-                set2d4gTagStatus(i, false);
-            }
-        }
-        if (obj.size() >= chooseChannel2d4G.getChildCount() - 1) {
-            set2d4gTagStatus(chooseChannel2d4G.getChildCount() - 1, true);
-            return;
-        }
-        if (obj.size() <= 0) {
-            set2d4gTagStatus(chooseChannel2d4G.getChildCount() - 1, false);
-            return;
-        }
+    //
+    private void recovery2d4GTags(int[] obj) {
+        chooseChannel2d4G.setSelectIndex(obj);
     }
 
-    private void recovery5GTags(List<Integer> obj) {
-//        refreshChannelTagVisible(false);
-        for (int i = 0; i < chooseChannel5G.getChildCount(); i++) {
-            if (obj.contains(i * 4 + 149)) {
-                set5gTagStatus(i, true);
-            } else {
-                set5gTagStatus(i, false);
-            }
-        }
-        if (obj.size() >= chooseChannel5G.getChildCount() - 1) {
-            set5gTagStatus(chooseChannel5G.getChildCount() - 1, true);
-            return;
-        }
-        if (obj.size() <= 0) {
-            set5gTagStatus(chooseChannel5G.getChildCount() - 1, false);
-            return;
-        }
-    }
-
-    private void set2d4gTagStatus(int index, boolean isSelect) {
-        FancyButton tag = (FancyButton) chooseChannel2d4G.getChildAt(index);
-        tag.setGhost(!isSelect);
-        if (index >= chooseChannel2d4G.getChildCount() - 1) {
-            if (isSelect) {
-                tag.setText("取消");
-            } else {
-                tag.setText("全选");
-            }
-
-        }
-    }
-
-    private void set5gTagStatus(int index, boolean isSelect) {
-        FancyButton tag = (FancyButton) chooseChannel5G.getChildAt(index);
-        tag.setGhost(!isSelect);
-        if (index >= chooseChannel5G.getChildCount() - 1) {
-            if (isSelect) {
-                tag.setText("取消");
-            } else {
-                tag.setText("全选");
-            }
-        }
+    private void recovery5GTags(int[] obj) {
+        chooseChannel5G.setSelectIndex(obj);
     }
 
     private void refreshChannelTagVisible(Boolean is2d4G) {
-        final FlexboxLayout chooseChannel2d4G = (FlexboxLayout) view.findViewById(R.id.channel_list_2d4g);
-        final FlexboxLayout chooseChannel5G = (FlexboxLayout) view.findViewById(R.id.channel_list_5g);
+        chooseChannel2d4G = (FlexButtonLayout) view.findViewById(R.id.channel_list_2d4g);
+        chooseChannel5G = (FlexButtonLayout) view.findViewById(R.id.channel_list_5g);
         if (is2d4G) {
             chooseChannel2d4G.setVisibility(View.VISIBLE);
             chooseChannel5G.setVisibility(View.INVISIBLE);
@@ -396,28 +359,25 @@ public class WifiFragmentOne extends Fragment {
 
     public void setChannelStatus(int[] sum) {
         for (int i = 0; i < chooseChannel2d4G.getChildCount() - 1; i++) {
-            FancyButton fButton = ((FancyButton) chooseChannel2d4G.getChildAt(i));
             if (sum[AppConfig.INTS_CHANNEL_2D4G[i]] == 0) {
-                setFancyBtnNull(fButton);
+                chooseChannel2d4G.setBtnSecondaryBgColor(i, ContextCompat.getColor(this.getActivity(),
+                        R.color.LDarkLight));
             } else {
-                setFancyBtnExist(fButton);
+                //恢复背景色
+                chooseChannel2d4G.setBtnSecondaryBgColor(i, ContextCompat.getColor(this.getActivity()
+                        , R.color.LOrange));
             }
         }
         for (int i = 0; i < chooseChannel5G.getChildCount() - 1; i++) {
-            FancyButton fButton = ((FancyButton) chooseChannel5G.getChildAt(i));
             if (sum[AppConfig.INTS_CHANNEL_5G[i]] == 0) {
-                setFancyBtnNull(fButton);
+                chooseChannel5G.setBtnSecondaryBgColor(i, ContextCompat.getColor(this.getActivity(),
+                        R.color.LDarkLight));
             } else {
-                setFancyBtnExist(fButton);
+                //恢复背景色
+                chooseChannel5G.setBtnSecondaryBgColor(i, ContextCompat.getColor(this.getActivity()
+                        , R.color.LOrange));
             }
         }
-    }
-    private void setFancyBtnNull(FancyButton fButton) {
-        fButton.setBorderColor(ContextCompat.getColor(this.getActivity(),R.color.chartLineColor4));
-    }
-
-    private void setFancyBtnExist(FancyButton fButton) {
-        fButton.setBorderColor(ContextCompat.getColor(this.getActivity(),R.color.card_background));
     }
 
 

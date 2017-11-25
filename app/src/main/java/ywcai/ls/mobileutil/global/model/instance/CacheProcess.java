@@ -21,6 +21,7 @@ import ywcai.ls.mobileutil.identity.model.User;
 import ywcai.ls.mobileutil.results.model.ResultState;
 import ywcai.ls.mobileutil.results.model.TaskTotal;
 import ywcai.ls.mobileutil.tools.Ping.model.PingState;
+import ywcai.ls.mobileutil.tools.Station.model.StationState;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiEntry;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiState;
 
@@ -29,12 +30,15 @@ public class CacheProcess {
     private static Object lock = new Object();
     private static CacheProcess cacheProcess = null;
     private final String RESULT_STATE = "RESULT_STATE";
-    private final String WIFI_STATE = "WIFI_STATE";
-    private final String USER = "USER";
     private final String PING_STATE = "PING_STATE";
+    private final String WIFI_STATE = "WIFI_STATE";
+    private final String STATION_STATE = "STATION_STATE";
+    private final String USER = "USER";
     private final String LOG_INDEX = "LOG_INDEX";
     private final String TASK_TOTAL = "TASK_TOTAL";
     private final String WIFI_TEMP_DATA = "WIFI_TEMP_DATA";
+
+
     File file = MainApplication.getInstance().getFilesDir();
 
     private CacheProcess() {
@@ -353,9 +357,38 @@ public class CacheProcess {
             }
         }
         setCache(RESULT_STATE, cache);
-
     }
 
+    public StationState getStationState() {
+        String cache = getCache(STATION_STATE);
+        if (cache.equals("null")) {
+            return new StationState();
+        }
+        Gson gson = new Gson();
+        StationState stationState = null;
+        try {
+            stationState = gson.fromJson(cache, StationState.class);
+        } catch (Exception e) {
+
+        }
+        if (stationState == null) {
+            return new StationState();
+        }
+        return stationState;
+    }
+    public void setStationState(StationState stationState) {
+        String cache = "null";
+        if (stationState == null) {
+            setCache(STATION_STATE, cache);
+        } else {
+            Gson gson = new Gson();
+            try {
+                cache = gson.toJson(stationState);
+            } catch (Exception e) {
+            }
+        }
+        setCache(STATION_STATE, cache);
+    }
 
 //    public void setCacheWifiList(List<WifiEntry> list) {
 //        String cacheWifiList = "null";

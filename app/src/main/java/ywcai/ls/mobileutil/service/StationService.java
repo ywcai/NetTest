@@ -11,19 +11,17 @@ import android.support.v7.app.NotificationCompat;
 
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
-import ywcai.ls.mobileutil.global.util.statics.LsLog;
 import ywcai.ls.mobileutil.tools.Station.presenter.StationProcess;
-import ywcai.ls.mobileutil.tools.Station.presenter.inf.StationProcessInf;
 
 /**
  * Created by zmy_11 on 2017/10/16.
  */
 
 public class StationService extends Service {
-    static final String TAG = "STATION";
-    static final int PID = 7296;
+    static final String TAG = AppConfig.TITLE_STATION;
+    static final int PID = AppConfig.INT_NOTIFICATION_PID_STATION;
     MyBinder binder = new MyBinder();
-    public StationProcessInf stationProcessInf;
+    public StationProcess stationProcess;
 
     @Nullable
     @Override
@@ -35,24 +33,19 @@ public class StationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        createInstall();
-        notifyBuild();
+        InstallProcess();
     }
 
-    private void createInstall() {
-        stationProcessInf = new StationProcess();
-        //判断版本，如果高于api22,则可检测双卡，否则检测单卡。
-
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP_MR1)
-        {
-            stationProcessInf.addDoubleSimCardListener();
+    private void InstallProcess() {
+        if (stationProcess != null) {
+            //直接冲内存恢复数据渲染UI
+            stationProcess.recoveryAllData();
+            return;
         }
-        else {
-            stationProcessInf.addOnlySimCardListener();
-        }
+        stationProcess = new StationProcess();//构造函数中去初始化数据。??
     }
 
-    private void notifyBuild() {
+    public void setForegroundTask() {
         NotificationCompat.Builder tipBuilder = new NotificationCompat.Builder(this);
         LsPendingIntent lsPendingIntent = new LsPendingIntent();
         tipBuilder
