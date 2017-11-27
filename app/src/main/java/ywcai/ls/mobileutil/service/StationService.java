@@ -35,7 +35,7 @@ public class StationService extends Service {
     private void InstallProcess() {
         if (stationProcess != null) {
             //直接冲内存恢复数据渲染UI
-            stationProcess.recoveryAllData();
+//            stationProcess.recoveryAllData();
             return;
         }
         stationProcess = new StationProcess();//构造函数中去初始化数据。??

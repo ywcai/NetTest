@@ -8,12 +8,10 @@ import com.github.mikephil.charting.charts.LineChart;
 
 import java.util.HashMap;
 
-
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.global.model.instance.MainApplication;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
-import ywcai.ls.mobileutil.tools.Station.model.DoubleCardStationListener;
 import ywcai.ls.mobileutil.tools.Station.model.SingleCardStationListener;
 import ywcai.ls.mobileutil.tools.Station.model.StationEntry;
 import ywcai.ls.mobileutil.tools.Station.model.StationState;
@@ -24,7 +22,8 @@ import ywcai.ls.mobileutil.tools.Station.presenter.inf.StationChangeListenerInf;
 public class StationProcess implements StationChangeListenerInf {
     private Context context = MainApplication.getInstance().getApplicationContext();
     private StationState stationState;
-    private StationEntry stationEntry;
+    private StationEntry currentEntry;
+    private CacheProcess cacheProcess = CacheProcess.getInstance();
     //场强和小区变化，需要分别注册实体监测，不然会吊死
     StationListenerFactoryInf stationListenerFactoryInf1, stationListenerFactoryInf2;
     NormalMode normalMode;
@@ -35,18 +34,19 @@ public class StationProcess implements StationChangeListenerInf {
 
     public StationProcess() {
         //从缓存初始化状态;
-        stationState = CacheProcess.getInstance().getStationState();
-        stationEntry = new StationEntry();
+        currentEntry = new StationEntry();
+        stationState = cacheProcess.getStationState();
         checkNetType();
-        normalMode = new NormalMode(stationEntry);
-        detailMode = new DetailMode();
-        recoveryAllData();//从station恢复状态
+        normalMode = new NormalMode(stationState, currentEntry);
+//        detailMode = new DetailMode();
+        recoveryTopBtn();
+        normalMode.recoveryChart();
     }
 
-    //如果service还在后台，则仅恢复UI状态.
-    public void recoveryAllData() {
-//        stationBaseInfo = stationListenerFactoryInf.getBaseInfo();
+    private void recoveryTopBtn() {
+        sendMsgSwitchTopBtn();
     }
+
 
     //开始监听需要的基站数据,如果是新建，才启动，否则仅调用 recoveryAllData();
     public void startProcess() {
@@ -74,12 +74,12 @@ public class StationProcess implements StationChangeListenerInf {
 
     //在外面去用.
     private void checkNetType() {
-        stationEntry.netType = telephonyManager.getNetworkType();
-        stationEntry.setNetTypeName();
-        stationEntry.imei = telephonyManager.getDeviceId();
-        stationEntry.cardNumber = telephonyManager.getSimSerialNumber();
+        currentEntry.netType = telephonyManager.getNetworkType();
+        currentEntry.setNetTypeName();
+        currentEntry.imei = telephonyManager.getDeviceId();
+        currentEntry.cardNumber = telephonyManager.getSimSerialNumber();
         //在TOP顶部显示网络制式
-        sendMsgTopTitle(stationEntry.netTypeCn);
+        sendMsgTopTitle(currentEntry.netTypeCn);
     }
 
 
@@ -90,11 +90,6 @@ public class StationProcess implements StationChangeListenerInf {
         detailMode.refreshInfo(cells, signals);
     }
 
-    @Override
-    public void resetCellListener() {
-//        telephonyManager.listen((PhoneStateListener) stationListenerFactoryInf, PhoneStateListener.LISTEN_CELL_LOCATION);
-    }
-
 
     public void addTask() {
     }
@@ -103,60 +98,45 @@ public class StationProcess implements StationChangeListenerInf {
     }
 
     public void popOperatorMenu(boolean isShow) {
+        sendMsgPopMenu(isShow);
     }
 
+
     public void saveLogLocal() {
+        normalMode.saveLocal();
+        sendMsgPopMenu(false);
     }
 
     public void saveLogRemote() {
+        normalMode.saveRemote();
+        sendMsgPopMenu(false);
     }
 
     public void clearTask() {
+        normalMode.clearLog();
+        sendMsgPopMenu(false);
     }
 
     public void saveBitmap(LineChart lineChart) {
+
+    }
+
+    public void setFlexButton(int pos) {
+        stationState.isShowFormat = pos == 0 ? true : false;
+        cacheProcess.setStationState(stationState);
+        sendMsgSwitchTopBtn();
     }
 
 
-//    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
-//    private  void getSimCard()
-//    {
-//        String[] strSimCard=new String[2];
-//        SubscriptionManager mSubscriptionManager = SubscriptionManager.from(context);
-//        String tip="";
-//        tip=mSubscriptionManager.getActiveSubscriptionInfoCount()+"|"+mSubscriptionManager.getActiveSubscriptionInfoCountMax()+
-//                "|"+mSubscriptionManager.getActiveSubscriptionInfoList().size();
-//        MsgHelper.sendEvent(GlobalEventT.station_set_entry_change,tip, null);
-//    }
-//    private String getSimCard1()
-//    {
-//        return "";
-//    }
-//    private String getSimCard2()
-//    {
-//        return "";
-//    }
-//
-//
-//
-//    public void addDoubleSimCardListener() {
-//
-//    }
-//
-//
-//    public void addOnlySimCardListener() {
-//        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-//        SingleCardStationListener stationListener=new SingleCardStationListener();
-//        try {
-//            telephonyManager.listen(stationListener, PhoneStateListener.LISTEN_CELL_LOCATION);
-//            telephonyManager.listen(stationListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
-//        }
-//        catch (Exception e)
-//        {
-//        }
-//    }
-
     private void sendMsgTopTitle(String netTypeName) {
         MsgHelper.sendEvent(GlobalEventT.station_set_toolbar_center_text, netTypeName, null);
+    }
+
+    private void sendMsgPopMenu(boolean isShow) {
+        MsgHelper.sendEvent(GlobalEventT.station_pop_dialog, "", isShow);
+    }
+
+    private void sendMsgSwitchTopBtn() {
+        MsgHelper.sendEvent(GlobalEventT.station_switch_top_btn, "", stationState.isShowFormat);
     }
 }

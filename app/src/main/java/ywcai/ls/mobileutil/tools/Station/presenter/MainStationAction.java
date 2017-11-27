@@ -7,7 +7,6 @@ import com.github.mikephil.charting.charts.LineChart;
 
 import rx.functions.Action1;
 import ywcai.ls.mobileutil.global.util.statics.InStallService;
-import ywcai.ls.mobileutil.global.util.statics.LsLog;
 import ywcai.ls.mobileutil.service.LsConnection;
 import ywcai.ls.mobileutil.service.StationService;
 import ywcai.ls.mobileutil.tools.Station.presenter.inf.MainStationActionInf;
@@ -37,9 +36,7 @@ public class MainStationAction implements MainStationActionInf {
     public void startWork() {
         InStallService.waitService(stationService);
         if (stationService != null) {
-
             stationService.stationProcess.startProcess();
-
         }
 
     }
@@ -83,6 +80,13 @@ public class MainStationAction implements MainStationActionInf {
     public void clearTask() {
         if (stationService != null) {
             stationService.stationProcess.clearTask();
+        }
+    }
+
+    @Override
+    public void selectFlexButton(int pos) {
+        if (stationService != null) {
+            stationService.stationProcess.setFlexButton(pos);
         }
     }
 

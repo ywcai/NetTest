@@ -21,6 +21,7 @@ import ywcai.ls.mobileutil.identity.model.User;
 import ywcai.ls.mobileutil.results.model.ResultState;
 import ywcai.ls.mobileutil.results.model.TaskTotal;
 import ywcai.ls.mobileutil.tools.Ping.model.PingState;
+import ywcai.ls.mobileutil.tools.Station.model.StationEntry;
 import ywcai.ls.mobileutil.tools.Station.model.StationState;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiEntry;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiState;
@@ -33,13 +34,15 @@ public class CacheProcess {
     private final String PING_STATE = "PING_STATE";
     private final String WIFI_STATE = "WIFI_STATE";
     private final String STATION_STATE = "STATION_STATE";
+    //    private final String STATION_RECORD = "STATION_RECORD";
     private final String USER = "USER";
     private final String LOG_INDEX = "LOG_INDEX";
     private final String TASK_TOTAL = "TASK_TOTAL";
-    private final String WIFI_TEMP_DATA = "WIFI_TEMP_DATA";
+//    private final String WIFI_TEMP_DATA = "WIFI_TEMP_DATA";
 
 
     File file = MainApplication.getInstance().getFilesDir();
+
 
     private CacheProcess() {
     }
@@ -211,7 +214,7 @@ public class CacheProcess {
         if (temp == null) {
             temp = new ArrayList<LogIndex>();
         }
-        temp.add(0,logIndex);
+        temp.add(0, logIndex);
         Gson gson = new Gson();
         String cache = gson.toJson(temp);
         setCache(LOG_INDEX, cache);
@@ -376,6 +379,7 @@ public class CacheProcess {
         }
         return stationState;
     }
+
     public void setStationState(StationState stationState) {
         String cache = "null";
         if (stationState == null) {
@@ -390,37 +394,41 @@ public class CacheProcess {
         setCache(STATION_STATE, cache);
     }
 
-//    public void setCacheWifiList(List<WifiEntry> list) {
-//        String cacheWifiList = "null";
-//        if (list == null) {
-//            setCache(WIFI_TEMP_DATA, cacheWifiList);
-//        } else {
-//            Gson gson = new Gson();
-//            try {
-//                cacheWifiList = gson.toJson(list, new TypeToken<List<WifiEntry>>() {
-//                }.getType());
-//            } catch (Exception e) {
-//
-//            }
-//            setCache(WIFI_TEMP_DATA, cacheWifiList);
-//        }
-//    }
+    public List<StationEntry> getStationRecord(String logName) {
+        String cache = getCache(logName);
+        if (cache.equals("null")) {
+            return new ArrayList<>();
+        }
+        Gson gson = new Gson();
+        List<StationEntry> stationStateList = null;
+        try {
+            stationStateList = gson.fromJson(cache, new TypeToken<List<StationEntry>>() {
+            }.getType());
+        } catch (Exception e) {
 
-//    public List<WifiEntry> getCacheWifiList() {
-//        String strLogIndex = getCache(WIFI_TEMP_DATA);
-//        List<WifiEntry> dataList = null;
-//        if (!strLogIndex.equals("null")) {
-//            Gson gson = new Gson();
-//            try {
-//                dataList = gson.fromJson(strLogIndex, new TypeToken<List<WifiEntry>>() {
-//                }.getType());
-//            } catch (Exception e) {
-//
-//            }
-//        } else {
-//            dataList = new ArrayList<WifiEntry>();
-//        }
-//        return dataList;
-//    }
+        }
+        if (stationStateList == null) {
+            return new ArrayList<>();
+        }
+        return stationStateList;
+    }
+
+    public void setStationRecord(String logName, StationEntry stationEntry) {
+        String cache = "null";
+        if (stationEntry == null) {
+            deleteCache(logName);
+            return;
+        }
+        List<StationEntry> list = getStationRecord(logName);
+        list.add(0, stationEntry);
+        Gson gson = new Gson();
+        try {
+            cache = gson.toJson(list, new TypeToken<List<StationEntry>>() {
+            }.getType());
+        } catch (Exception e) {
+
+        }
+        setCache(logName, cache);
+    }
 }
 

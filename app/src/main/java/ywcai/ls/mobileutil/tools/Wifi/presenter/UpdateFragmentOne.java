@@ -78,7 +78,6 @@ public class UpdateFragmentOne implements UpdateFragmentOneInf {
                     @Override
                     public Boolean call(WifiEntry wifiEntry) {
                         if (wifiState.choose2d4G) {
-                            LsLog.saveLog(wifiEntry.channel+"");
                             return wifiState.select2d4G[wifiEntry.channel - 1] == 1;
                         } else {
                             return wifiState.select5G[(wifiEntry.channel - 149) / 4] == 1;

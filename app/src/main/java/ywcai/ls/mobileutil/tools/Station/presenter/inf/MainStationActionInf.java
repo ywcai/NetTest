@@ -34,6 +34,8 @@ public interface MainStationActionInf {
 
     void clearTask();
 
+    void selectFlexButton(int pos);
+
     void saveBitmap(LineChart lineChart);
 
     void setToDtMode(boolean isDtMode);//进入路测模式？。预留

@@ -12,5 +12,4 @@ import ywcai.ls.mobileutil.tools.Station.model.StationEntry;
 
 public interface StationChangeListenerInf {
     void stationDataChange( HashMap<String, Integer> cellList, HashMap<String, Integer> signalList);
-    void resetCellListener();
 }

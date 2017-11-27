@@ -3,20 +3,26 @@ package ywcai.ls.mobileutil.tools.Station.view;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.method.ScrollingMovementMethod;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Description;
+
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.DataSet;
+
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -28,21 +34,27 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import me.drakeet.materialdialog.MaterialDialog;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
-import rx.functions.Func1;
+
 import rx.schedulers.Schedulers;
 import ywcai.ls.control.flex.FlexButtonLayout;
+import ywcai.ls.control.flex.OnFlexButtonClickListener;
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.GlobalEvent;
+import ywcai.ls.mobileutil.global.util.statics.LsSnack;
 import ywcai.ls.mobileutil.global.util.statics.SetTitle;
 import ywcai.ls.mobileutil.tools.Station.model.StationEntry;
 import ywcai.ls.mobileutil.tools.Station.presenter.MainStationAction;
@@ -52,7 +64,8 @@ import ywcai.ls.mobileutil.tools.Station.presenter.inf.MainStationActionInf;
 public class StationActivity extends AppCompatActivity {
     private LineChart stationInfoRecord;
     private MainStationActionInf mainStationActionInf;
-    private int baseMaxX = 100;
+    private MaterialDialog popMenu;
+    private int baseMaxX = 50;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,30 +79,83 @@ public class StationActivity extends AppCompatActivity {
     }
 
     private void InitView() {
+
+        popMenu = new MaterialDialog(this);
+        View view = LayoutInflater.from(this).inflate(R.layout.pop_dialog_wifi, null);
+        popMenu.setContentView(view);
+        popMenu.setCanceledOnTouchOutside(false);
+        Button save_local = (Button) view.findViewById(R.id.wifi_save_local);
+        Button save_remote = (Button) view.findViewById(R.id.wifi_save_remote);
+        Button clear = (Button) view.findViewById(R.id.wifi_clear);
+        Button cancal = (Button) view.findViewById(R.id.wifi_cancal);
+        clear.setText("重置数据");
+        save_local.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainStationActionInf.saveLogLocal();
+            }
+        });
+        save_remote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainStationActionInf.saveLogRemote();
+            }
+        });
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainStationActionInf.clearTask();
+            }
+        });
+        cancal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainStationActionInf.popOperatorMenu(false);
+            }
+        });
+
         FlexButtonLayout flexBtn = (FlexButtonLayout) findViewById(R.id.station_top_btn);
         List list = new ArrayList();
         list.add("摘要");
         list.add("详细");
         flexBtn.setDataAdapter(list);
         flexBtn.setCurrentIndex(0);
+        flexBtn.setOnFlexButtonClickListener(new OnFlexButtonClickListener() {
+            @Override
+            public void clickItem(int i, boolean b) {
+                mainStationActionInf.selectFlexButton(i);
+            }
+
+            @Override
+            public void clickAllBtn(int[] ints, boolean b) {
+
+            }
+        });
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.station_btn_show_menu);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainStationActionInf.popOperatorMenu(true);
+            }
+        });
     }
 
     private void createLineChart() {
         stationInfoRecord = (LineChart) findViewById(R.id.station_task_record);
+        stationInfoRecord.setTouchEnabled(false);
         stationInfoRecord.getAxisRight().setEnabled(false);
         stationInfoRecord.setDrawGridBackground(false);
-        stationInfoRecord.setNoDataText("");
-        stationInfoRecord.setTouchEnabled(true);
-        stationInfoRecord.setDragEnabled(true);
-        stationInfoRecord.setScaleEnabled(true);
+        stationInfoRecord.setTouchEnabled(false);
+        stationInfoRecord.setDragEnabled(false);
+        stationInfoRecord.setScaleEnabled(false);
         stationInfoRecord.setDoubleTapToZoomEnabled(false);
         stationInfoRecord.setHighlightPerTapEnabled(false);
         stationInfoRecord.setHighlightPerDragEnabled(false);
         YAxis leftAxis = stationInfoRecord.getAxisLeft();
         leftAxis.setAxisMaximum(-40);
         leftAxis.setAxisMinimum(-160);
-        leftAxis.setTextSize(10);
-        leftAxis.setTextColor(Color.WHITE);
+        leftAxis.setTextSize(6);
+        leftAxis.setTextColor(ContextCompat.getColor(this, R.color.LBlue));
         leftAxis.setDrawAxisLine(true);
         leftAxis.enableGridDashedLine(10, 20f, 0);
         leftAxis.setDrawGridLines(true);
@@ -117,26 +183,29 @@ public class StationActivity extends AppCompatActivity {
         stationInfoRecord.setDescription(null);
         stationInfoRecord.getLegend().setEnabled(false);
         stationInfoRecord.setAutoScaleMinMaxEnabled(true);
-        stationInfoRecord.setNoDataText("点击右下角按钮可添加数据记录任务");
+        stationInfoRecord.setNoDataText("检测信号变化后，系统会自动重绘折线");
         refreshChartData(null);
 
     }
 
     private void refreshChartData(List<Entry> entryList) {
-        if (stationInfoRecord.getLineData() != null) {
-            stationInfoRecord.setData(null);
-        }
+
+        stationInfoRecord.setData(null);
         if (entryList == null) {
-            entryList = new ArrayList<>();
-            entryList.add(new Entry(0, -40));
+            stationInfoRecord.invalidate();
+            return;
+        }
+        if (entryList.size() <= 0) {
+            stationInfoRecord.invalidate();
+            return;
         }
         List<ILineDataSet> listDataSets = new ArrayList<>();
         LineDataSet dataSet = new LineDataSet(entryList, "");//图列名称
         dataSet.setDrawCircles(false);
         dataSet.setDrawValues(false);
         dataSet.setHighlightEnabled(false);
-        dataSet.setColor(ContextCompat.getColor(this, AppConfig.colors[0]));
-        dataSet.setLineWidth(1f);
+        dataSet.setColor(ContextCompat.getColor(this, R.color.LOrange));
+        dataSet.setLineWidth(2f);
         dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         listDataSets.add(dataSet);
         LineData lineData = new LineData(listDataSets);
@@ -210,7 +279,7 @@ public class StationActivity extends AppCompatActivity {
 //                showCellLog((HashMap<String, Integer>) event.obj);
                 break;
             case GlobalEventT.station_refresh_signal_log_info:
-//                showSignalLog((HashMap<String, Integer>) event.obj);
+                showSignalLog((HashMap<String, Integer>) event.obj);
                 break;
             case GlobalEventT.station_set_toolbar_center_text:
                 showTopTip(event.tip);
@@ -218,12 +287,52 @@ public class StationActivity extends AppCompatActivity {
             case GlobalEventT.station_refresh_chart_entry_record:
                 refreshChartData((List<Entry>) event.obj);
                 break;
+            case GlobalEventT.station_pop_dialog:
+                popMenu((boolean) event.obj);
+                break;
+            case GlobalEventT.station_bottom_snack_tip:
+                showSnackTip(event.tip, (boolean) event.obj);
+                break;
+            case GlobalEventT.station_switch_top_btn:
+                switchShowContent((boolean) event.obj);
+                break;
+        }
+    }
+
+
+    private void popMenu(boolean obj) {
+        if (obj) {
+            popMenu.show();
+        } else {
+            popMenu.dismiss();
         }
     }
 
     private void showTopTip(String tip) {
         TextView topTip = (TextView) findViewById(R.id.station_toolbar_tip);
         topTip.setText(tip);
+    }
+
+    private void switchShowContent(boolean isShowFormat) {
+        CardView card1 = (CardView) findViewById(R.id.station_main_entry_container);
+        CardView card2 = (CardView) findViewById(R.id.station_detail_card);
+        if (isShowFormat) {
+            card1.setVisibility(View.VISIBLE);
+            card2.setVisibility(View.INVISIBLE);
+        } else {
+            card1.setVisibility(View.INVISIBLE);
+            card2.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    private void showSnackTip(String tip, boolean isSuccess) {
+        RelativeLayout snack_container = (RelativeLayout) findViewById(R.id.station_snack_container);
+        if (isSuccess) {
+            LsSnack.show(this, snack_container, tip);
+        } else {
+            LsSnack.show(this, snack_container, tip, R.color.LRed);
+        }
     }
 
     private void refreshStationInfo(StationEntry stationEntry) {
@@ -239,40 +348,21 @@ public class StationActivity extends AppCompatActivity {
         db.setText(stationEntry.rsp + " dbm");
     }
 
+    private void showSignalLog(HashMap<String, Integer> obj) {
 
 
-
-        //在Model里处理数据;
-//        Observable.from(list)
-//                .map(new Func1<StationEntry, Entry>() {
-//                    @Override
-//                    public Entry call(StationEntry stationEntry) {
-//                        if (stationEntry.rsp >= -1) {
-//                            return new Entry(list.indexOf(stationEntry), -160);
-//                        }
-//                        return new Entry(list.indexOf(stationEntry), stationEntry.rsp);
-//                    }
-//                })
-//                .toList()
-//                .subscribe(new Action1<List<Entry>>() {
-//                    @Override
-//                    public void call(List<Entry> entries) {
-//                        refreshChartData(entries);
-//                    }
-//                });
-
-//    private void showSignalLog(HashMap<String, Integer> obj) {
-//        String s = "";
-//        Iterator it = obj.entrySet().iterator();
-//        while (it.hasNext()) {
-//            Map.Entry entry = (Map.Entry) it.next();
-//            Object key = entry.getKey();
-//            Object val = entry.getValue();
-//            s += (String) key + ":" + (Integer) val + " ";
-//        }
-//        TextView text = (TextView) findViewById(R.id.station_text2);
-//        text.setText(s);
-//    }
+        TextView signalLog = (TextView) findViewById(R.id.station_detail_text);
+        signalLog.setMovementMethod(new ScrollingMovementMethod());
+        String s = "信号数据\n";
+        Iterator it = obj.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
+            Object key = entry.getKey();
+            Object val = entry.getValue();
+            s += key + " : [" + val + "]\n";
+        }
+        signalLog.setText(s);
+    }
 //
 //    private void showCellLog(HashMap<String, Integer> obj) {
 //        String s = "";

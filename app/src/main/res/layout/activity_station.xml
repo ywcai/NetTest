@@ -56,8 +56,8 @@
                 app:btnPaddingRight="20"
                 app:btnPaddingTop="10"
                 app:btnRadius="6"
-                app:btnTextSize="12"
                 app:btnTextColor="@android:color/white"
+                app:btnTextSize="12"
                 app:btnUnSelectTextColor="@android:color/white"
                 app:flexWrap="nowrap"
                 app:isSelectOnlyOne="true"></ywcai.ls.control.flex.FlexButtonLayout>
@@ -210,7 +210,7 @@
                     android:gravity="center_vertical"
                     android:text="-1"
                     android:textColor="@color/LOrange"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/station_main_entry_dbm"
@@ -231,14 +231,57 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/station_main_entry_container"
         android:layout_margin="4dp"
-        android:visibility="visible">
+        android:visibility="invisible"
+        android:id="@+id/cardView">
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/station_task_record"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="2dp"
             android:background="@android:color/transparent" />
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/station_detail_card"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:layout_alignTop="@+id/cardView"
+        android:layout_alignLeft="@+id/cardView"
+        android:layout_alignStart="@+id/cardView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp"
+            android:divider="@drawable/line_space_stroke"
+            android:orientation="vertical"
+            android:showDividers="middle">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="以下为系统内存中反射的信息，是否有你需要"
+                android:textColor="@color/LBlue"
+                android:textSize="10sp" />
+            <TextView
+                android:scrollbars="vertical"
+                android:id="@+id/station_detail_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:lineSpacingExtra="8dp"
+                android:maxLines="500"
+                android:padding="5dp"
+                android:text="Detail Info"
+                android:textColor="@color/colorWifiBg"
+                android:textSize="10sp" />
+        </LinearLayout>
     </android.support.v7.widget.CardView>
 
     <android.support.design.widget.FloatingActionButton
@@ -254,6 +297,12 @@
         app:backgroundTint="@android:color/holo_orange_light"
         app:elevation="5dp"
         app:fabSize="normal" />
+
+    <RelativeLayout
+        android:id="@+id/station_snack_container"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"></RelativeLayout>
 </RelativeLayout>
 
 

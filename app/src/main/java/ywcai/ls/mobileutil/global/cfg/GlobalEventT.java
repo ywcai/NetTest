@@ -64,7 +64,10 @@ public class GlobalEventT {
     public static final int station_set_cell_change1 = 90052;
     public static final int station_refresh_entry_info = 90053;
     public static final int station_set_toolbar_center_text = 90054;
-    public static final int station_refresh_cell_log_info=90055;
-    public static final int station_refresh_signal_log_info=90056;
-    public static final int station_refresh_chart_entry_record=90057;
+    public static final int station_refresh_cell_log_info = 90055;
+    public static final int station_refresh_signal_log_info = 90056;
+    public static final int station_refresh_chart_entry_record = 90057;
+    public static final int station_pop_dialog = 90058;
+    public static final int station_bottom_snack_tip = 90059;
+    public static final int station_switch_top_btn = 90060;
 }
