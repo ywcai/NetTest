@@ -4,13 +4,22 @@
       <w>addr</w>
       <w>bssid</w>
       <w>cancal</w>
+      <w>cdma</w>
       <w>chooseable</w>
+      <w>ehrpd</w>
+      <w>evdo</w>
+      <w>gprs</w>
+      <w>hsdpa</w>
+      <w>hspa</w>
+      <w>hsupa</w>
+      <w>imei</w>
       <w>ipaddr</w>
       <w>mbps</w>
       <w>mobileutil</w>
       <w>rscp</w>
       <w>rsrp</w>
       <w>ssid</w>
+      <w>umts</w>
       <w>wcdma</w>
       <w>ywcai</w>
     </words>

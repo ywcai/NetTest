@@ -4,7 +4,7 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.os.Build;
+
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
@@ -12,10 +12,6 @@ import android.support.v7.app.NotificationCompat;
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.tools.Station.presenter.StationProcess;
-
-/**
- * Created by zmy_11 on 2017/10/16.
- */
 
 public class StationService extends Service {
     static final String TAG = AppConfig.TITLE_STATION;

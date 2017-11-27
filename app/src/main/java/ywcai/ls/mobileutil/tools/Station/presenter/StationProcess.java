@@ -1,71 +1,100 @@
 package ywcai.ls.mobileutil.tools.Station.presenter;
 
 import android.content.Context;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 
 import com.github.mikephil.charting.charts.LineChart;
 
+import java.util.HashMap;
+
+
+import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.global.model.instance.MainApplication;
+import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 import ywcai.ls.mobileutil.tools.Station.model.DoubleCardStationListener;
 import ywcai.ls.mobileutil.tools.Station.model.SingleCardStationListener;
-import ywcai.ls.mobileutil.tools.Station.model.StationBaseInfo;
 import ywcai.ls.mobileutil.tools.Station.model.StationEntry;
 import ywcai.ls.mobileutil.tools.Station.model.StationState;
 import ywcai.ls.mobileutil.tools.Station.model.inf.StationListenerFactoryInf;
 import ywcai.ls.mobileutil.tools.Station.presenter.inf.StationChangeListenerInf;
-import ywcai.ls.mobileutil.tools.Wifi.model.WifiEntry;
 
-/**
- * Created by zmy_11 on 2017/10/30.
- */
 
 public class StationProcess implements StationChangeListenerInf {
     private Context context = MainApplication.getInstance().getApplicationContext();
     private StationState stationState;
     private StationEntry stationEntry;
-    StationBaseInfo stationBaseInfo;
-    StationListenerFactoryInf stationListenerFactoryInf;
+    //场强和小区变化，需要分别注册实体监测，不然会吊死
+    StationListenerFactoryInf stationListenerFactoryInf1, stationListenerFactoryInf2;
+    NormalMode normalMode;
+    DetailMode detailMode;
+    DtTask privateTask;
+    LogTask logTask;
+    private TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 
     public StationProcess() {
         //从缓存初始化状态;
         stationState = CacheProcess.getInstance().getStationState();
+        stationEntry = new StationEntry();
+        checkNetType();
+        normalMode = new NormalMode(stationEntry);
+        detailMode = new DetailMode();
         recoveryAllData();//从station恢复状态
     }
 
     //如果service还在后台，则仅恢复UI状态.
     public void recoveryAllData() {
-        stationBaseInfo = stationListenerFactoryInf.getBaseInfo();
+//        stationBaseInfo = stationListenerFactoryInf.getBaseInfo();
     }
+
     //开始监听需要的基站数据,如果是新建，才启动，否则仅调用 recoveryAllData();
     public void startProcess() {
         //检测系统版本，确认是否支持双卡
         //若低于N版本，检测是否有双卡。
         //根据检测的结果选择注册不同的添加监听器;这里要实现监听的接口并处理接口返回的数据
-
         if (isOnlyListenerSingleCard()) {
-            stationListenerFactoryInf = new SingleCardStationListener();
-
+            //这些需要在UI线程注册
+            stationListenerFactoryInf1 = new SingleCardStationListener();
+            stationListenerFactoryInf2 = new SingleCardStationListener();
+            telephonyManager.listen((PhoneStateListener) stationListenerFactoryInf1, PhoneStateListener.LISTEN_CELL_LOCATION);
+            telephonyManager.listen((PhoneStateListener) stationListenerFactoryInf2, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
         } else {
-            stationListenerFactoryInf = new DoubleCardStationListener();
+            //如果是LEVEL21以上，处理双卡系统。
         }
-        stationListenerFactoryInf.setChangeListener(this);
+        stationListenerFactoryInf1.setChangeListener(this);
+        stationListenerFactoryInf2.setChangeListener(this);
     }
 
     //检测系统版本，选择哪种监听模式
     private boolean isOnlyListenerSingleCard() {
-        return false;
+        return true;
+    }
+
+
+    //在外面去用.
+    private void checkNetType() {
+        stationEntry.netType = telephonyManager.getNetworkType();
+        stationEntry.setNetTypeName();
+        stationEntry.imei = telephonyManager.getDeviceId();
+        stationEntry.cardNumber = telephonyManager.getSimSerialNumber();
+        //在TOP顶部显示网络制式
+        sendMsgTopTitle(stationEntry.netTypeCn);
     }
 
 
     @Override
-    public void stationDataChange(StationEntry stationEntry) {
-        this.stationEntry = stationEntry;
-        CoreStationProcess(stationEntry);
+    public void stationDataChange(HashMap<String, Integer> cells, HashMap<String, Integer> signals) {
+        checkNetType();
+        normalMode.refreshInfo(cells, signals);
+        detailMode.refreshInfo(cells, signals);
     }
 
-    private void CoreStationProcess(StationEntry stationEntry) {
-        //需要怎么处理，在这里说了算.
+    @Override
+    public void resetCellListener() {
+//        telephonyManager.listen((PhoneStateListener) stationListenerFactoryInf, PhoneStateListener.LISTEN_CELL_LOCATION);
     }
+
 
     public void addTask() {
     }
@@ -127,5 +156,7 @@ public class StationProcess implements StationChangeListenerInf {
 //        }
 //    }
 
-
+    private void sendMsgTopTitle(String netTypeName) {
+        MsgHelper.sendEvent(GlobalEventT.station_set_toolbar_center_text, netTypeName, null);
+    }
 }

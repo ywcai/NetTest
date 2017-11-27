@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorMainBg">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/station_toolbar"
         android:layout_width="match_parent"
@@ -14,53 +15,245 @@
         android:paddingTop="@dimen/toolbar_top"
         app:popupTheme="@style/LsAppBarOverlay"
         app:titleTextAppearance="@style/ToolbarTitleSize"
-        app:titleTextColor="@android:color/white" />
-    <LinearLayout
+        app:titleTextColor="@android:color/white">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/station_toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="基站信号"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/station_toolbar_tip"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/station_top_btn"
+                android:layout_toRightOf="@+id/station_toolbar_title"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+            <ywcai.ls.control.flex.FlexButtonLayout
+                android:id="@+id/station_top_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                app:btnBgColor="@color/LBlue"
+                app:btnBorderColor="@android:color/white"
+                app:btnBorderSize="2"
+                app:btnPaddingBottom="10"
+                app:btnPaddingLeft="20"
+                app:btnPaddingRight="20"
+                app:btnPaddingTop="10"
+                app:btnRadius="6"
+                app:btnTextSize="12"
+                app:btnTextColor="@android:color/white"
+                app:btnUnSelectTextColor="@android:color/white"
+                app:flexWrap="nowrap"
+                app:isSelectOnlyOne="true"></ywcai.ls.control.flex.FlexButtonLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/station_main_device_base_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/station_toolbar"
+        android:layout_margin="4dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:id="@+id/station_main_base_left"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/line_space_stroke"
+                android:orientation="vertical"
+                android:showDividers="middle">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:text="IMEI"
+                    android:textColor="@color/LBlue"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:text="SIM卡号"
+                    android:textColor="@color/LBlue"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/station_main_base_right"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/station_main_base_left"
+                android:divider="@drawable/line_space_stroke"
+                android:orientation="vertical"
+                android:showDividers="middle">
+
+                <TextView
+                    android:id="@+id/station_main_base_imei"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:text="-1"
+                    android:textColor="@color/LOrange"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/station_main_base_card_num"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:text="-1"
+                    android:textColor="@color/LOrange"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/station_main_entry_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/station_main_device_base_container"
+        android:layout_margin="4dp">
+
+        <RelativeLayout
+            android:id="@+id/station_main_format_info_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:id="@+id/station_main_entry_left"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/line_space_stroke"
+                android:orientation="vertical"
+                android:showDividers="middle">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:text="区域码（LAC）"
+                    android:textColor="@color/LBlue"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:text="小区号（CID）"
+                    android:textColor="@color/LBlue"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:text="信号强度"
+                    android:textColor="@color/LBlue"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/station_main_entry_right"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/station_main_entry_left"
+                android:divider="@drawable/line_space_stroke"
+                android:orientation="vertical"
+                android:showDividers="middle">
+
+                <TextView
+                    android:id="@+id/station_main_entry_lac"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:text="-1"
+                    android:textColor="@color/LOrange"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/station_main_entry_cid"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:text="-1"
+                    android:textColor="@color/LOrange"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/station_main_entry_dbm"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:text="-1"
+                    android:textColor="@color/LOrange"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/station_toolbar"
-        android:layout_marginTop="13dp"
-        android:orientation="vertical"
-        android:padding="0dp">
+        android:layout_below="@+id/station_main_entry_container"
+        android:layout_margin="4dp"
+        android:visibility="visible">
 
-        <TextView
-            android:id="@+id/station_text"
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/station_task_record"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="xxxxx"
-            android:scrollbars="vertical"
-            android:maxLines="500"
-            android:textSize="12sp"
-           />
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:background="@android:color/transparent" />
+    </android.support.v7.widget.CardView>
 
-
-        <TextView
-            android:layout_marginTop="20dp"
-            android:id="@+id/station_text2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="xxxxx"
-            android:scrollbars="vertical"
-            android:maxLines="500"
-            android:textSize="12sp"
-            android:textColor="@android:color/holo_blue_light"
-            />
-
-        <TextView
-            android:layout_marginTop="20dp"
-            android:id="@+id/station_text3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="xxxxx"
-            android:scrollbars="vertical"
-            android:maxLines="500"
-            android:textSize="12sp"
-            android:textColor="@android:color/holo_red_light"
-            />
-        </LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/station_btn_show_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
+        android:src="@drawable/add_task"
+        android:visibility="visible"
+        app:backgroundTint="@android:color/holo_orange_light"
+        app:elevation="5dp"
+        app:fabSize="normal" />
 </RelativeLayout>
 
 

@@ -258,7 +258,6 @@ public class WifiFragmentTwo extends Fragment {
                         List data = CacheProcess.getInstance().getWifiTaskResult(wifiEntry.logFlag);
                         if (maxX < data.size()) {
                             wifiTaskChart.getXAxis().setAxisMaximum((maxX + baseMaxX));
-                            wifiTaskChart.setScaleX(1);
                         }
                         if (data.size() > 0) {
                             for (int i = 0; i < data.size(); i++) {

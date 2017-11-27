@@ -46,8 +46,8 @@ public class InStallService {
                 e.printStackTrace();
             }
             i++;
-            if (i >= 500) {
-                //避免service为空，如果一直没获取到就不启动任务。默认刷新10秒钟
+            if (i >= 50) {
+                //避免service为空，如果一直没获取到就不启动任务。默认刷新5秒钟
                 return;
             }
         }

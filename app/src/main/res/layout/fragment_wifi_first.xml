@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:padding="2dp"
-            android:visibility="invisible"
+            android:visibility="visible"
             app:btnBgColor="@color/LOrange"
             app:btnBorderColor="@color/LOrange"
             app:btnBorderSize="2"

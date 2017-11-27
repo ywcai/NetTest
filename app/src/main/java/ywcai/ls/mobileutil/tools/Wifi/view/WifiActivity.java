@@ -82,15 +82,16 @@ public class WifiActivity extends AppCompatActivity {
 
 
     private void InitMainAction() {
-        mainWifiActionInf = new MainWifiAction();
+        mainWifiActionInf = new MainWifiAction(this);
         Observable.just(mainWifiActionInf)
                 .delay(1, TimeUnit.SECONDS)//延迟一秒启动服务非常重要，否则有可能前台未启动Fragment收不到扫描完成的通知.
-                .subscribeOn(Schedulers.newThread()).subscribe(new Action1<MainWifiActionInf>() {
-            @Override
-            public void call(MainWifiActionInf mainWifiActionInf) {
-                mainWifiActionInf.startWifiService();
-            }
-        });
+                .observeOn(Schedulers.newThread()).
+                subscribe(new Action1<MainWifiActionInf>() {
+                    @Override
+                    public void call(MainWifiActionInf mainWifiActionInf) {
+                        mainWifiActionInf.startWifiService();
+                    }
+                });
     }
 
     @Override

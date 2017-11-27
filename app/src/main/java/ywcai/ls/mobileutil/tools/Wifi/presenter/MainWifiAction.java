@@ -22,9 +22,10 @@ import ywcai.ls.mobileutil.tools.Wifi.presenter.inf.MainWifiActionInf;
 public class MainWifiAction implements MainWifiActionInf {
     WifiService wifiService = null;
     LsConnection lsConnection;
-    Context context = MainApplication.getInstance().getApplicationContext();
+    Context context;
 
-    public MainWifiAction() {
+    public MainWifiAction(Context context) {
+        this.context=context;
         lsConnection = new LsConnection(new Action1() {
             @Override
             public void call(Object o) {
@@ -35,7 +36,7 @@ public class MainWifiAction implements MainWifiActionInf {
                 }
             }
         });
-        InStallService.bindService(context, StationService.class, lsConnection);
+        InStallService.bindService(context, WifiService.class, lsConnection);
     }
 
     @Override

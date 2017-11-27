@@ -10,5 +10,5 @@ import ywcai.ls.mobileutil.tools.Station.presenter.inf.StationChangeListenerInf;
 public interface StationListenerFactoryInf {
     void setChangeListener(StationChangeListenerInf stationChangeListenerInf);
 
-    StationBaseInfo getBaseInfo();
+//    StationBaseInfo getBaseInfo();
 }

@@ -22,11 +22,16 @@ public class DoubleCardStationListener implements StationListenerFactoryInf {
     private Context context = MainApplication.getInstance().getApplicationContext();
     private TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 
-    @Override
-    public StationBaseInfo getBaseInfo() {
-        //每次初始化或恢复服务时都重新获取；
-        return new StationBaseInfo();
+
+    public DoubleCardStationListener() {
+
     }
+//
+//    @Override
+//    public StationBaseInfo getBaseInfo() {
+//        //每次初始化或恢复服务时都重新获取；
+//        return new StationBaseInfo();
+//    }
 
     @Override
     public void setChangeListener(StationChangeListenerInf stationChangeListenerInf) {
