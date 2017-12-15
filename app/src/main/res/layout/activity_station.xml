@@ -119,8 +119,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
-                    android:text="-1"
-                    android:textColor="@color/LOrange"
+                    android:text="0"
+                    android:textColor="@color/colorWifiBg"
                     android:textSize="12sp" />
 
                 <TextView
@@ -128,8 +128,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
-                    android:text="-1"
-                    android:textColor="@color/LOrange"
+                    android:text="0"
+                    android:textColor="@color/colorWifiBg"
                     android:textSize="12sp" />
             </LinearLayout>
         </RelativeLayout>
@@ -199,8 +199,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
-                    android:text="-1"
-                    android:textColor="@color/LOrange"
+                    android:text="0"
+                    android:textColor="@color/colorWifiBg"
                     android:textSize="12sp" />
 
                 <TextView
@@ -208,8 +208,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
-                    android:text="-1"
-                    android:textColor="@color/LOrange"
+                    android:text="0"
+                    android:textColor="@color/colorWifiBg"
                     android:textSize="14sp" />
 
                 <TextView
@@ -217,8 +217,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
-                    android:text="-1"
-                    android:textColor="@color/LOrange"
+                    android:text="0"
+                    android:textColor="@color/colorWifiBg"
                     android:textSize="12sp" />
 
             </LinearLayout>
@@ -227,12 +227,12 @@
 
 
     <android.support.v7.widget.CardView
+        android:id="@+id/station_main_chart_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/station_main_entry_container"
         android:layout_margin="4dp"
-        android:visibility="invisible"
-        android:id="@+id/cardView">
+        android:visibility="invisible">
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/station_task_record"
@@ -245,15 +245,13 @@
             android:background="@android:color/transparent" />
     </android.support.v7.widget.CardView>
 
-
     <android.support.v7.widget.CardView
         android:id="@+id/station_detail_card"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
-        android:layout_alignTop="@+id/cardView"
-        android:layout_alignLeft="@+id/cardView"
-        android:layout_alignStart="@+id/cardView">
+        android:layout_below="@+id/station_main_entry_container"
+        android:layout_margin="4dp"
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -262,6 +260,7 @@
             android:divider="@drawable/line_space_stroke"
             android:orientation="vertical"
             android:showDividers="middle">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
@@ -269,18 +268,19 @@
                 android:maxLines="1"
                 android:text="以下为系统内存中反射的信息，是否有你需要"
                 android:textColor="@color/LBlue"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
+
             <TextView
-                android:scrollbars="vertical"
                 android:id="@+id/station_detail_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:lineSpacingExtra="8dp"
                 android:maxLines="500"
                 android:padding="5dp"
+                android:scrollbars="vertical"
                 android:text="Detail Info"
                 android:textColor="@color/colorWifiBg"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
@@ -301,7 +301,7 @@
     <RelativeLayout
         android:id="@+id/station_snack_container"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="30dp"
         android:layout_alignParentBottom="true"></RelativeLayout>
 </RelativeLayout>
 

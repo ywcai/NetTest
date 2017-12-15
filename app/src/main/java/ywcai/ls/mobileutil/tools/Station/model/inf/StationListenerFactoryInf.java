@@ -1,5 +1,7 @@
 package ywcai.ls.mobileutil.tools.Station.model.inf;
 
+import android.content.Context;
+
 import ywcai.ls.mobileutil.tools.Station.model.StationBaseInfo;
 import ywcai.ls.mobileutil.tools.Station.presenter.inf.StationChangeListenerInf;
 
@@ -10,5 +12,4 @@ import ywcai.ls.mobileutil.tools.Station.presenter.inf.StationChangeListenerInf;
 public interface StationListenerFactoryInf {
     void setChangeListener(StationChangeListenerInf stationChangeListenerInf);
 
-//    StationBaseInfo getBaseInfo();
 }

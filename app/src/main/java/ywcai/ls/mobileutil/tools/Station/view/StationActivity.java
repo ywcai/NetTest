@@ -1,6 +1,7 @@
 package ywcai.ls.mobileutil.tools.Station.view;
 
-import android.graphics.Color;
+
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -8,6 +9,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -66,6 +69,8 @@ public class StationActivity extends AppCompatActivity {
     private MainStationActionInf mainStationActionInf;
     private MaterialDialog popMenu;
     private int baseMaxX = 50;
+    private String cellLog = "", signalLog = "";
+    private FlexButtonLayout topBtn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -114,13 +119,12 @@ public class StationActivity extends AppCompatActivity {
             }
         });
 
-        FlexButtonLayout flexBtn = (FlexButtonLayout) findViewById(R.id.station_top_btn);
+        topBtn = (FlexButtonLayout) findViewById(R.id.station_top_btn);
         List list = new ArrayList();
+        list.add("图表");
         list.add("摘要");
-        list.add("详细");
-        flexBtn.setDataAdapter(list);
-        flexBtn.setCurrentIndex(0);
-        flexBtn.setOnFlexButtonClickListener(new OnFlexButtonClickListener() {
+        topBtn.setDataAdapter(list);
+        topBtn.setOnFlexButtonClickListener(new OnFlexButtonClickListener() {
             @Override
             public void clickItem(int i, boolean b) {
                 mainStationActionInf.selectFlexButton(i);
@@ -253,6 +257,12 @@ public class StationActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        mainStationActionInf.unRegPhoneStateListener();
+        super.onDestroy();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
@@ -276,7 +286,7 @@ public class StationActivity extends AppCompatActivity {
                 refreshStationInfo((StationEntry) event.obj);
                 break;
             case GlobalEventT.station_refresh_cell_log_info:
-//                showCellLog((HashMap<String, Integer>) event.obj);
+                showCellLog((HashMap<String, Integer>) event.obj);
                 break;
             case GlobalEventT.station_refresh_signal_log_info:
                 showSignalLog((HashMap<String, Integer>) event.obj);
@@ -314,15 +324,25 @@ public class StationActivity extends AppCompatActivity {
     }
 
     private void switchShowContent(boolean isShowFormat) {
-        CardView card1 = (CardView) findViewById(R.id.station_main_entry_container);
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.station_btn_show_menu);
+        CardView card1 = (CardView) findViewById(R.id.station_main_chart_container);
         CardView card2 = (CardView) findViewById(R.id.station_detail_card);
         if (isShowFormat) {
             card1.setVisibility(View.VISIBLE);
             card2.setVisibility(View.INVISIBLE);
+            topBtn.setCurrentIndex(0);
+            topBtn.getChildAt(0).setClickable(false);
+            topBtn.getChildAt(1).setClickable(true);
+            floatingActionButton.setVisibility(View.VISIBLE);
         } else {
             card1.setVisibility(View.INVISIBLE);
             card2.setVisibility(View.VISIBLE);
+            topBtn.setCurrentIndex(1);
+            topBtn.getChildAt(0).setClickable(true);
+            topBtn.getChildAt(1).setClickable(false);
+            floatingActionButton.setVisibility(View.INVISIBLE);
         }
+
 
     }
 
@@ -349,33 +369,40 @@ public class StationActivity extends AppCompatActivity {
     }
 
     private void showSignalLog(HashMap<String, Integer> obj) {
-
-
-        TextView signalLog = (TextView) findViewById(R.id.station_detail_text);
-        signalLog.setMovementMethod(new ScrollingMovementMethod());
-        String s = "信号数据\n";
+        signalLog = "";
+        TextView logText = (TextView) findViewById(R.id.station_detail_text);
+        logText.setMovementMethod(new ScrollingMovementMethod());
         Iterator it = obj.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry entry = (Map.Entry) it.next();
-            Object key = entry.getKey();
-            Object val = entry.getValue();
-            s += key + " : [" + val + "]\n";
+            String key = entry.getKey() + "";
+            String val = entry.getValue() + "";
+            if (key.contains("Gsm")
+                    || key.contains("Wcdma")
+                    || key.contains("Lte")
+                    || key.contains("Cdma")
+                    ) {
+                signalLog += key + " : [" + val + "]\n";
+            }
         }
-        signalLog.setText(s);
+        String temp = "-----小区原始数据-----\n" + cellLog + "\n----信号强度数据----\n" + signalLog;
+        logText.setText(temp);
     }
-//
-//    private void showCellLog(HashMap<String, Integer> obj) {
-//        String s = "";
-//        Iterator it = obj.entrySet().iterator();
-//        while (it.hasNext()) {
-//            Map.Entry entry = (Map.Entry) it.next();
-//            Object key = entry.getKey();
-//            Object val = entry.getValue();
-//            s += (String) key + ":" + (Integer) val + "\n ";
-//        }
-//        TextView text = (TextView) findViewById(R.id.station_text3);
-//        text.setText(s);
-//    }
+
+    private void showCellLog(HashMap<String, Integer> obj) {
+        cellLog = "";
+        TextView logText = (TextView) findViewById(R.id.station_detail_text);
+        logText.setMovementMethod(new ScrollingMovementMethod());
+        Iterator it = obj.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
+            String key = entry.getKey() + "";
+            String val = entry.getValue() + "";
+            cellLog += key + " : [" + val + "]\n";
+        }
+        String temp = "-----小区原始数据-----\n" + cellLog + "\n----信号强度数据----\n" + signalLog;
+        logText.setText(temp);
+    }
 
 
 }

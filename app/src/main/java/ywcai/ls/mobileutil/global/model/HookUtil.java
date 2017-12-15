@@ -1,11 +1,18 @@
 package ywcai.ls.mobileutil.global.model;
 
+import android.app.Activity;
 import android.content.Context;
+
+//import com.baidu.mobstat.StatService;
+
+import com.baidu.mobstat.StatService;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+
+import ywcai.ls.mobileutil.global.util.statics.LsLog;
 
 /**
  * Created by zmy_11 on 2017/10/8.
@@ -14,6 +21,7 @@ import java.lang.reflect.Proxy;
 public class HookUtil {
     private Class<?> proxyActivity;
     private Context context;
+
     public HookUtil(Context context) {
         this.context = context;
     }
@@ -59,12 +67,19 @@ public class HookUtil {
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            Object obj = method.invoke(iActivityManagerObject, args);
             saveTopActivityCache(method);
-            return method.invoke(iActivityManagerObject, args);
+            return obj;
         }
 
         private void saveTopActivityCache(Method method) {
-            //// TODO: 2017/10/8 暂时没啥需要埋的
+            //百度移动统计数据埋点位置， 只统计通过aliRouter路由的工具页面
+            if (method.getName().equals("activityPaused")) {
+                StatService.onPause(context);
+            }
+            if (method.getName().equals("activityResumed")) {
+                StatService.onResume(context);
+            }
         }
     }
 }

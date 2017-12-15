@@ -24,7 +24,6 @@ public class SingleCardStationListener extends PhoneStateListener implements Sta
     public void setChangeListener(StationChangeListenerInf stationChangeListenerInf) {
         this.stationChangeListenerInf = stationChangeListenerInf;
     }
-
     @Override
     public void onSignalStrengthsChanged(SignalStrength signalStrength) {
         HashMap<String, Integer> signalFields = new HashMap<>();

@@ -1,5 +1,6 @@
 package ywcai.ls.mobileutil.main.view;
 
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -16,6 +17,9 @@ import android.widget.TextView;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.baidu.autoupdatesdk.BDAutoUpdateSDK;
+import com.baidu.autoupdatesdk.UICheckUpdateCallback;
+
 import java.util.ArrayList;
 import java.util.List;
 import ywcai.ls.mobileutil.R;
@@ -30,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public int currentPage = 3;
     @Autowired()
     public String ROUTER_PAGE;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +42,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ARouter.getInstance().inject(this);
         SetTitle.setTitleTransparent(getWindow());
         setContentView(R.layout.activity_main);
+        checkApkVersion();
         InstallFragment();
         selectFragment(0);
         startCacheActivity();
     }
+    private void checkApkVersion()
+    {
+        progressDialog=new ProgressDialog(this);
+        BDAutoUpdateSDK.uiUpdateAction(MainActivity.this, new MyUICheckUpdateCallback());
+    }
+
     private void startCacheActivity() {
         //如果不是从桌面第一次打开，则根据缓存的页面进行跳转，暂时没有引用
         if(!ROUTER_PAGE.equals("First"))
@@ -129,8 +141,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TextView nav_4 = (TextView) findViewById(R.id.bot_nav_4);
         nav_1.setOnClickListener(this);
         nav_2.setOnClickListener(this);
-        nav_3.setOnClickListener(this);
-        nav_4.setOnClickListener(this);
+//        nav_3.setOnClickListener(this);
+//        nav_4.setOnClickListener(this);
         nav.add(nav_1);
         nav.add(nav_2);
         nav.add(nav_3);
@@ -158,5 +170,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             nav.get(selectPage).setTextSize(14);
             currentPage = selectPage;
         }
+    }
+
+    private class MyUICheckUpdateCallback implements UICheckUpdateCallback {
+        @Override
+        public void onCheckComplete() {
+            progressDialog.dismiss();
+        }
+
     }
 }

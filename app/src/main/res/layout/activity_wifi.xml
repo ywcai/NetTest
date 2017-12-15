@@ -48,7 +48,14 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@+id/btn_5g"
-                android:visibility="invisible"
+                android:visibility="visible"
+
+
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                app:btnRadius="6"
                 app:fb_borderColor="@android:color/white"
                 app:fb_borderWidth="1dp"
                 app:fb_defaultColor="@android:color/holo_blue_bright"
@@ -56,7 +63,7 @@
                 app:fb_disabledTextColor="@android:color/white"
                 app:fb_focusColor="#CACAD9"
                 app:fb_ghost="false"
-                app:fb_radius="5dp"
+                app:fb_radius="6dp"
                 app:fb_text="2.4G"
                 app:fb_textColor="@android:color/white"
                 app:fb_textSize="12sp"></mehdi.sakout.fancybuttons.FancyButton>
@@ -68,7 +75,11 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
-                android:visibility="invisible"
+                android:visibility="visible"
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
                 app:fb_borderColor="@android:color/white"
                 app:fb_borderWidth="1dp"
                 app:fb_defaultColor="@android:color/holo_blue_bright"
@@ -77,7 +88,7 @@
                 app:fb_focusColor="#CACAD9"
                 app:fb_ghost="true"
                 app:fb_radius="5dp"
-                app:fb_text="5G"
+                app:fb_text=" 5G "
                 app:fb_textColor="@android:color/white"
                 app:fb_textSize="12sp"></mehdi.sakout.fancybuttons.FancyButton>
         </RelativeLayout>

@@ -77,13 +77,12 @@ public class PingAction implements PingActionInf {
     private void drawDesc(PingState pingState) {
         MsgHelper.sendEvent(GlobalEventT.ping_update_chart_desc, "", pingState);//更新图表描述信息
     }
+    private void sendMsgPopSnackTip(String tip, boolean success) {
+        MsgHelper.sendEvent(GlobalEventT.ping_close_loading_dialog, tip, success);
+    }
 
     private void popLoadingWindow(String tip) {
         MsgHelper.sendEvent(GlobalEventT.ping_pop_loading_dialog, tip, null);
-    }
-
-    private void closeLoadingWindow(String tip) {
-        MsgHelper.sendEvent(GlobalEventT.ping_close_loading_dialog, tip, null);
     }
 
     private void setFloatBtnVisible(int visible) {
@@ -189,36 +188,21 @@ public class PingAction implements PingActionInf {
         PingState initState = cacheProcess.getCachePingState();
         addDataIndex(initState);//创建日志的索引
         resetChart(initState);
-        List list = cacheProcess.getCacheLogIndex();
-        closeLoadingWindow("数据成功保存到本地:");
+        sendMsgPopSnackTip("数据保存到本地成功", true);
     }
 
     @Override
     public void clickBtnSaveRemote() {
-        //启动加载模态窗口
-        popLoadingWindow("正在上传数据");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                PingState initState = cacheProcess.getCachePingState();
-                HttpRequestInf http = new HttpRequest();
-                if (http.updatePingResult()) {
-                    deleteLastData(initState.startTime);
-                    resetChart(initState);
-                    closeLoadingWindow("功能开发中,敬请期待.上传失败！");
-                } else {
-                    closeLoadingWindow("上传云端失败");
-                }
-
-            }
-        }).start();
+        sendMsgPopSnackTip(AppConfig.TIP_FOR_REMOTE_SAVE, false);
     }
+
 
     @Override
     public void clickBtnSaveClear() {
         PingState initState = cacheProcess.getCachePingState();
         deleteLastData(initState.startTime);
         resetChart(initState);
+        sendMsgPopSnackTip("清除数据成功", true);
     }
 
     @Override
@@ -294,4 +278,7 @@ public class PingAction implements PingActionInf {
         logIndex.logTime = initState.startTime;
         cacheProcess.addCacheLogIndex(logIndex);
     }
+
+
+
 }

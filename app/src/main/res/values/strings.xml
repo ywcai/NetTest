@@ -9,7 +9,7 @@
     <string name="bot_menu3"></string>
     <string name="bot_menu4"></string>
     <string name="menu1">分享结果</string>
-    <string name="menu2">版本更新</string>
+    <string name="menu2">检查更新</string>
     <string name="menu3">使用帮助</string>
     <string name="menu4">赞助作者</string>
 </resources>

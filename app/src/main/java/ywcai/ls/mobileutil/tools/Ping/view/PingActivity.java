@@ -106,6 +106,7 @@ public class PingActivity extends AppCompatActivity {
         save_remote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                action.clickBtnSaveCancal();
                 action.clickBtnSaveRemote();
                 bottomDialog.dismiss();
             }
@@ -113,7 +114,6 @@ public class PingActivity extends AppCompatActivity {
         clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 action.clickBtnSaveClear();
                 bottomDialog.dismiss();
             }
@@ -414,7 +414,7 @@ public class PingActivity extends AppCompatActivity {
                 popLoadingDialog(event.tip);
                 break;
             case GlobalEventT.ping_close_loading_dialog:
-                closeLoadingDialog(event.tip);
+                popBottomSnackBar(event.tip, (boolean) event.obj);
                 break;
             case GlobalEventT.ping_set_float_btn_visible:
                 setFloatingBtnVisible((int) event.obj);
@@ -425,9 +425,13 @@ public class PingActivity extends AppCompatActivity {
     }
 
 
-    private void closeLoadingDialog(String tip) {
+    private void popBottomSnackBar(String tip, boolean success) {
         //// TODO: 2017/10/3 加载窗口
-        LsSnack.show(this, findViewById(R.id.ping_snack_container), tip);
+        if (success) {
+            LsSnack.show(this, findViewById(R.id.ping_snack_container), tip);
+        } else {
+            LsSnack.show(this, findViewById(R.id.ping_snack_container), tip, R.color.LRed);
+        }
     }
 
     private void popLoadingDialog(String tip) {

@@ -2,9 +2,6 @@ package ywcai.ls.mobileutil.results.model;
 
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 
-/**
- * Created by zmy_11 on 2017/10/9.
- */
 
 public class TaskTotal {
     public int runCount = 0, waitProcessCount = 0, savedCount = 0;

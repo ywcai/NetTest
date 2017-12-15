@@ -64,8 +64,9 @@ public class WifiFragmentFour extends Fragment {
             @Override
             public void onClick(View v) {
                 //三秒类只允许点击一次。
-                Observable.interval(3, TimeUnit.SECONDS)
+                Observable
                         .just("")
+                        .throttleFirst(5, TimeUnit.SECONDS)
                         .subscribe(new Action1<String>() {
                             @Override
                             public void call(String s) {

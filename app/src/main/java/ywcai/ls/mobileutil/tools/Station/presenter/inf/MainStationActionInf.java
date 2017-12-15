@@ -43,4 +43,5 @@ public interface MainStationActionInf {
     void sendToRemoteReal(boolean isSend);//实时传输当前测试的数据。预留
 
 
+    void unRegPhoneStateListener();
 }

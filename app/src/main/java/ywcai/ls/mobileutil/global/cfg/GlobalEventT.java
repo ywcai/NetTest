@@ -70,4 +70,10 @@ public class GlobalEventT {
     public static final int station_pop_dialog = 90058;
     public static final int station_bottom_snack_tip = 90059;
     public static final int station_switch_top_btn = 90060;
+
+
+    public static final int scan_lan_ping_index_result = 90090;
+
+    public static final int scan_lan_refresh_local_ip = 90091;
+    public static final int scan_lan_ping_stop = 90092;
 }

@@ -103,22 +103,24 @@ public class MenuFragment extends Fragment {
         cToolbar.setTitleEnabled(false);
         Toolbar mToolbar = (Toolbar) view.findViewById(R.id.main_toolbar);
         mToolbar.setTitle("网络测试工具集");
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(false);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.menu1:
-                        break;
                     case R.id.menu2:
+//                        checkApkVersion();
                         break;
-                    //打开选择应用菜单
-                    case R.id.menu3:
-                        break;
-                    case R.id.menu4:
-//                        cutProcess();
-                        break;
+//                    case R.id.menu2:
+//
+//                        break;
+//                    //打开选择应用菜单
+//                    case R.id.menu3:
+//                        break;
+//                    case R.id.menu4:
+////                        cutProcess();
+//                        break;
                 }
                 return false;
             }
@@ -232,7 +234,6 @@ public class MenuFragment extends Fragment {
         menuList.get(AppConfig.INDEX_PING).isRunning = taskTotal.state[AppConfig.INDEX_PING];
         menuAdapter.notifyDataSetChanged();
         updateTitleTip();
-
     }
 
     private void updateTitleTip()
@@ -257,6 +258,4 @@ public class MenuFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
     }
-
-
 }

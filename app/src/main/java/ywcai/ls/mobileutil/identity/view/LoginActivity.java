@@ -55,22 +55,22 @@ public class LoginActivity extends AppCompatActivity {
     private void InitToolBar() {
         Toolbar mToolbar = (Toolbar) findViewById(R.id.login_toolbar);
         setSupportActionBar(mToolbar);
-        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.menu1:
-                        break;
-                    case R.id.menu2:
-                        break;
-                    case R.id.menu3:
-                        break;
-                    case R.id.menu4:
-                        break;
-                }
-                return false;
-            }
-        });
+//        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                switch (item.getItemId()) {
+//                    case R.id.menu1:
+//                        break;
+//                    case R.id.menu2:
+//                        break;
+//                    case R.id.menu3:
+//                        break;
+//                    case R.id.menu4:
+//                        break;
+//                }
+//                return false;
+//            }
+//        });
     }
 
     private void InitActionEvent()

@@ -43,21 +43,26 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
     compile 'com.appyvet:materialrangebar:1.3'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
-
     compile 'io.reactivex:rxjava:1.0.14'
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'com.alibaba:arouter-api:1.2.2'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    //
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.3'
     compile 'cat.ereza:customactivityoncrash:2.1.0'
     //crash info tip
-
-
-
     compile 'com.github.ywcai:LoadingDialog:1.0.0'
     compile 'com.github.ywcai:FlexButton:v0.0.8'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    //    compile 'com.github.medyo:fancybuttons:1.8.3'
 
-//    compile 'com.github.medyo:fancybuttons:1.8.3'
-//    compile 'com.google.android:flexbox:0.2.6'
+    //    compile 'com.google.android:flexbox:0.2.6'
+
+    //下拉刷新库
+    compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
+    compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.3'
+    compile 'com.github.ywcai:LsScanRadar:0.9.4'
+
+
+    compile project(':bDIntegrationSDK_LibProject')
 }
 

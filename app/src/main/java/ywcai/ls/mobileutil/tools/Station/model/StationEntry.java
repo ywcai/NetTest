@@ -4,12 +4,12 @@ import android.os.ParcelUuid;
 import android.telephony.TelephonyManager;
 
 public class StationEntry {
-    public int cid = -1, lac = -1, rsp = -1, netType = -1;
+    public int cid = 0, lac = 0, rsp = 0, netType = -1;
     public String networkOperator = "null", networkOperatorName = "null";
     //用netTypeName对应发射获取的场强字段
     public String netTypeName = "UNKNOWN", netTypeCn = "UNKNOWN";
     public final String UNKNOWN = "UNKNOWN";
-    public String imei,cardNumber;
+    public String imei, cardNumber;
 
     public void setNetTypeName() {
         switch (netType) {
@@ -86,4 +86,17 @@ public class StationEntry {
     }
 
 
+
+    public void copy(StationEntry currentEntry) {
+        cid = currentEntry.cid;
+        lac = currentEntry.lac;
+        rsp = currentEntry.rsp;
+        netType = currentEntry.netType;
+        networkOperator = currentEntry.networkOperator;
+        networkOperatorName = currentEntry.networkOperatorName;
+        netTypeName = currentEntry.netTypeName;
+        netTypeCn = currentEntry.netTypeCn;
+        imei = currentEntry.imei;
+        cardNumber = currentEntry.cardNumber;
+    }
 }

@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.LocationManager;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
@@ -22,6 +21,7 @@ import java.util.List;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
@@ -398,6 +398,7 @@ public class WifiProcess implements Action1 {
             removeTask(pos);
             operatorDraw();
         }
+        sendMsgForPopMainSnack("清除任务成功!", true);
     }
 
 
@@ -407,7 +408,13 @@ public class WifiProcess implements Action1 {
             removeTask(pos);
             operatorDraw();
         }
+        sendMsgForPopMainSnack("保存结果成功!", true);
     }
+
+    public void saveLogForRemote(int pos) {
+        sendMsgForPopMainSnack(AppConfig.TIP_FOR_REMOTE_SAVE, false);
+    }
+
 
     //删除缓存LOG数据
     private void deleteLog(int pos) {
@@ -488,6 +495,15 @@ public class WifiProcess implements Action1 {
     //渲染activity标题
     private void sendMsgTitleTip(String tip) {
         MsgHelper.sendEvent(GlobalEventT.wifi_set_main_title_tip, tip, null);
+    }
+
+    private void sendMsgForPopMainSnack(String tip, boolean success) {
+        if (success) {
+            MsgHelper.sendEvent(GlobalEventT.wifi_main_bottom_tip, tip, -1);
+        } else {
+            MsgHelper.sendEvent(GlobalEventT.wifi_main_bottom_tip, tip, R.color.LRed);
+        }
+
     }
 
     //操作顶部标题的频率切换按钮

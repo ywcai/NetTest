@@ -7,11 +7,20 @@ import ywcai.ls.mobileutil.R;
  */
 
 public class AppConfig {
+
+
+    public static final String TIP_FOR_REMOTE_SAVE = "暂时不支持云端保存，请见谅";
+    public static final String STR_LOCAL_MAC_FILE="/sys/class/net/wlan0/address";
+    public static final String STR_ARP_FILE_PATH="/proc/net/arp";
+
     public static final String MAIN_ACTIVITY_PATH = "/main/view/MainActivity";
+    public static final String WAIT_ACTIVITY_PATH = "/welcome/view/WaitActivity";
 
     public static final String PING_ACTIVITY_PATH = "/tools/Ping/view/PingActivity";
     public static final String WIFI_ACTIVITY_PATH = "/tools/Wifi/view/WifiActivity";
     public static final String STATION_ACTIVITY_PATH = "/tools/Station/view/StationActivity";
+    public static final String SCAN_LAN_ACTIVITY_PATH = "/tools/ScanLan/view/ScanLanActivity";
+    public static final String SCAN_PORT_ACTIVITY_PATH = "/tools/ScanPort/view/ScanPortActivity";
     public static final String BLE_ACTIVITY_PATH = "/tools/Ping/view/PingActivity";
     public static final String LAN_ACTIVITY_PATH = "/tools/Ping/view/PingActivity";
     public static final String PORT_ACTIVITY_PATH = "/tools/Ping/view/PingActivity";
@@ -46,11 +55,11 @@ public class AppConfig {
     public static final int INDEX_WIFI = 1;
     public static final int INDEX_STATION = 2;
     public static final int INDEX_LAN = 3;
-    public static final int INDEX_SENSOR = 4;
-    public static final int INDEX_PORT = 5;
-    public static final int INDEX_GPS = 6;
-    public static final int INDEX_BLE = 7;
-    public static final int INDEX_SPEED = 8;
+    public static final int INDEX_PORT = 4;
+    public static final int INDEX_SPEED = 5;
+    public static final int INDEX_SENSOR = 6;
+    public static final int INDEX_GPS = 7;
+    public static final int INDEX_BLE = 8;
     public static final int INDEX_ORIENTATION = 9;
 
     public static final int[] INTS_CHANNEL_2D4G = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
@@ -152,26 +161,26 @@ public class AppConfig {
                 case INDEX_STATION:
                     temp[i] = STATION_ACTIVITY_PATH;
                     break;
-                case INDEX_BLE:
-                    temp[i] = BLE_ACTIVITY_PATH;
-                    break;
                 case INDEX_LAN:
-                    temp[i] = LAN_ACTIVITY_PATH;
+                    temp[i] = SCAN_LAN_ACTIVITY_PATH;
+                    break;
+                case INDEX_BLE:
+                    temp[i] = WAIT_ACTIVITY_PATH;
                     break;
                 case INDEX_PORT:
-                    temp[i] = PORT_ACTIVITY_PATH;
+                    temp[i] = WAIT_ACTIVITY_PATH;
                     break;
                 case INDEX_GPS:
-                    temp[i] = GPS_ACTIVITY_PATH;
+                    temp[i] = WAIT_ACTIVITY_PATH;
                     break;
                 case INDEX_SENSOR:
-                    temp[i] = SENSOR_ACTIVITY_PATH;
+                    temp[i] = WAIT_ACTIVITY_PATH;
                     break;
                 case INDEX_SPEED:
-                    temp[i] = SPEED_ACTIVITY_PATH;
+                    temp[i] = WAIT_ACTIVITY_PATH;
                     break;
                 case INDEX_ORIENTATION:
-                    temp[i] = ORIENTATION_ACTIVITY_PATH;
+                    temp[i] = WAIT_ACTIVITY_PATH;
                     break;
             }
         }
@@ -195,10 +204,10 @@ public class AppConfig {
                     temp[i] = R.drawable.homepage_menu_ble;
                     break;
                 case INDEX_LAN:
-                    temp[i] = R.drawable.homepage_menu_lan;
+                    temp[i] = R.drawable.homepage_menu_scan_lan;
                     break;
                 case INDEX_PORT:
-                    temp[i] = R.drawable.homepage_menu_more;
+                    temp[i] = R.drawable.homepage_menu_scan_port;
                     break;
                 case INDEX_GPS:
                     temp[i] = R.drawable.homepage_menu_gps;
@@ -207,7 +216,7 @@ public class AppConfig {
                     temp[i] = R.drawable.homepage_menu_sensor;
                     break;
                 case INDEX_SPEED:
-                    temp[i] = R.drawable.homepage_menu_orientation;
+                    temp[i] = R.drawable.homepage_menu_speed;
                     break;
                 case INDEX_ORIENTATION:
                     temp[i] = R.drawable.homepage_menu_orientation;

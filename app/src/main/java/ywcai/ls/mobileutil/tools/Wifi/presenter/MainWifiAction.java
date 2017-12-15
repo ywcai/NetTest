@@ -117,7 +117,9 @@ public class MainWifiAction implements MainWifiActionInf {
 
     @Override
     public void saveLogForRemote(int pos) {
-
+        if (wifiService != null) {
+            wifiService.wifiDataProcess.saveLogForRemote(pos);
+        }
     }
 
     @Override

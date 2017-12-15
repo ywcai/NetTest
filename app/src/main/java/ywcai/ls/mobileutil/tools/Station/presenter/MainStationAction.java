@@ -36,7 +36,7 @@ public class MainStationAction implements MainStationActionInf {
     public void startWork() {
         InStallService.waitService(stationService);
         if (stationService != null) {
-            stationService.stationProcess.startProcess();
+            stationService.stationProcess.startProcess(context);
         }
 
     }
@@ -108,6 +108,13 @@ public class MainStationAction implements MainStationActionInf {
     public void sendToRemoteReal(boolean isSend) {
         if (stationService != null) {
 //            stationService.stationProcess.sendToRemoteReal(isSend);
+        }
+    }
+
+    @Override
+    public void unRegPhoneStateListener() {
+        if (stationService != null) {
+            stationService.stationProcess.unRegPhoneListener();
         }
     }
 }

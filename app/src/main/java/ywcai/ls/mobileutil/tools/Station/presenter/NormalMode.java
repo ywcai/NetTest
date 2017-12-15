@@ -1,5 +1,7 @@
 package ywcai.ls.mobileutil.tools.Station.presenter;
 
+import android.content.Context;
+
 import com.github.mikephil.charting.data.Entry;
 
 import java.util.HashMap;
@@ -8,6 +10,7 @@ import java.util.List;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.functions.Func2;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
@@ -33,53 +36,80 @@ public class NormalMode {
     }
 
     public void refreshInfo(HashMap<String, Integer> cells, HashMap<String, Integer> signals) {
-        if (cells != null) {
-            if (currentEntry.netTypeName.equals(currentEntry.UNKNOWN)) {
-                currentEntry.cid = 0;
-                currentEntry.lac = 0;
-                currentEntry.rsp = 0;
-            } else {
-                if (cells.get("mCid") != null) {
-                    currentEntry.cid = cells.get("mCid");
-                }
-                if (cells.get("mLac") != null) {
-                    currentEntry.lac = cells.get("mLac");
+        synchronized (currentEntry) {
+            if (cells != null) {
+                if (currentEntry.netTypeName.equals(currentEntry.UNKNOWN)) {
+                    currentEntry.cid = 0;
+                    currentEntry.lac = 0;
+                    currentEntry.rsp = 0;
+                } else {
+                    if (cells.get("mCid") != null) {
+                        currentEntry.cid = cells.get("mCid");
+                    }
+                    if (cells.get("mLac") != null) {
+                        currentEntry.lac = cells.get("mLac");
+                    }
                 }
             }
-            sendMsgShowRealInfo();
-        }
-        if (signals != null) {
-            if (signals.get(currentEntry.netTypeName) != null) {
-                currentEntry.rsp = signals.get(currentEntry.netTypeName);
+            if (signals != null) {
+                if (signals.get(currentEntry.netTypeName) != null) {
+                    currentEntry.rsp = signals.get(currentEntry.netTypeName);
+                }
+                //保存数据到日志
             }
-            //保存数据到日志
             saveTempLog();
             sendMsgShowRealInfo();
         }
     }
 
     private void saveTempLog() {
-        stationEntries.add(0, currentEntry);
+        StationEntry temp = new StationEntry();
+        temp.copy(currentEntry);
+        stationEntries.add(0, temp);
         cacheProcess.setStationRecord(stationState.logName, currentEntry);
         recoveryChart();
     }
 
 
     public void saveLocal() {
-        LogIndex logIndex = new LogIndex();
-        logIndex.logTime = stationState.logName;
-        logIndex.cacheTypeIndex = AppConfig.INDEX_STATION;
-        logIndex.remarks = "基站信号测试数据";
-        logIndex.aliasFileName = "日志别名";
-        logIndex.cacheFileName = stationState.logName;
-        cacheProcess.addCacheLogIndex(logIndex);
+        if (stationEntries.size() <= 1) {
+            sendMsgSnackBarTip("还没有数据,保存失败", false);
+            return;
+        }
+        Observable.from(stationEntries)
+                .filter(new Func1<StationEntry, Boolean>() {
+                    @Override
+                    public Boolean call(StationEntry stationEntry) {
+                        return stationEntry.rsp < -1;
+                    }
+                }).toSortedList(new Func2<StationEntry, StationEntry, Integer>() {
+            @Override
+            public Integer call(StationEntry stationEntry, StationEntry stationEntry2) {
+                return stationEntry.rsp > stationEntry2.rsp ? 1 : -1;
+            }
+        }).subscribe(new Action1<List<StationEntry>>() {
+            @Override
+            public void call(List<StationEntry> list) {
+                final LogIndex logIndex = new LogIndex();
+                logIndex.logTime = stationState.logName;
+                logIndex.cacheTypeIndex = AppConfig.INDEX_STATION;
+                logIndex.aliasFileName = "基站测试日志";
+                logIndex.cacheFileName = stationState.logName;
+                if (list.size() <= 0) {
+                    logIndex.remarks = "本次测试并没有记录到任何数据";
+                }
+                logIndex.remarks = "检测到数据变化 [" + stationEntries.size() + "] 次 " + "最强[" + list.get(list.size() - 1).rsp + "] 最弱[" +
+                        list.get(0).rsp + "]";
+                cacheProcess.addCacheLogIndex(logIndex);
+                resetLog();
+                sendMsgSnackBarTip("本地保存成功!", true);
+            }
+        });
         //继续开始一个新的任务
-        resetLog();
-        sendMsgSnackBarTip("本地保存成功!", true);
     }
 
     public void saveRemote() {
-        sendMsgSnackBarTip("开发中，暂不支持云端保存！", false);
+        sendMsgSnackBarTip(AppConfig.TIP_FOR_REMOTE_SAVE, false);
     }
 
     public void clearLog() {
@@ -92,8 +122,8 @@ public class NormalMode {
     private void resetLog() {
         stationEntries.clear();
         stationState.logName = MyTime.getDetailTime();
+        cacheProcess.setStationState(stationState);
         sendMsgRefreshLineChart(null);
-//        cacheProcess.setStationRecord(stationState.logName, currentEntry);
     }
 
 
