@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.appyvet.rangebar.RangeBar;
+import com.baidu.mobstat.StatService;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.LimitLine;
@@ -131,7 +132,13 @@ public class PingActivity extends AppCompatActivity {
     protected void onResume() {
         action.activityResume();
         super.onResume();
+        StatService.onResume(this);
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        StatService.onPause(this);
     }
 
     private void popBottomDialog() {

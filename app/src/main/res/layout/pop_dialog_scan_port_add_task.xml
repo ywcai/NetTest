@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="10dp">
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/scan_port_target_ip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:digits="0123456789."
+        android:hint="请输入要探测的目标IP地址"
+        android:inputType="number"
+        android:maxEms="15"
+        android:maxLines="1"
+        android:textSize="14sp"
+        app:met_clearButton="true"
+        app:met_baseColor="#ff000000"
+        app:met_errorColor="#ff4d4d"
+        app:met_floatingLabel="normal"
+        app:met_floatingLabelTextColor="#8805ad"
+        app:met_primaryColor="#2196F3"
+        app:met_textColorHint="#9797A6" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/scan_port_start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:digits="0123456789"
+        android:hint="端口号-开始"
+        android:inputType="number"
+        android:maxEms="6"
+        android:maxLines="1"
+        android:textSize="14sp"
+        app:met_baseColor="#ff000000"
+        app:met_errorColor="#ff4d4d"
+        app:met_floatingLabel="normal"
+        app:met_floatingLabelTextColor="#8805ad"
+        app:met_primaryColor="#2196F3"
+        app:met_textColorHint="#9797A6" />
+
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/scan_port_end"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:digits="0123456789"
+        android:hint="端口号-结束"
+        android:inputType="number"
+        android:maxEms="6"
+        android:maxLines="1"
+        android:textSize="14sp"
+        app:met_baseColor="#ff000000"
+        app:met_errorColor="#ff4d4d"
+        app:met_floatingLabel="normal"
+        app:met_floatingLabelTextColor="#8805ad"
+        app:met_primaryColor="#2196F3"
+        app:met_textColorHint="#9797A6" />
+
+    <Button
+        android:id="@+id/scan_port_sub_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_cancal"
+        android:text="确认提交"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
+</LinearLayout>

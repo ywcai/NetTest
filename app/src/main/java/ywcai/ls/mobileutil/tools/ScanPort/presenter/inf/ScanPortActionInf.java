@@ -5,13 +5,12 @@ package ywcai.ls.mobileutil.tools.ScanPort.presenter.inf;
  */
 
 public interface ScanPortActionInf {
-    void startScanPort();
 
-    void stopScanPort();
+    void clickOperatorBtn();
 
-    void scanPortEnd();
+    void addScanTask(String ip, String startText, String endText);
 
-    void addScanIp(String targetIp);
+    void recoveryUI();
 
-    void addScanPortRange(int start, int end);
+    void waitService();
 }

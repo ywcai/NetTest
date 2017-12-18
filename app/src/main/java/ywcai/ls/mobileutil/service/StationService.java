@@ -11,7 +11,6 @@ import android.support.v7.app.NotificationCompat;
 
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
-import ywcai.ls.mobileutil.global.util.statics.LsLog;
 import ywcai.ls.mobileutil.tools.Station.presenter.StationProcess;
 
 public class StationService extends Service {
@@ -35,13 +34,10 @@ public class StationService extends Service {
 
     private void InstallProcess() {
         if (stationProcess != null) {
-            //直接冲内存恢复数据渲染UI
-//            stationProcess.recoveryAllData();
-            LsLog.saveLog("old service");
+            //直接由内存恢复数据渲染UI
             return;
         }
-        LsLog.saveLog("new service");
-        stationProcess = new StationProcess();//构造函数中去初始化数据。??
+        stationProcess = new StationProcess();//构造函数中去初始化数据。
     }
 
     public void setForegroundTask() {

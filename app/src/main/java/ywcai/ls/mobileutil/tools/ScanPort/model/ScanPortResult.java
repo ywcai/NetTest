@@ -1,5 +1,6 @@
 package ywcai.ls.mobileutil.tools.ScanPort.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -7,6 +8,7 @@ import java.util.List;
  */
 
 public class ScanPortResult {
-    public String protocol,scanIp;
-    public List<Integer> openPorts;
+    //    public String protocol, scanIp;
+    public List<Integer> openPorts = new ArrayList<>();
+    public int maxCounts = -1, currentScanIndex = -1;//记录当前扫描的任务位置。以此可得到当前扫描的进
 }

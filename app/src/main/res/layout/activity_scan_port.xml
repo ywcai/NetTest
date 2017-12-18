@@ -20,43 +20,122 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/scan_port_toolbar"
-        android:background="@color/colorWifiBg"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/scan_port_top_tip"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_marginLeft="10dp"
-            android:gravity="center_vertical"
-            android:text="本地IP： "
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/scan_port_local_ip"
+        android:background="@color/colorWifiBg">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/scan_port_top_card"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_toRightOf="@+id/scan_lan_top_tip"
-            android:gravity="center_vertical"
-            android:text=" "
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:layout_height="100dp"
+            android:layout_margin="5dp"
+            app:cardBackgroundColor="@color/colorWifiBg"
+            app:cardCornerRadius="5dp">
+
+            <TextView
+                android:id="@+id/text_scan_port_tip"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:text="可点击右下角按钮添加端口扫描任务"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:visibility="invisible" />
+
+            <RelativeLayout
+                android:id="@+id/rl_scan_task_info"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:background="@android:color/transparent"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/text_scan_port_ip"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_toLeftOf="@+id/rl_scan_port_operator"
+                    android:gravity="center_vertical"
+                    android:text="目标IP: "
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/text_scan_port_ports"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_scan_port_ip"
+                    android:layout_marginRight="20dp"
+                    android:layout_toLeftOf="@+id/rl_scan_port_operator"
+                    android:gravity="center_vertical"
+                    android:lineSpacingExtra="3dp"
+                    android:maxLines="2"
+                    android:text="端口号:"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/text_scan_port_process_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_scan_port_ports"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_toLeftOf="@+id/rl_scan_port_operator"
+                    android:gravity="center_vertical"
+                    android:lineSpacingExtra="3dp"
+                    android:maxLines="2"
+                    android:text=""
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp" />
+
+
+                <RelativeLayout
+                    android:id="@+id/rl_scan_port_operator"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/btn_scan_port_operator"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/stop_2" />
+                </RelativeLayout>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
 
         <ywcai.ls.control.scan.LsScan
-            android:layout_margin="40dp"
-            android:id="@+id/radarScanPortView"
+            android:id="@+id/radar_scan_port"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <ImageView
-            android:id="@+id/scan_port_btn_refresh"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_margin="10dp"
-            android:src="@drawable/refresh" />
+            android:layout_below="@+id/scan_port_top_card"
+            android:layout_centerVertical="true"
+            android:layout_margin="30dp"></ywcai.ls.control.scan.LsScan>
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/scan_port_snack_container"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"></RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_scan_port_cfg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
+        android:src="@drawable/add_task"
+        android:visibility="visible"
+        app:backgroundTint="@android:color/holo_orange_light"
+        app:elevation="5dp"
+        app:fabSize="normal" />
 
 </RelativeLayout>
 

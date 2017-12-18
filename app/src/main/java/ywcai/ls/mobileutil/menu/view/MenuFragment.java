@@ -46,6 +46,7 @@ import ywcai.ls.mobileutil.menu.model.TitleTipAdapter;
 import ywcai.ls.mobileutil.menu.model.TitleTipMenu;
 import ywcai.ls.mobileutil.menu.presenter.inf.OnItemClickListener;
 import ywcai.ls.mobileutil.results.model.TaskTotal;
+import ywcai.ls.mobileutil.tools.ScanPort.model.ScanPortResult;
 
 @Route(path = "/main/menuFragment")
 public class MenuFragment extends Fragment {
@@ -94,8 +95,10 @@ public class MenuFragment extends Fragment {
     public void onResume() {
         updatePingMenu();
         updateWifiMenu();
+        updateScanPortMenu();
         super.onResume();
     }
+
 
     private void InitToolBar() {
         CollapsingToolbarLayout cToolbar =
@@ -217,6 +220,9 @@ public class MenuFragment extends Fragment {
             case GlobalEventT.wifi_refresh_save_tags:
                 updateWifiMenu();
                 break;
+            case GlobalEventT.scan_port_refresh_radar_progress:
+                updateScanPortMenu();
+                break;
         }
     }
 
@@ -234,6 +240,15 @@ public class MenuFragment extends Fragment {
         menuList.get(AppConfig.INDEX_PING).isRunning = taskTotal.state[AppConfig.INDEX_PING];
         menuAdapter.notifyDataSetChanged();
         updateTitleTip();
+    }
+
+    private void updateScanPortMenu() {
+        TaskTotal taskTotal = CacheProcess.getInstance().getCacheTaskTotal();
+        //更新ScanPort的上标
+        menuList.get(AppConfig.INDEX_PORT).isRunning = taskTotal.state[AppConfig.INDEX_PORT];
+        menuAdapter.notifyDataSetChanged();
+        updateTitleTip();
+
     }
 
     private void updateTitleTip()

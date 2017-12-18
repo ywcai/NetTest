@@ -68,18 +68,8 @@ public class HookUtil {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             Object obj = method.invoke(iActivityManagerObject, args);
-            saveTopActivityCache(method);
+//            saveTopActivityCache(method);
             return obj;
-        }
-
-        private void saveTopActivityCache(Method method) {
-            //百度移动统计数据埋点位置， 只统计通过aliRouter路由的工具页面
-            if (method.getName().equals("activityPaused")) {
-                StatService.onPause(context);
-            }
-            if (method.getName().equals("activityResumed")) {
-                StatService.onResume(context);
-            }
         }
     }
 }

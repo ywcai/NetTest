@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.baidu.mobstat.StatService;
+
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.model.instance.MainApplication;
@@ -79,4 +81,15 @@ public class WelComeActivity extends AppCompatActivity {
         }).start();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        StatService.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        StatService.onPause(this);
+    }
 }

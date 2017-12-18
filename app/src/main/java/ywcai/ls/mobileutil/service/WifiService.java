@@ -9,9 +9,6 @@ import ywcai.ls.mobileutil.tools.Wifi.presenter.ListenerWifiBroadcast;
 import ywcai.ls.mobileutil.tools.Wifi.presenter.WifiHardControl;
 import ywcai.ls.mobileutil.tools.Wifi.presenter.WifiProcess;
 
-/**
- * Created by zmy_11 on 2017/10/16.
- */
 
 public class WifiService extends Service {
     MyBinder binder = new MyBinder();
@@ -42,20 +39,4 @@ public class WifiService extends Service {
         new ListenerWifiBroadcast(wifiDataProcess);//注册系统广播
         wifiControl.startWifiScan();
     }
-
-//    public void notifyAddTask(int count) {
-//        NotificationCompat.Builder tipBuilder = new NotificationCompat.Builder(this);
-//        LsPendingIntent lsPendingIntent = new LsPendingIntent();
-//        tipBuilder
-//                .setContentIntent(lsPendingIntent.getPendingForStartActivity(this, AppConfig.WIFI_ACTIVITY_PATH))
-//                .setAutoCancel(true)
-//                .setOngoing(false)
-//                .setSmallIcon(R.drawable.homepage_menu_wifi)
-//                .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.mipmap.nav))
-//                .setContentTitle(TAG + " 添加了一个监听任务")
-//                .setContentText(TAG + " 后台有" + count + "个任务正在运行");
-//        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//        notificationManager.notify(PID, tipBuilder.build());
-//    }
-
 }

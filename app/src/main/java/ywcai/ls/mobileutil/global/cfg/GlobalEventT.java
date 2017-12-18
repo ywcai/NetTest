@@ -73,7 +73,15 @@ public class GlobalEventT {
 
 
     public static final int scan_lan_ping_index_result = 90090;
-
     public static final int scan_lan_refresh_local_ip = 90091;
     public static final int scan_lan_ping_stop = 90092;
+
+    public static final int scan_port_set_card_run_info_run = 90101;
+    public static final int scan_port_set_card_run_info_none = 90102;
+    public static final int scan_port_set_card_run_info_end = 90103;
+    public static final int scan_port_set_card_run_info_new = 90104;
+    public static final int scan_port_add_radar_result = 90105;
+    public static final int scan_port_refresh_radar_progress = 90106;
+    public static final int scan_port_recovery_radar_data = 90107;
+    public static final int scan_port_show_bottom_msg = 90108;
 }

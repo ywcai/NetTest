@@ -10,8 +10,8 @@ public class AppConfig {
 
 
     public static final String TIP_FOR_REMOTE_SAVE = "暂时不支持云端保存，请见谅";
-    public static final String STR_LOCAL_MAC_FILE="/sys/class/net/wlan0/address";
-    public static final String STR_ARP_FILE_PATH="/proc/net/arp";
+    public static final String STR_LOCAL_MAC_FILE = "/sys/class/net/wlan0/address";
+    public static final String STR_ARP_FILE_PATH = "/proc/net/arp";
 
     public static final String MAIN_ACTIVITY_PATH = "/main/view/MainActivity";
     public static final String WAIT_ACTIVITY_PATH = "/welcome/view/WaitActivity";
@@ -40,6 +40,7 @@ public class AppConfig {
     public static final int INT_NOTIFICATION_PID_PING = 7294;
     public static final int INT_NOTIFICATION_PID_WIFI = 7295;
     public static final int INT_NOTIFICATION_PID_STATION = 7296;
+    public static final int INT_NOTIFICATION_PID_SCAN_PORT = 7297;
 
     public static final String TITLE_PING = "PING";
     public static final String TITLE_WIFI = "WIFI";
@@ -89,20 +90,6 @@ public class AppConfig {
             R.color.chartLineColor0,
 
     };
-
-//    public static final String[] menuString = new String[]
-//            {
-//                    TITLE_PING,
-//                    TITLE_WIFI,
-//                    TITLE_STATION
-////                    TITLE_BLE,
-////                    TITLE_LAN,
-////                    TITLE_PORT,
-////                    TITLE_GPS,
-////                    TITLE_SENSOR,
-////                    TITLE_ORIENTATION,
-////                    TITLE_SPEED
-//            };
 
 
     //本地最多允许存储500条测试结果记录。
@@ -168,7 +155,7 @@ public class AppConfig {
                     temp[i] = WAIT_ACTIVITY_PATH;
                     break;
                 case INDEX_PORT:
-                    temp[i] = WAIT_ACTIVITY_PATH;
+                    temp[i] = SCAN_PORT_ACTIVITY_PATH;
                     break;
                 case INDEX_GPS:
                     temp[i] = WAIT_ACTIVITY_PATH;

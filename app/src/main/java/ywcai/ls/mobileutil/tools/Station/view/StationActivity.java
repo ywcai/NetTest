@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.baidu.mobstat.StatService;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 
@@ -239,6 +240,13 @@ public class StationActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        StatService.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        StatService.onPause(this);
     }
 
     private void InitToolBar() {
@@ -403,6 +411,7 @@ public class StationActivity extends AppCompatActivity {
         String temp = "-----小区原始数据-----\n" + cellLog + "\n----信号强度数据----\n" + signalLog;
         logText.setText(temp);
     }
+
 
 
 }
