@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import ywcai.ls.mobileutil.global.model.instance.MainApplication;
@@ -18,19 +17,27 @@ import ywcai.ls.mobileutil.global.model.instance.MainApplication;
 
 public class ListenerWifiBroadcast extends BroadcastReceiver {
     public Action1 action1;
-    public Context context= MainApplication.getInstance().getApplicationContext();
+    public Context context = MainApplication.getInstance().getApplicationContext();
 
     public ListenerWifiBroadcast(Action1 action1) {
         this.action1 = action1;
         registerBoardCast();
     }
 
+    public void setNewAction(Action1 action1) {
+        this.action1 = action1;
+    }
+
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        Observable.just(intent).observeOn(Schedulers.io()).subscribeOn(Schedulers.io()).subscribe(action1);
+        Observable.just(intent)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.newThread())
+                .subscribe(action1);
     }
-    private void registerBoardCast()
-    {
+
+    private void registerBoardCast() {
         context.registerReceiver(this, new IntentFilter(
                 WifiManager.WIFI_STATE_CHANGED_ACTION));
         context.registerReceiver(this, new IntentFilter(

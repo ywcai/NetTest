@@ -120,7 +120,6 @@ public class UpdateFragmentOne implements UpdateFragmentOneInf {
         }
     }
 
-
     @Override
     public void showSelectEntryInfo(WifiEntry wifiEntry) {
         //不为空，可能是直接选择的，也可能是刷新获取到的,获取到的是直接在SCAN中拿到的数据，否则lockEntry为空
@@ -153,33 +152,33 @@ public class UpdateFragmentOne implements UpdateFragmentOneInf {
 
 
     private void sendMsgRecovery2d4gTag() {
-        MsgHelper.sendEvent(GlobalEventT.wifi_recovery_channel_select_2d4g, "", wifiState.select2d4G);
+        MsgHelper.sendStickEvent(GlobalEventT.wifi_recovery_channel_select_2d4g, "", wifiState.select2d4G);
     }
 
     private void sendMsgRecovery5gTag() {
-        MsgHelper.sendEvent(GlobalEventT.wifi_recovery_channel_select_5g, "", wifiState.select5G);
+        MsgHelper.sendStickEvent(GlobalEventT.wifi_recovery_channel_select_5g, "", wifiState.select5G);
     }
 
 
     private void sendMsgCurrentSelectWifi(WifiEntry wifiEntry) {
-        MsgHelper.sendEvent(GlobalEventT.wifi_set_select_entry_info, "", wifiEntry);
+        MsgHelper.sendStickEvent(GlobalEventT.wifi_set_select_entry_info, "", wifiEntry);
     }
 
 
     private void sendMsgDrawRadarChartAndTagColor(WifiDrawDetail wifiDrawDetail) {
-        MsgHelper.sendEvent(GlobalEventT.wifi_refresh_first_info, "", wifiDrawDetail);
+        MsgHelper.sendStickEvent(GlobalEventT.wifi_refresh_first_info, "", wifiDrawDetail);
     }
 
     private void sendMsgTaskBtnStatus(Boolean isExist) {
-        MsgHelper.sendEvent(GlobalEventT.wifi_set_task_btn_status, "", isExist);
+        MsgHelper.sendStickEvent(GlobalEventT.wifi_set_task_btn_status, "", isExist);
     }
 
 
     private void sendMsgLockBtnStatus() {
-        MsgHelper.sendEvent(GlobalEventT.wifi_set_lock_btn_status, "", wifiState.lockWifi);
+        MsgHelper.sendStickEvent(GlobalEventT.wifi_set_lock_btn_status, "", wifiState.lockWifi);
     }
 
     private void sendMsgLockAndSaveBtnVisible() {
-        MsgHelper.sendEvent(GlobalEventT.wifi_set_lock_save_btn_visible, "", wifiState.selectEntry != null);
+        MsgHelper.sendStickEvent(GlobalEventT.wifi_set_lock_save_btn_visible, "", wifiState.selectEntry != null);
     }
 }

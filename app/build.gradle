@@ -6,8 +6,8 @@ android {
         applicationId "ywcai.ls.mobileutil"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 11
-        versionName "1.1.0"
+        versionCode 12
+        versionName "1.1.1"
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = [moduleName: project.getName()]
@@ -29,6 +29,7 @@ repositories {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     //noinspection GradleCompatible
+    compile project(':bDIntegrationSDK_LibProject')
     compile 'com.android.support:design:24.2.0'
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:cardview-v7:24.2.1'
@@ -46,22 +47,11 @@ dependencies {
     compile 'io.reactivex:rxjava:1.0.14'
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'com.alibaba:arouter-api:1.2.2'
-    //
-    annotationProcessor 'com.alibaba:arouter-compiler:1.1.3'
     compile 'cat.ereza:customactivityoncrash:2.1.0'
-    //crash info tip
-
-//    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    //下拉刷新库
-//    compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
-//    compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.3'
-
     compile 'com.github.ywcai:LsScanRadar:0.9.6'
     compile 'com.github.ywcai:LoadingDialog:1.0.0'
     compile 'com.github.ywcai:FlexButton:v0.0.8'
-
-    compile project(':bDIntegrationSDK_LibProject')
-
-
+    annotationProcessor 'com.alibaba:arouter-compiler:1.1.3'
+    compile files('libs/GDTUnionSDK.4.12.554.min.jar')
 }
 

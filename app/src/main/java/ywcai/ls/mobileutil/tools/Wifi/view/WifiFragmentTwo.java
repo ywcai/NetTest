@@ -42,6 +42,7 @@ import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.GlobalEvent;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
+import ywcai.ls.mobileutil.global.util.statics.LsNotification;
 import ywcai.ls.mobileutil.menu.presenter.inf.OnItemClickListener;
 import ywcai.ls.mobileutil.service.LsPendingIntent;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiEntry;
@@ -96,7 +97,7 @@ public class WifiFragmentTwo extends Fragment {
         super.onStop();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(GlobalEvent event) {
         switch (event.type) {
             case GlobalEventT.wifi_refresh_two_list:
@@ -118,19 +119,22 @@ public class WifiFragmentTwo extends Fragment {
     }
 
     private void popNotification(String tip) {
-        NotificationCompat.Builder tipBuilder = new NotificationCompat.Builder(this.getActivity());
-        LsPendingIntent lsPendingIntent = new LsPendingIntent();
-        tipBuilder
-                .setContentIntent(lsPendingIntent.getPendingForStartActivity(this.getActivity(), AppConfig.WIFI_ACTIVITY_PATH))
-                .setAutoCancel(true)
-                .setOngoing(false)
-                .setSmallIcon(R.drawable.homepage_menu_wifi)
-                .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.mipmap.nav))
-                .setDefaults(Notification.DEFAULT_SOUND)
-                .setContentTitle(AppConfig.TITLE_WIFI + " 添加了一个后台监听任务")
-                .setContentText(AppConfig.TITLE_WIFI + " " + tip);
-        NotificationManager notificationManager = (NotificationManager) this.getActivity().getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(AppConfig.INT_NOTIFICATION_PID_WIFI, tipBuilder.build());
+        LsNotification.notification(this.getActivity(), tip, AppConfig.TITLE_WIFI, AppConfig.WIFI_ACTIVITY_PATH,
+                R.drawable.homepage_menu_wifi
+                , AppConfig.INT_NOTIFICATION_PID_WIFI);
+//        NotificationCompat.Builder tipBuilder = new NotificationCompat.Builder(this.getActivity());
+//        LsPendingIntent lsPendingIntent = new LsPendingIntent();
+//        tipBuilder
+//                .setContentIntent(lsPendingIntent.getPendingForStartActivity(this.getActivity(), AppConfig.WIFI_ACTIVITY_PATH))
+//                .setAutoCancel(true)
+//                .setOngoing(false)
+//                .setSmallIcon(R.drawable.homepage_menu_wifi)
+//                .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.mipmap.nav))
+//                .setDefaults(Notification.DEFAULT_SOUND)
+//                .setContentTitle(AppConfig.TITLE_WIFI + " 添加了一个后台监听任务")
+//                .setContentText(AppConfig.TITLE_WIFI + " " + tip);
+//        NotificationManager notificationManager = (NotificationManager) this.getActivity().getSystemService(NOTIFICATION_SERVICE);
+//        notificationManager.notify(AppConfig.INT_NOTIFICATION_PID_WIFI, tipBuilder.build());
     }
 
     private void createPopDialog() {

@@ -10,12 +10,19 @@ import ywcai.ls.mobileutil.global.model.GlobalEvent;
 
 public class MsgHelper {
 
-    public static void sendEvent(int type,String tip,Object object)
-    {
-        GlobalEvent event=new GlobalEvent();
-        event.type=type;
-        event.tip=tip;
-        event.obj=object;
+    public static void sendEvent(int type, String tip, Object object) {
+        GlobalEvent event = new GlobalEvent();
+        event.type = type;
+        event.tip = tip;
+        event.obj = object;
         EventBus.getDefault().post(event);
+    }
+
+    public static void sendStickEvent(int type, String tip, Object object) {
+        GlobalEvent event = new GlobalEvent();
+        event.type = type;
+        event.tip = tip;
+        event.obj = object;
+        EventBus.getDefault().postSticky(event);
     }
 }

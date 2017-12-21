@@ -5,21 +5,28 @@ import java.util.concurrent.Executors;
 
 
 import ywcai.ls.mobileutil.global.model.LsThreadFactory;
+import ywcai.ls.mobileutil.global.util.statics.LsLog;
 
 
 public class ScanTaskExecute {
     private ScanPortState scanPortState;
     private ScanPortResult scanPortResult;
     private ExecutorService executorService;
-    private LsThreadFactory lsThreadFactory;
 
     public ScanTaskExecute(ScanPortState scanPortState, ScanPortResult scanPortResult) {
         this.scanPortState = scanPortState;
         this.scanPortResult = scanPortResult;
         if (executorService == null) {
-            lsThreadFactory = new LsThreadFactory();
+            LsThreadFactory lsThreadFactory = new LsThreadFactory();
             executorService = Executors.newFixedThreadPool(30, lsThreadFactory);
         }
+    }
+
+    public void resetThread(ScanPortState scanPortState, ScanPortResult scanPortResult) {
+        this.scanPortState = scanPortState;
+        this.scanPortResult = scanPortResult;
+        LsThreadFactory lsThreadFactory = new LsThreadFactory();
+        executorService = Executors.newFixedThreadPool(30, lsThreadFactory);
     }
 
     public void startScanTask() {
@@ -31,7 +38,7 @@ public class ScanTaskExecute {
             executorService.execute(portTest);
             return;
         }
-        for (int i = scanPortState.startPort; i <= scanPortState.endPort; i++) {
+        for (int i = scanPortState.startPort + scanPortResult.currentScanIndex; i <= scanPortState.endPort; i++) {
             PortTest portTest = new PortTest();
             portTest.setConfig(scanPortState, scanPortResult);
             portTest.setTestPort(i);
@@ -42,6 +49,9 @@ public class ScanTaskExecute {
     public void breakThread() {
         if (executorService != null) {
             executorService.shutdownNow();
+            executorService = null;
         }
     }
+
+
 }

@@ -32,6 +32,7 @@ import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 import ywcai.ls.mobileutil.global.util.statics.MyTime;
 import ywcai.ls.mobileutil.results.model.LogIndex;
 import ywcai.ls.mobileutil.results.model.TaskTotal;
+import ywcai.ls.mobileutil.service.WifiService;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiEntry;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiState;
 import ywcai.ls.mobileutil.tools.Wifi.presenter.inf.UpdateFragmentOneInf;
@@ -42,7 +43,6 @@ public class WifiProcess implements Action1 {
     private CacheProcess cacheProcess = CacheProcess.getInstance();
     private WifiManager wifiMg = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
     private WifiEntry connWifi = new WifiEntry();
-    private WifiHardControl wifiControl;
     private List<WifiEntry> allList = new ArrayList<>();
     private int[] channelSum = new int[166];
     private WifiState wifiState;
@@ -51,36 +51,54 @@ public class WifiProcess implements Action1 {
     private UpdateFragmentTwo updateFragmentTwo;
     private UpdateFragmentThree updateFragmentThree;
     private UpdateFragmentFour updateFragmentFour;
+    private WifiService wifiService;
 
-    public WifiProcess(WifiHardControl wifiControl) {
-        this.wifiControl = wifiControl;
+    public WifiProcess() {
         connWifi.initConnWifi();
         wifiState = cacheProcess.getWifiState();
         updateFragmentOne = new UpdateFragmentOne(wifiState);
         updateFragmentTwo = new UpdateFragmentTwo(wifiState);
         updateFragmentThree = new UpdateFragmentThree(wifiState);
         updateFragmentFour = new UpdateFragmentFour(wifiState);
-        recoveryAllData();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                recoveryAllData();
+            }
+        }).start();
+    }
+
+
+    //绑定WIFI服务并处理
+    public void setWifiService(WifiService wifiService) {
+        this.wifiService = wifiService;
+        if (wifiService != null) {
+            wifiService.startWifiScan(this);
+        }
     }
 
     public void recoveryAllData() {
+        connectWifi();
         synchronized (allList) {
             sendMsgTopBtnStatus();
-            sendMsgTitleTip("共" + allList.size() + "个信号");
-            updateFragmentOne.showSelectEntryInfo(lockEntry);
+//            sendMsgTitleTip("恢复中...");
+//            updateFragmentOne.showSelectEntryInfo(lockEntry);
+
             updateFragmentOne.loadChannelTagStatus();
             updateFragmentOne.loadLockAndSaveVisible();
             updateFragmentOne.loadLockBtnStatus();
             updateFragmentOne.loadTaskBtnStatus();
             updateFragmentOne.loadSignalChangeData(allList, channelSum);
-            updateFragmentTwo.refreshList(allList);
+//            updateFragmentTwo.refreshList(allList);
             updateFragmentTwo.refreshChart();
-
 //            updateFragmentThree.refreshChannelLineRecord(channelSum);
-            updateFragmentThree.refreshChannelBarChart(channelSum);
+//            updateFragmentThree.refreshChannelBarChart(channelSum);
 //            updateFragmentThree.refreshChannelPieChart(channelSum);
-
-
         }
     }
 
@@ -269,7 +287,7 @@ public class WifiProcess implements Action1 {
                         if (wifiState.selectEntry != null) {
                             //如果获取到了该信号的数据，则会更新，否则为NULL
                             if (wifiEntry.bssid.equals(wifiState.selectEntry.bssid)) {
-                                lockEntry = wifiState.selectEntry;
+                                lockEntry = wifiEntry;
                             }
                         }
                         channelSum[wifiEntry.channel]++;
@@ -281,7 +299,9 @@ public class WifiProcess implements Action1 {
                     @Override
                     public void call(List<WifiEntry> wifiEntries) {
                         allList.addAll(wifiEntries);
-                        wifiControl.selfAdd++;
+                        if (wifiService != null) {
+                            wifiService.wifiResultSelfAdd();
+                        }
                     }
                 });
     }
@@ -508,7 +528,7 @@ public class WifiProcess implements Action1 {
 
     //操作顶部标题的频率切换按钮
     private void sendMsgTopBtnStatus() {
-        MsgHelper.sendEvent(GlobalEventT.wifi_set_channel_btn_status, "", wifiState.choose2d4G);
+        MsgHelper.sendStickEvent(GlobalEventT.wifi_set_channel_btn_status, "", wifiState.choose2d4G);
     }
 
 
@@ -516,4 +536,6 @@ public class WifiProcess implements Action1 {
         updateFragmentFour.saveBitMap(wifiChannelRecord);
 
     }
+
+
 }

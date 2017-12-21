@@ -3,18 +3,29 @@ package ywcai.ls.mobileutil.welcome.view;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
+
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.baidu.mobstat.StatService;
+import com.qq.e.ads.splash.SplashAD;
+import com.qq.e.ads.splash.SplashADListener;
+import com.qq.e.comm.util.AdError;
 
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.model.instance.MainApplication;
+import ywcai.ls.mobileutil.global.util.statics.LsLog;
 
 
-public class WelComeActivity extends AppCompatActivity {
+public class WelComeActivity extends AppCompatActivity implements SplashADListener {
     public String ROUTER_PAGE = "First";
+    SplashAD splashAD;
+    ViewGroup adContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,57 +39,46 @@ public class WelComeActivity extends AppCompatActivity {
             finish();
             return;
         }
-        //通知栏打开程序，又有两个情况。
-//        if (isBroughtToFront) {
-            //打开了一个已存在的任务，并且这个栈被移到了栈顶。则直接路由到MAIN界面，并传递MAIN的路由参数
-            //不存在实例，
-            if (!MainApplication.getInstance().isActivityExist) {
+        //不存在实例，
+        if (!MainApplication.getInstance().isActivityExist) {
                 /*
                 重建时，重绘welcome页面后再进入，否则会闪白屏，不是很美观
                  */
-                this.requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
-                this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//去掉信息栏
-                setContentView(R.layout.activity_welcome);
-                MainApplication.getInstance().isActivityExist = true;
+            showWelcomeActivity();
                 /*
                 路由信息，可根据上一次应用关闭时的TOP activity缓存来恢复
                  */
-                startMainActivity();
-            } else {
-                //已存在，直接关闭这次吊起的页面即可
-                finish();
-            }
-            return;
-//        }
-        //第一次启动，打开欢迎的启动界面
-//        this.requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
-//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//去掉信息栏
-//        setContentView(R.layout.activity_welcome);
-//        startMainActivity();
-//        //标识应用已经建立了ACTIVITY
-//        MainApplication.getInstance().isActivityExist = true;
-    }
-
-    @Override
-    public void onBackPressed() {
+        } else {
+            //已存在，直接关闭这次吊起的页面即可
+            finish();
+        }
+        return;
 
     }
 
-    private void startMainActivity()
-    {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                ARouter.getInstance().
-                        build(AppConfig.MAIN_ACTIVITY_PATH).withString(AppConfig.ROUTER_FLAG, ROUTER_PAGE).
-                        navigation();
-            }
-        }).start();
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    //显示欢迎页面，在这里加入欢迎页面的所有广告内容
+    private void showWelcomeActivity() {
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//去掉信息栏
+        setContentView(R.layout.activity_welcome);
+        MainApplication.getInstance().isActivityExist = true;
+        adContainer = (ViewGroup) findViewById(R.id.splash_container);
+        splashAD = new SplashAD(this, adContainer, AppConfig.TENCENT_APP_ID, AppConfig.TENCENT_AD_ID, this);
+    }
+
+    //跳转到主界面
+    private void startMainActivity() {
+        ARouter.getInstance().
+                build(AppConfig.MAIN_ACTIVITY_PATH).withString(AppConfig.ROUTER_FLAG, ROUTER_PAGE).
+                navigation();
     }
 
     @Override
@@ -91,5 +91,35 @@ public class WelComeActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         StatService.onPause(this);
+    }
+
+
+    @Override
+    public void onADDismissed() {
+        //广告加载完成
+        startMainActivity();
+    }
+
+    @Override
+    public void onNoAD(AdError adError) {
+        // 如果加载广告失败，则直接跳转
+        startMainActivity();
+    }
+
+    @Override
+    public void onADPresent() {
+        //广告被正常弹出
+        ImageView log = (ImageView) findViewById(R.id.splash_holder);
+        log.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onADClicked() {
+
+    }
+
+    @Override
+    public void onADTick(long l) {
+        //显示倒计时
     }
 }

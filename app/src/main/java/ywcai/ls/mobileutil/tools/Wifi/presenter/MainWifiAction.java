@@ -2,19 +2,14 @@ package ywcai.ls.mobileutil.tools.Wifi.presenter;
 
 
 import android.content.Context;
-import android.graphics.Color;
+
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.highlight.Highlight;
 
 import rx.functions.Action1;
-import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
-import ywcai.ls.mobileutil.global.model.instance.MainApplication;
 import ywcai.ls.mobileutil.global.util.statics.InStallService;
-import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
-import ywcai.ls.mobileutil.global.util.statics.MyTime;
 import ywcai.ls.mobileutil.service.LsConnection;
-import ywcai.ls.mobileutil.service.StationService;
 import ywcai.ls.mobileutil.service.WifiService;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiEntry;
 import ywcai.ls.mobileutil.tools.Wifi.presenter.inf.MainWifiActionInf;
@@ -22,10 +17,25 @@ import ywcai.ls.mobileutil.tools.Wifi.presenter.inf.MainWifiActionInf;
 public class MainWifiAction implements MainWifiActionInf {
     WifiService wifiService = null;
     LsConnection lsConnection;
-    Context context;
+    WifiProcess wifiProcess;
 
-    public MainWifiAction(Context context) {
-        this.context=context;
+    public MainWifiAction() {
+        wifiProcess = new WifiProcess();
+        startWifiService();
+    }
+
+    @Override
+    public void startWifiService() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                bindService();
+                waitService();
+            }
+        }).start();
+    }
+
+    private void bindService() {
         lsConnection = new LsConnection(new Action1() {
             @Override
             public void call(Object o) {
@@ -36,113 +46,90 @@ public class MainWifiAction implements MainWifiActionInf {
                 }
             }
         });
-        InStallService.bindService(context, WifiService.class, lsConnection);
+        InStallService.bindService(WifiService.class, lsConnection);
     }
 
-    @Override
-    public void startWifiService() {
-        InStallService.waitService(wifiService);//绑定服务是异步的，必须等待，否则可能启动时空指针
-        if (wifiService != null) {
-            wifiService.installProcess();
-//            wifiService.wifiControl.startWifiScan();
-        }
+    private void waitService() {
+        InStallService.waitService(wifiService);
+        //绑定后启动扫描，如果已经存在扫描的线程，则在子方法中判断
+        wifiProcess.setWifiService(wifiService);
     }
 
     @Override
     public void lockWifi() {
-        if (wifiService != null) {
-            wifiService.wifiDataProcess.lock();
-        }
-//        wifiDataProcess.lock();
+
+        wifiProcess.lock();
+
     }
 
     @Override
     public void setSelectEntry(WifiEntry wifiEntry) {
-        if (wifiService != null) {
-            wifiService.wifiDataProcess.setSelectEntry(wifiEntry);
-        }
-//        wifiDataProcess.setSelectEntry(wifiEntry);
+
+        wifiProcess.setSelectEntry(wifiEntry);
     }
 
     @Override
     public void saveHighLightHolderView(Highlight[] hh) {
-        if (wifiService != null) {
-            wifiService.wifiDataProcess.saveHighlightHolder(hh);
-        }
-//        wifiDataProcess.saveHighlightHolder(hh);
+
+        wifiProcess.saveHighlightHolder(hh);
     }
 
 
     @Override
     public void addOrRemoveTask() {
-        if (wifiService != null) {
-            wifiService.wifiDataProcess.task();
-        }
-//        wifiDataProcess.task();
+
+        wifiProcess.task();
     }
 
 
     @Override
     public void set2d4G(boolean choose2d4G) {
-        if (wifiService != null) {
-            wifiService.wifiDataProcess.set2d4G(choose2d4G);
-        }
-//        wifiDataProcess.set2d4G(choose2d4G);
+
+        wifiProcess.set2d4G(choose2d4G);
     }
 
     @Override
     public void setChannelFilter(int index, boolean isSelect) {
-        if (wifiService != null) {
-            wifiService.wifiDataProcess.setChannelFilter(index, isSelect);
-        }
-//        wifiDataProcess.setChannelFilter(index);
+
+        wifiProcess.setChannelFilter(index, isSelect);
     }
 
     @Override
     public void setAllTagSelectOrCancal(int[] allTagStatus) {
-        if (wifiService != null) {
-            wifiService.wifiDataProcess.setAllTagSelectOrCancal(allTagStatus);
-        }
+
+        wifiProcess.setAllTagSelectOrCancal(allTagStatus);
     }
 
 
     @Override
     public void saveLogForLocal(int pos) {
-        if (wifiService != null) {
-            wifiService.wifiDataProcess.saveLogForLocal(pos);
-        }
-//        wifiDataProcess.saveLogIndexOnLocal(pos);
-//        wifiDataProcess.removeTask(pos);
+
+        wifiProcess.saveLogForLocal(pos);
+
     }
 
     @Override
     public void saveLogForRemote(int pos) {
-        if (wifiService != null) {
-            wifiService.wifiDataProcess.saveLogForRemote(pos);
-        }
+
+        wifiProcess.saveLogForRemote(pos);
     }
 
     @Override
     public void clearLog(int pos) {
-        if (wifiService != null) {
-            wifiService.wifiDataProcess.clearLog(pos);
-        }
+
+        wifiProcess.clearLog(pos);
     }
 
     @Override
     public void showChartLine(int popTaskPos) {
-        if (wifiService != null) {
-            wifiService.wifiDataProcess.setLineHide(popTaskPos);
-        }
-//        wifiDataProcess.setLineHide(popTaskPos);
+
+        wifiProcess.setLineHide(popTaskPos);
     }
 
     @Override
     public void saveBitmap(LineChart wifiChannelRecord) {
 
-        if (wifiService != null) {
-            wifiService.wifiDataProcess.saveBitMap(wifiChannelRecord);
-        }
+        wifiProcess.saveBitMap(wifiChannelRecord);
     }
 
 
@@ -163,10 +150,7 @@ public class MainWifiAction implements MainWifiActionInf {
 
     @Override
     public void clickTaskItem() {
-        if (wifiService != null) {
-            wifiService.wifiDataProcess.popOperatorMenu();
-        }
+
+        wifiProcess.popOperatorMenu();
     }
-
-
 }

@@ -23,12 +23,14 @@ import ywcai.ls.mobileutil.results.model.TaskTotal;
 import ywcai.ls.mobileutil.tools.Ping.model.PingState;
 import ywcai.ls.mobileutil.tools.ScanPort.model.ScanPortResult;
 import ywcai.ls.mobileutil.tools.ScanPort.model.ScanPortState;
+import ywcai.ls.mobileutil.tools.Sensor.model.SensorState;
 import ywcai.ls.mobileutil.tools.Station.model.StationEntry;
 import ywcai.ls.mobileutil.tools.Station.model.StationState;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiEntry;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiState;
 
 public class CacheProcess {
+
 
     private static Object lock = new Object();
     private static CacheProcess cacheProcess = null;
@@ -38,12 +40,10 @@ public class CacheProcess {
     private final String STATION_STATE = "STATION_STATE";
     private final String SCAN_PORT_STATE = "SCAN_PORT_STATE";
     private final String SCAN_PORT_RESULT = "SCAN_PORT_RESULT";
-
-    //    private final String STATION_RECORD = "STATION_RECORD";
+    private final String SENSOR_STATE = "SENSOR_STATE";
     private final String USER = "USER";
     private final String LOG_INDEX = "LOG_INDEX";
     private final String TASK_TOTAL = "TASK_TOTAL";
-//    private final String WIFI_TEMP_DATA = "WIFI_TEMP_DATA";
 
 
     File file = MainApplication.getInstance().getFilesDir();
@@ -78,13 +78,13 @@ public class CacheProcess {
         }
         try {
             fos = MainApplication.getInstance().getApplicationContext().openFileOutput(fileName, Context.MODE_PRIVATE);
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try {
             fos.write(cache.getBytes("utf-8"));
             fos.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -164,7 +164,7 @@ public class CacheProcess {
         try {
             taskTotal = gson.fromJson(cache, TaskTotal.class);
         } catch (Exception e) {
-
+            taskTotal = null;
         }
         if (taskTotal == null) {
             return new TaskTotal();
@@ -295,6 +295,7 @@ public class CacheProcess {
             cache = gson.toJson(list, new TypeToken<List<Float>>() {
             }.getType());
         } catch (Exception e) {
+            cache = "null";
         }
         setCache(logFlag, cache);
     }
@@ -531,6 +532,40 @@ public class CacheProcess {
         setCache(SCAN_PORT_RESULT, cache);
     }
 
+    /*
+    *Sensor Module
+    *--------------------------------------------------------------------------------------------------
+    * */
+    public SensorState getSensorState() {
+        String cache = getCache(SENSOR_STATE);
+        if (cache.equals("null")) {
+            return new SensorState();
+        }
+        Gson gson = new Gson();
+        SensorState sensorState = null;
+        try {
+            sensorState = gson.fromJson(cache, SensorState.class);
+        } catch (Exception e) {
 
+        }
+        if (sensorState == null) {
+            return new SensorState();
+        }
+        return sensorState;
+    }
+
+    public void setSensorState(SensorState sensorState) {
+        String cache = "null";
+        if (sensorState == null) {
+            setCache(SENSOR_STATE, cache);
+        } else {
+            Gson gson = new Gson();
+            try {
+                cache = gson.toJson(sensorState);
+            } catch (Exception e) {
+            }
+        }
+        setCache(SENSOR_STATE, cache);
+    }
 }
 

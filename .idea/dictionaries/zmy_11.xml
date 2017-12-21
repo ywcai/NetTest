@@ -8,6 +8,8 @@
       <w>chooseable</w>
       <w>ehrpd</w>
       <w>evdo</w>
+      <w>fileprovider</w>
+      <w>gdtdownload</w>
       <w>gprs</w>
       <w>hsdpa</w>
       <w>hspa</w>
@@ -20,6 +22,7 @@
       <w>rscp</w>
       <w>rsrp</w>
       <w>ssid</w>
+      <w>tencent</w>
       <w>umts</w>
       <w>wcdma</w>
       <w>wlan</w>

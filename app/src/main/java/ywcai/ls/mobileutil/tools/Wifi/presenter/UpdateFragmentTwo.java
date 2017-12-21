@@ -77,7 +77,7 @@ public class UpdateFragmentTwo implements UpdateFragmentTwoInf {
 
 
     private void sendMsgUpdateTaskList(List<WifiEntry> wifiEntryList) {
-        MsgHelper.sendEvent(GlobalEventT.wifi_refresh_two_list, "", wifiEntryList);
+        MsgHelper.sendStickEvent(GlobalEventT.wifi_refresh_two_list, "", wifiEntryList);
     }
 
     private void sendMsgPopMenu() {
@@ -85,11 +85,11 @@ public class UpdateFragmentTwo implements UpdateFragmentTwoInf {
     }
 
     private void sendMsgRefreshChart() {
-        MsgHelper.sendEvent(GlobalEventT.wifi_refresh_two_chart_line, "", null);
+        MsgHelper.sendStickEvent(GlobalEventT.wifi_refresh_two_chart_line, "", null);
     }
 
     private void sendMsgUpdateItemBtn(int pos, boolean isShowInChart) {
-        MsgHelper.sendEvent(GlobalEventT.wifi_set_item_btn_hide_status, pos + "", isShowInChart);
+        MsgHelper.sendStickEvent(GlobalEventT.wifi_set_item_btn_hide_status, pos + "", isShowInChart);
 
     }
 

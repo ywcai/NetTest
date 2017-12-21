@@ -1,7 +1,6 @@
 package ywcai.ls.mobileutil.tools.ScanPort.model;
 
 
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -12,7 +11,6 @@ import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
-import ywcai.ls.mobileutil.results.model.LogIndex;
 import ywcai.ls.mobileutil.results.model.TaskTotal;
 
 /**
@@ -38,8 +36,8 @@ public class PortTest implements Runnable {
 
     @Override
     public void run() {
-        boolean isOpen = false;
-        Socket socket = null;
+        boolean isOpen;
+        Socket socket;
         try {
             //创建一个流套接字并将其连接到指定主机上的指定端口号
             socket = new Socket();
@@ -62,6 +60,9 @@ public class PortTest implements Runnable {
                 }
             }
         }
+        if (scanPortState.scanTaskState != 1) {
+            return;
+        }
         processResult(isOpen);
     }
 
@@ -76,6 +77,7 @@ public class PortTest implements Runnable {
                 temp.openPorts.addAll(scanPortResult.openPorts);
                 sendMsgAddResult(temp);
             } else {
+                //
                 temp.openPorts.addAll(scanPortResult.openPorts);
             }
             cacheProcess.setScanPortResult(scanPortResult);
@@ -93,14 +95,14 @@ public class PortTest implements Runnable {
     }
 
     private void sendMsgRefreshProgress(ScanPortResult temp) {
-        MsgHelper.sendEvent(GlobalEventT.scan_port_refresh_radar_progress, "", temp);
+        MsgHelper.sendStickEvent(GlobalEventT.scan_port_refresh_radar_progress, "", temp);
     }
 
     private void sendMsgAddResult(ScanPortResult temp) {
-        MsgHelper.sendEvent(GlobalEventT.scan_port_add_radar_result, "", temp);
+        MsgHelper.sendStickEvent(GlobalEventT.scan_port_add_radar_result, "", temp);
     }
 
     private void sendMsgScanAutoEnd() {
-        MsgHelper.sendEvent(GlobalEventT.scan_port_set_card_run_info_end, "", scanPortState);
+        MsgHelper.sendStickEvent(GlobalEventT.scan_port_set_card_run_info_end, "", scanPortState);
     }
 }

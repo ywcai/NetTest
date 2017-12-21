@@ -4,13 +4,13 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import ywcai.ls.mobileutil.tools.ScanPort.model.ScanPortProcess;
+import ywcai.ls.mobileutil.tools.ScanPort.model.ScanPortResult;
+import ywcai.ls.mobileutil.tools.ScanPort.model.ScanPortState;
+import ywcai.ls.mobileutil.tools.ScanPort.model.ScanTaskExecute;
 
 public class ScanPortService extends Service {
-//    static final String TAG = AppConfig.TITLE_PORT;
-//    static final int PID = AppConfig.INT_NOTIFICATION_PID_SCAN_PORT;
     MyBinder binder = new MyBinder();
-    public ScanPortProcess scanPortProcess;
+    private ScanTaskExecute scanTaskExecute;
 
     @Nullable
     @Override
@@ -22,12 +22,33 @@ public class ScanPortService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        InstallProcess();
     }
 
-    private void InstallProcess() {
-        if (scanPortProcess == null) {
-            scanPortProcess = new ScanPortProcess();
+    //如果是退出了APP后新打开，则需要建任务并恢复任务
+    public void recoveryExecuteTask(ScanPortState scanPortState, ScanPortResult scanPortResult) {
+        if (scanTaskExecute == null) {
+            scanTaskExecute = new ScanTaskExecute(scanPortState, scanPortResult);
+        }
+    }
+
+    //当主动停止时，重新开始任务需要调用这个方法重置线程池
+    public void resetThread(ScanPortState scanPortState, ScanPortResult scanPortResult) {
+        if (scanTaskExecute != null) {
+            scanTaskExecute.resetThread(scanPortState, scanPortResult);
+        }
+    }
+
+    //直接在APP里面操作按钮时调用的
+    public void startTask() {
+        if (scanTaskExecute != null) {
+            scanTaskExecute.startScanTask();
+        }
+    }
+
+    //主动停止时候需要调用
+    public void stopExecuteTask() {
+        if (scanTaskExecute != null) {
+            scanTaskExecute.breakThread();
         }
     }
 }

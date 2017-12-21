@@ -3,28 +3,49 @@ package ywcai.ls.mobileutil.tools.ScanPort.model;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
-import ywcai.ls.mobileutil.global.util.statics.ListToString;
+import ywcai.ls.mobileutil.global.util.statics.LsListTransfer;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 import ywcai.ls.mobileutil.global.util.statics.MyTime;
 import ywcai.ls.mobileutil.results.model.LogIndex;
 import ywcai.ls.mobileutil.results.model.TaskTotal;
+import ywcai.ls.mobileutil.service.ScanPortService;
 
 public class ScanPortProcess {
 
     private ScanPortState scanPortState;
     private ScanPortResult scanPortResult;
     private CacheProcess cacheProcess = CacheProcess.getInstance();
-    private ScanTaskExecute scanTaskExecute;
+    private ScanPortService scanPortService;
 
     public ScanPortProcess() {
         this.scanPortState = cacheProcess.getScanPortState();
         this.scanPortResult = cacheProcess.getScanPortResult();
-        //如果是新构造的业务，说明原来的service已经中断，需要自动从缓存中重新恢复任务
-        recoveryStartTask();
+
     }
 
+    public void setScanPortService(ScanPortService scanPortService) {
+        this.scanPortService = scanPortService;
+        scanPortService.recoveryExecuteTask(scanPortState, scanPortResult);
+        isNeedRecoveryTask();
+    }
+
+    /*
+    如果当前任务状态是运行状态，测需要进一步检测是否真正有后台TASK执行。
+    如果检测到有TASK执行，则不处理UI
+    如果检测到无TASK执行，则根据保存的任务参数恢复任务
+     */
+    private void isNeedRecoveryTask() {
+        //只要没有关闭APP退出，Service始终将任务执行完。
+        //如果任务没有执行完退出后又重新打开APP，则直接显示上一次执行到中途的结果。
+        if (scanPortState.scanTaskState == 1) {
+            scanPortService.startTask();
+        }
+    }
 
     public void selectProcess() {
+        if (scanPortService == null) {
+            return;
+        }
         switch (scanPortState.scanTaskState) {
             case 0:
                 startScanTask();
@@ -79,6 +100,11 @@ public class ScanPortProcess {
             scanPortState.startPort = start;
             scanPortState.endPort = end;
         }
+        reSetWorkConfig();
+        sendMsgTopCardNew();
+    }
+
+    private void reSetWorkConfig() {
         scanPortState.scanTaskState = 0;
         cacheProcess.setScanPortState(scanPortState);
         scanPortResult.currentScanIndex = 0;
@@ -89,8 +115,8 @@ public class ScanPortProcess {
             scanPortResult.maxCounts = scanPortState.endPort - scanPortState.startPort + 1;
         }
         cacheProcess.setScanPortResult(scanPortResult);
-        sendMsgTopCardNew();
     }
+
 
     /*
     Core process
@@ -99,14 +125,12 @@ public class ScanPortProcess {
         scanPortState.scanTaskState = 1;
         cacheProcess.setScanPortState(scanPortState);
         sendMsgTopCardRun();
-        scanTaskExecute = new ScanTaskExecute(scanPortState, scanPortResult);
-        scanTaskExecute.startScanTask();
+        scanPortService.resetThread(scanPortState, scanPortResult);
+        scanPortService.startTask();
     }
 
     private void stopScanTask() {
-        if (scanTaskExecute != null) {
-            scanTaskExecute.breakThread();
-        }
+        scanPortService.stopExecuteTask();
         scanPortState.scanTaskState = 2;
         cacheProcess.setScanPortState(scanPortState);
         sendMsgTopCardEnd();
@@ -114,12 +138,12 @@ public class ScanPortProcess {
 
     private void processResult() {
         saveScanLog();
-        scanPortState = new ScanPortState();
+        scanPortState.reset();
         cacheProcess.setScanPortState(scanPortState);
-        scanPortResult = new ScanPortResult();
+        scanPortResult.reset();
         cacheProcess.setScanPortResult(scanPortResult);
         sendMsgTopCardNone();
-        sendMsgPopBottomMsg("结果已在本地保存");
+        sendMsgPopBottomMsg("结果已在本地保存!");
     }
 
 
@@ -135,7 +159,7 @@ public class ScanPortProcess {
                 + "-" + scanPortState.endPort
                 + " 扫描数量:" + scanPortResult.maxCounts
                 + " 打开数量:" + scanPortResult.openPorts.size()
-                + " 端口明细:" + ListToString.IntegerToString(scanPortResult.openPorts);
+                + " 端口明细:" + LsListTransfer.IntegerToString(scanPortResult.openPorts);
         cacheProcess.addCacheLogIndex(logIndex);
         TaskTotal taskTotal = cacheProcess.getCacheTaskTotal();
         taskTotal.state[AppConfig.INDEX_PORT] = 0;
@@ -143,42 +167,35 @@ public class ScanPortProcess {
         cacheProcess.setCacheTaskTotal(taskTotal);
     }
 
-    //如果是重新打开了一个对象，则先更新UI，再根据当前的状态确认是否重新建立工作线程
-    private void recoveryStartTask() {
-        recoveryUiState();
-        //recoveryWorkTask();
-    }
-
-
-
     /*
     refresh the ui method
      */
 
     private void sendMsgTopCardNone() {
-        MsgHelper.sendEvent(GlobalEventT.scan_port_set_card_run_info_none, "", null);
+        MsgHelper.sendStickEvent(GlobalEventT.scan_port_set_card_run_info_none, "", null);
     }
 
     //刷新顶部的card栏任务信息，并显示开始按钮
     private void sendMsgTopCardNew() {
-        MsgHelper.sendEvent(GlobalEventT.scan_port_set_card_run_info_new, "", scanPortState);
+        MsgHelper.sendStickEvent(GlobalEventT.scan_port_set_card_run_info_new, "", scanPortState);
     }
 
     private void sendMsgTopCardRun() {
-        MsgHelper.sendEvent(GlobalEventT.scan_port_set_card_run_info_run, "", scanPortState);
+        MsgHelper.sendStickEvent(GlobalEventT.scan_port_set_card_run_info_run, "", scanPortState);
     }
 
     private void sendMsgTopCardEnd() {
-        MsgHelper.sendEvent(GlobalEventT.scan_port_set_card_run_info_end, "", scanPortState);
+        MsgHelper.sendStickEvent(GlobalEventT.scan_port_set_card_run_info_end, "", scanPortState);
     }
 
     //刷更新雷达上的扫描结果，结果及百分比信息
     private void sendMsgMainRadarData() {
-        MsgHelper.sendEvent(GlobalEventT.scan_port_recovery_radar_data, "", scanPortResult);
+        MsgHelper.sendStickEvent(GlobalEventT.scan_port_recovery_radar_data, "", scanPortResult);
     }
 
     private void sendMsgPopBottomMsg(String tip) {
         MsgHelper.sendEvent(GlobalEventT.scan_port_show_bottom_msg, tip, null);
     }
+
 
 }

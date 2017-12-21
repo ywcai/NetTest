@@ -83,7 +83,6 @@ public class PingService extends Service implements ServiceControlInf {
                 break;
             //暂停任务
             case 1:
-                String context = progressBuilder.mContentText.toString();
                 progressBuilder
                         .setContentText(progressBuilder.mContentText.toString() + " 手动暂停任务");
                 notificationManager.notify(PID, progressBuilder.build());

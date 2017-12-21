@@ -78,7 +78,6 @@ public class MenuFragment extends Fragment {
     }
 
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -192,7 +191,7 @@ public class MenuFragment extends Fragment {
         menuAdapter.setOnclickListener(new OnItemClickListener() {
             @Override
             public void OnClickItem(View v, int pos) {
-                Observable.just(pos).throttleFirst(3, TimeUnit.SECONDS)
+                Observable.just(pos).throttleFirst(5, TimeUnit.SECONDS)
                         .subscribe(new Action1<Integer>() {
                             @Override
                             public void call(Integer pos) {
@@ -211,7 +210,7 @@ public class MenuFragment extends Fragment {
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void updateDeviceList(GlobalEvent event) {
         switch (event.type) {
             case GlobalEventT.ping_update_chart_desc:
@@ -237,8 +236,10 @@ public class MenuFragment extends Fragment {
     private void updatePingMenu() {
         TaskTotal taskTotal = CacheProcess.getInstance().getCacheTaskTotal();
         //更新Ping的上标
-        menuList.get(AppConfig.INDEX_PING).isRunning = taskTotal.state[AppConfig.INDEX_PING];
-        menuAdapter.notifyDataSetChanged();
+        if (taskTotal.state[AppConfig.INDEX_PING] % 10 == 0) {
+            menuList.get(AppConfig.INDEX_PING).isRunning = taskTotal.state[AppConfig.INDEX_PING];
+            menuAdapter.notifyDataSetChanged();
+        }
         updateTitleTip();
     }
 
@@ -251,8 +252,7 @@ public class MenuFragment extends Fragment {
 
     }
 
-    private void updateTitleTip()
-    {
+    private void updateTitleTip() {
         //在首页更新显示所有后台任务的情况，所有自活动的变换都会需要对这个页面更新一次
         TaskTotal taskTotal = CacheProcess.getInstance().getCacheTaskTotal();
         titleTipMenuList.get(0).titleContent = taskTotal.runCount + "";

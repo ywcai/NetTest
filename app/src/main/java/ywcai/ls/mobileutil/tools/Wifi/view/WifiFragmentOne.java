@@ -90,7 +90,7 @@ public class WifiFragmentOne extends Fragment {
         super.onStop();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void updateDeviceList(GlobalEvent event) {
         switch (event.type) {
             case GlobalEventT.wifi_refresh_first_info:
@@ -102,11 +102,11 @@ public class WifiFragmentOne extends Fragment {
                 break;
             case GlobalEventT.wifi_recovery_channel_select_2d4g:
 
-                recovery2d4GTags((int[])event.obj);
+                recovery2d4GTags((int[]) event.obj);
                 break;
             case GlobalEventT.wifi_recovery_channel_select_5g:
 
-                recovery5GTags((int[])event.obj);
+                recovery5GTags((int[]) event.obj);
                 break;
             case GlobalEventT.wifi_set_channel_btn_status:
                 refreshChannelTagVisible((Boolean) event.obj);
@@ -120,14 +120,7 @@ public class WifiFragmentOne extends Fragment {
             case GlobalEventT.wifi_set_select_entry_info:
                 showSelectEntryInfo((WifiEntry) event.obj);
                 break;
-            case GlobalEventT.wifi_set_first_main_toast:
-                showToast(event.tip);
-                break;
         }
-    }
-
-    private void showToast(String tip) {
-        Toast.makeText(this.getContext(), tip, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -211,7 +204,7 @@ public class WifiFragmentOne extends Fragment {
         chooseChannel2d4G.setOnFlexButtonClickListener(new OnFlexButtonClickListener() {
             @Override
             public void clickItem(int i, boolean b) {
-                mainWifiActionInf.setChannelFilter(i,b);
+                mainWifiActionInf.setChannelFilter(i, b);
             }
 
             @Override
@@ -231,7 +224,7 @@ public class WifiFragmentOne extends Fragment {
         chooseChannel5G.setOnFlexButtonClickListener(new OnFlexButtonClickListener() {
             @Override
             public void clickItem(int i, boolean b) {
-                mainWifiActionInf.setChannelFilter(i,b);
+                mainWifiActionInf.setChannelFilter(i, b);
             }
 
             @Override

@@ -1,40 +1,27 @@
 package ywcai.ls.mobileutil.tools.Wifi.view;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.support.design.widget.Snackbar;
+
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.baidu.mobstat.StatService;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import mehdi.sakout.fancybuttons.FancyButton;
-import rx.Observable;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 import ywcai.ls.mobileutil.R;
-import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.GlobalEvent;
-import ywcai.ls.mobileutil.global.util.statics.LsLog;
 import ywcai.ls.mobileutil.global.util.statics.LsSnack;
 import ywcai.ls.mobileutil.global.util.statics.SetTitle;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiPageAdapter;
@@ -81,18 +68,8 @@ public class WifiActivity extends AppCompatActivity {
         snack_container = (RelativeLayout) findViewById(R.id.snack_container);
     }
 
-
     private void InitMainAction() {
-        mainWifiActionInf = new MainWifiAction(this);
-        Observable.just(mainWifiActionInf)
-                .delay(1, TimeUnit.SECONDS)//延迟一秒启动服务非常重要，否则有可能前台未启动Fragment收不到扫描完成的通知.
-                .observeOn(Schedulers.newThread()).
-                subscribe(new Action1<MainWifiActionInf>() {
-                    @Override
-                    public void call(MainWifiActionInf mainWifiActionInf) {
-                        mainWifiActionInf.startWifiService();
-                    }
-                });
+        mainWifiActionInf = new MainWifiAction();
     }
 
     @Override
@@ -110,7 +87,6 @@ public class WifiActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
     }
 
     private void InitToolBar() {
@@ -164,7 +140,7 @@ public class WifiActivity extends AppCompatActivity {
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void updateDeviceList(GlobalEvent event) {
         switch (event.type) {
             case GlobalEventT.wifi_set_main_title_tip:

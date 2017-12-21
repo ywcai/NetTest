@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ywcai.ls.mobileutil">
+
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -10,6 +11,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+
     <application
         android:name=".global.model.instance.MainApplication"
         android:allowBackup="true"
@@ -17,6 +19,22 @@
         android:label="@string/app_name"
         android:persistent="true"
         android:theme="@style/AppTheme">
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="ywcai.ls.mobileutil.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/gdt_file_path" />
+        </provider>
+        <service
+            android:name="com.qq.e.comm.DownloadService"
+            android:exported="false" />
+        <!-- 请开发者注意字母的大小写，ADActivity，而不是AdActivity -->
+        <activity
+            android:name="com.qq.e.ads.ADActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
         <meta-data
             android:name="BaiduMobAd_APP_ID"
             android:value="d89b3ac7" />
@@ -45,6 +63,7 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -69,23 +88,29 @@
         <activity
             android:name=".tools.Wifi.view.WifiActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".tools.Station.view.StationActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".tools.ScanLan.view.ScanLanActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".tools.ScanPort.ScanPortActivity"
+            android:name=".tools.ScanPort.view.ScanPortActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".tools.Sensor.view.SensorActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".welcome.view.WaitActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+
+
     </application>
 
 </manifest>

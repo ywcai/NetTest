@@ -2,12 +2,10 @@ package ywcai.ls.mobileutil.global.cfg;
 
 import ywcai.ls.mobileutil.R;
 
-/**
- * Created by zmy_11 on 2017/10/6.
- */
-
 public class AppConfig {
 
+    public static final String TENCENT_AD_ID = "4050321625819482";
+    public static final String TENCENT_APP_ID = "1106460462";
 
     public static final String TIP_FOR_REMOTE_SAVE = "暂时不支持云端保存，请见谅";
     public static final String STR_LOCAL_MAC_FILE = "/sys/class/net/wlan0/address";
@@ -21,13 +19,12 @@ public class AppConfig {
     public static final String STATION_ACTIVITY_PATH = "/tools/Station/view/StationActivity";
     public static final String SCAN_LAN_ACTIVITY_PATH = "/tools/ScanLan/view/ScanLanActivity";
     public static final String SCAN_PORT_ACTIVITY_PATH = "/tools/ScanPort/view/ScanPortActivity";
-    public static final String BLE_ACTIVITY_PATH = "/tools/Ping/view/PingActivity";
-    public static final String LAN_ACTIVITY_PATH = "/tools/Ping/view/PingActivity";
-    public static final String PORT_ACTIVITY_PATH = "/tools/Ping/view/PingActivity";
-    public static final String GPS_ACTIVITY_PATH = "/tools/Ping/view/PingActivity";
-    public static final String SENSOR_ACTIVITY_PATH = "/tools/Ping/view/PingActivity";
-    public static final String ORIENTATION_ACTIVITY_PATH = "/tools/Ping/view/PingActivity";
-    public static final String SPEED_ACTIVITY_PATH = "/tools/Ping/view/PingActivity";
+    public static final String BLE_ACTIVITY_PATH = "/welcome/view/WaitActivity";
+    public static final String LAN_ACTIVITY_PATH = "/welcome/view/WaitActivity";
+    public static final String GPS_ACTIVITY_PATH = "/welcome/view/WaitActivity";
+    public static final String SENSOR_ACTIVITY_PATH = "/tools/Sensor/view/SensorActivity";
+    public static final String ORIENTATION_ACTIVITY_PATH = "/welcome/view/WaitActivity";
+    public static final String SPEED_ACTIVITY_PATH = "/welcome/view/WaitActivity";
 
     public static final String MENU_FRAGMENT_PATH = "/main/view/menuFragment";
 
@@ -161,7 +158,7 @@ public class AppConfig {
                     temp[i] = WAIT_ACTIVITY_PATH;
                     break;
                 case INDEX_SENSOR:
-                    temp[i] = WAIT_ACTIVITY_PATH;
+                    temp[i] = SENSOR_ACTIVITY_PATH;
                     break;
                 case INDEX_SPEED:
                     temp[i] = WAIT_ACTIVITY_PATH;

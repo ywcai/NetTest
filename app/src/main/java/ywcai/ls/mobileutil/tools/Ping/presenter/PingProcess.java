@@ -1,6 +1,8 @@
 package ywcai.ls.mobileutil.tools.Ping.presenter;
 
 import android.view.View;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,23 +27,24 @@ public class PingProcess implements PingProcessInf {
     @Override
     public void refreshRunningTask(PingState pingState) {
         cacheProcess.setCachePingState(pingState);
-        MsgHelper.sendEvent(GlobalEventT.ping_update_chart_point, pingState.send + "", pingState.nowDelay);
+        MsgHelper.sendStickEvent(GlobalEventT.ping_update_chart_point, pingState.send + "", pingState.nowDelay);
         MsgHelper.sendEvent(GlobalEventT.ping_update_chart_desc, "", pingState);
-        pingService.setTaskProgress(pingState.send,pingState.packageCount);
+        pingService.setTaskProgress(pingState.send, pingState.packageCount);
     }
 
     @Override
     public void manualStartTask(PingService _pingService) {
-        pingService=_pingService;
+        pingService = _pingService;
         PingState pingState = cacheProcess.getCachePingState();
-        pingState.isAutoRecovery = true;//非常重要的标识，标识已任务已经被手动开启过。.
+        pingState.isAutoRecovery = true;//非常重要的标识，标识已任务已经被手动开启过。
+        //更新临时结果的文件名称
         cacheProcess.setCachePingState(pingState);
         executeTask(pingState);
     }
 
     @Override
     public void autoRecoveryTask(PingService _pingService) {
-        pingService=_pingService;
+        pingService = _pingService;
         if (executorService == null) {
             PingState pingState = cacheProcess.getCachePingState();
             executeTask(pingState);
@@ -91,13 +94,13 @@ public class PingProcess implements PingProcessInf {
     private void executeTask(PingState pingState) {
         LsThreadFactory threadFactory = new LsThreadFactory();
         executorService = Executors.newFixedThreadPool(pingState.threadCount, threadFactory);
-        List list = cacheProcess.getPingResult(AppConfig.INDEX_PING +"-"+ pingState.startTime);
-        PingCmd pingCmd = new PingCmd(this, list);
-        int pos = 0;
-        if (list != null) {
-            pos = list.size();
+        List list = cacheProcess.getPingResult(AppConfig.INDEX_PING + "-" + pingState.startTime);
+        if (list == null) {
+            list = new ArrayList();
         }
+        int pos = list.size();
         for (int i = pos; i < pingState.packageCount; i++) {
+            PingCmd pingCmd = new PingCmd(this, list, pingState);
             executorService.execute(pingCmd);
         }
     }

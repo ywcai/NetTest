@@ -24,9 +24,13 @@ public class SingleCardStationListener extends PhoneStateListener implements Sta
     public void setChangeListener(StationChangeListenerInf stationChangeListenerInf) {
         this.stationChangeListenerInf = stationChangeListenerInf;
     }
+
     @Override
     public void onSignalStrengthsChanged(SignalStrength signalStrength) {
         HashMap<String, Integer> signalFields = new HashMap<>();
+        if (signalStrength == null) {
+            return;
+        }
         Field[] fields = signalStrength.getClass().getDeclaredFields();
 
         for (int i = 0; i < fields.length; i++) {
@@ -37,7 +41,7 @@ public class SingleCardStationListener extends PhoneStateListener implements Sta
                 fields[i].setAccessible(true);
                 try {
                     value = fields[i].getInt(signalStrength);
-                } catch (IllegalAccessException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 signalFields.put(fieldName, value);
@@ -52,8 +56,10 @@ public class SingleCardStationListener extends PhoneStateListener implements Sta
     @Override
     public void onCellLocationChanged(CellLocation location) {
         HashMap<String, Integer> locationFields = new HashMap<>();
+        if (location == null) {
+            return;
+        }
         Field[] fields = location.getClass().getDeclaredFields();
-
         for (int i = 0; i < fields.length; i++) {
             String fieldName = fields[i].getName();
             String fieldType = fields[i].getGenericType().toString();
@@ -70,6 +76,4 @@ public class SingleCardStationListener extends PhoneStateListener implements Sta
         }
         stationChangeListenerInf.stationDataChange(locationFields, null);
     }
-
-
 }

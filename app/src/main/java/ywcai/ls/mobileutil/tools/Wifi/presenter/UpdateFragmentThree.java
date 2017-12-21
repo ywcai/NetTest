@@ -49,11 +49,11 @@ public class UpdateFragmentThree implements UpdateFragmentThreeInf {
 
 
     private void sendMsgRefreshBarChart(int[] channelSum) {
-        MsgHelper.sendEvent(GlobalEventT.wifi_refresh_three_bar, wifiState.choose2d4G + "", channelSum);
+        MsgHelper.sendStickEvent(GlobalEventT.wifi_refresh_three_bar, wifiState.choose2d4G + "", channelSum);
     }
 
     private void sendMsgRefreshFrequencyLevel(int[] _frequency) {
-        MsgHelper.sendEvent(GlobalEventT.wifi_refresh_frequency_level, "", _frequency);
+        MsgHelper.sendStickEvent(GlobalEventT.wifi_refresh_frequency_level, "", _frequency);
     }
 
 

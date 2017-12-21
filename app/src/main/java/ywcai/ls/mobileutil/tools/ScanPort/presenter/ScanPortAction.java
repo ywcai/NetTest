@@ -1,20 +1,69 @@
 package ywcai.ls.mobileutil.tools.ScanPort.presenter;
 
-import android.content.Context;
 
+import java.util.concurrent.TimeUnit;
+
+import rx.Observable;
+import rx.Subscriber;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import ywcai.ls.mobileutil.global.util.statics.InStallService;
 import ywcai.ls.mobileutil.service.LsConnection;
 import ywcai.ls.mobileutil.service.ScanPortService;
+import ywcai.ls.mobileutil.tools.ScanPort.model.ScanPortProcess;
 import ywcai.ls.mobileutil.tools.ScanPort.presenter.inf.ScanPortActionInf;
+
 
 public class ScanPortAction implements ScanPortActionInf {
     ScanPortService scanPortService = null;
     LsConnection lsConnection;
-    Context context;
+    ScanPortProcess scanPortProcess;
 
-    public ScanPortAction(Context context) {
-        this.context = context;
+    public ScanPortAction() {
+        scanPortProcess = new ScanPortProcess();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                bindService();
+                waitService();
+            }
+        }).start();
+//        Observable ob = Observable.create(new Observable.OnSubscribe<Object>() {
+//            @Override
+//            public void call(Subscriber<? super Object> subscriber) {
+//                bindService();
+//                subscriber.onCompleted();
+//            }
+//        });
+//        ob.delay(1, TimeUnit.SECONDS)
+//                .subscribeOn(Schedulers.newThread())
+//                .subscribe(new Subscriber() {
+//
+//                    @Override
+//                    public void onCompleted() {
+//                        waitService();
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(Object o) {
+//
+//                    }
+//                });
+    }
+
+    //自动绑定后台服务？？
+    private void bindService() {
         lsConnection = new LsConnection(new Action1() {
             @Override
             public void call(Object o) {
@@ -25,33 +74,27 @@ public class ScanPortAction implements ScanPortActionInf {
                 }
             }
         });
-        InStallService.bindService(this.context, ScanPortService.class, lsConnection);
+        InStallService.bindService(ScanPortService.class, lsConnection);
     }
-
 
     @Override
     public void clickOperatorBtn() {
-        if (scanPortService != null) {
-            scanPortService.scanPortProcess.selectProcess();
-        }
+        scanPortProcess.selectProcess();
     }
 
     @Override
     public void addScanTask(String ip, String startText, String endText) {
-        if (scanPortService != null) {
-            scanPortService.scanPortProcess.addScanPortTask(ip, startText, endText);
-        }
+        scanPortProcess.addScanPortTask(ip, startText, endText);
     }
 
     @Override
     public void recoveryUI() {
-        if (scanPortService != null) {
-            scanPortService.scanPortProcess.recoveryUiState();
-        }
+        scanPortProcess.recoveryUiState();
     }
 
     @Override
     public void waitService() {
         InStallService.waitService(scanPortService);//绑定服务是异步的，必须等待，否则可能启动时空指针
+        scanPortProcess.setScanPortService(scanPortService);
     }
 }

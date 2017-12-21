@@ -1,4 +1,4 @@
-package ywcai.ls.mobileutil.tools.ScanPort;
+package ywcai.ls.mobileutil.tools.ScanPort.view;
 
 
 import android.content.DialogInterface;
@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.baidu.mobstat.StatService;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -37,6 +38,7 @@ import ywcai.ls.mobileutil.global.model.GlobalEvent;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.global.util.statics.InputValidate;
 
+import ywcai.ls.mobileutil.global.util.statics.LsNotification;
 import ywcai.ls.mobileutil.global.util.statics.LsSnack;
 import ywcai.ls.mobileutil.global.util.statics.SetTitle;
 import ywcai.ls.mobileutil.tools.ScanPort.model.ScanPortResult;
@@ -63,7 +65,7 @@ public class ScanPortActivity extends AppCompatActivity {
     }
 
     private void InitAction() {
-        actionInf = new ScanPortAction(this);
+        actionInf = new ScanPortAction();
     }
 
     private void InitView() {
@@ -100,41 +102,42 @@ public class ScanPortActivity extends AppCompatActivity {
                 checkInput();
             }
         });
+
     }
 
     private void checkInput() {
-        TextView ip = (TextView) view.findViewById(R.id.scan_port_target_ip);
-        TextView start = (TextView) view.findViewById(R.id.scan_port_start);
-        TextView end = (TextView) view.findViewById(R.id.scan_port_end);
+        MaterialEditText ip = (MaterialEditText) view.findViewById(R.id.scan_port_target_ip);
+        MaterialEditText start = (MaterialEditText) view.findViewById(R.id.scan_port_start);
+        MaterialEditText end = (MaterialEditText) view.findViewById(R.id.scan_port_end);
         String ipAddr = ip.getText().toString();
         String startPort = start.getText().toString();
         String endPort = end.getText().toString();
         if (!InputValidate.isIpAddr(ipAddr)) {
+            ip.setError("请输入IP地址格式");
             return;
         }
         if (startPort.equals("") && endPort.equals("")) {
+            start.setError("开始和结束端口号不能同时为空");
             return;
         }
-        if (startPort.length() >= 6 || endPort.length() >= 6) {
-            return;
+        if (startPort.length() >= 5) {
+            int sPort = Integer.parseInt(startPort);
+            if (sPort >= 65533) {
+                start.setError("端口号不能超过65533");
+                return;
+            }
+        }
+        if (endPort.length() >= 5) {
+            int ePort = Integer.parseInt(endPort);
+            if (ePort >= 65533) {
+                end.setError("端口号不能超过65533");
+                return;
+            }
         }
         materialDialog.dismiss();
         actionInf.addScanTask(ipAddr, startPort, endPort);
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        actionInf.recoveryUI();
-        StatService.onResume(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        StatService.onPause(this);
-    }
 
     @Override
     protected void onDestroy() {
@@ -156,6 +159,18 @@ public class ScanPortActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        actionInf.recoveryUI();
+        StatService.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        StatService.onPause(this);
+    }
 
     @Override
     protected void onStart() {
@@ -174,7 +189,7 @@ public class ScanPortActivity extends AppCompatActivity {
         return false;
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void update(GlobalEvent event) {
         switch (event.type) {
             case GlobalEventT.scan_port_set_card_run_info_none:
@@ -211,8 +226,18 @@ public class ScanPortActivity extends AppCompatActivity {
         TextView start = (TextView) view.findViewById(R.id.scan_port_start);
         TextView end = (TextView) view.findViewById(R.id.scan_port_end);
         ip.setText(scanPortState.targetIp);
-        start.setText(scanPortState.startPort + "");
-        end.setText(scanPortState.endPort + "");
+        if (scanPortState.startPort == 0) {
+            start.setText("");
+        } else {
+            start.setText(scanPortState.startPort + "");
+        }
+        if (scanPortState.endPort == 0) {
+
+            end.setText("");
+        } else {
+
+            end.setText(scanPortState.endPort + "");
+        }
         materialDialog.show();
     }
 
@@ -242,13 +267,23 @@ public class ScanPortActivity extends AppCompatActivity {
         TextView textPorts = (TextView) findViewById(R.id.text_scan_port_ports);
         textTarget.setText("目标IP:" + scanPortState.targetIp);
         String ports = "目标端口:";
-        ports += scanPortState.startPort + "-" + scanPortState.endPort;
+        if (scanPortState.startPort != 0) {
+            ports += scanPortState.startPort + "-" + scanPortState.endPort;
+        } else {
+            ports += scanPortState.endPort;
+        }
         textPorts.setText(ports);
+
+//        notificationTask();
         popTaskMenu.hide();
     }
 
-    private void setCardWaitScan(ScanPortState scanPortState) {
+    private void notificationTask() {
+        LsNotification.notification(this, "端口扫描任务正在运行", AppConfig.TITLE_PORT, AppConfig.SCAN_PORT_ACTIVITY_PATH, R.drawable.homepage_menu_scan_port
+                , AppConfig.INT_NOTIFICATION_PID_SCAN_PORT);
+    }
 
+    private void setCardWaitScan(ScanPortState scanPortState) {
         lsScan.reset();
         RelativeLayout rlTopInfo = (RelativeLayout) findViewById(R.id.rl_scan_task_info);
         TextView textTopTip = (TextView) findViewById(R.id.text_scan_port_tip);
@@ -262,8 +297,15 @@ public class ScanPortActivity extends AppCompatActivity {
         TextView textPorts = (TextView) findViewById(R.id.text_scan_port_ports);
         textTarget.setText("目标IP:" + scanPortState.targetIp);
         String ports = "目标端口:";
-        ports += scanPortState.startPort + "-" + scanPortState.endPort;
+        if (scanPortState.startPort != 0) {
+            ports += scanPortState.startPort + "-" + scanPortState.endPort;
+        } else {
+            ports += scanPortState.endPort;
+        }
         textPorts.setText(ports);
+        TextView textTaskInfo = (TextView) findViewById(R.id.text_scan_port_process_info);
+        textTaskInfo.setText("");
+
 
         popTaskMenu.show();
     }
@@ -328,4 +370,5 @@ public class ScanPortActivity extends AppCompatActivity {
         RelativeLayout snack_container = (RelativeLayout) findViewById(R.id.scan_port_snack_container);
         LsSnack.show(this, snack_container, tip);
     }
+
 }

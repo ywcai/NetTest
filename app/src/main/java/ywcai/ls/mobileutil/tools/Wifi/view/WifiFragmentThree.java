@@ -87,7 +87,7 @@ public class WifiFragmentThree extends Fragment {
         super.onStop();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(GlobalEvent event) {
         switch (event.type) {
             case GlobalEventT.wifi_refresh_three_bar:

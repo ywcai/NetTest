@@ -12,7 +12,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+import ywcai.ls.mobileutil.global.model.instance.MainApplication;
 import ywcai.ls.mobileutil.global.util.statics.LsLog;
+import ywcai.ls.mobileutil.global.util.statics.SetTitle;
 
 /**
  * Created by zmy_11 on 2017/10/8.
@@ -67,9 +69,13 @@ public class HookUtil {
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            saveTopActivityCache(method);
             Object obj = method.invoke(iActivityManagerObject, args);
-//            saveTopActivityCache(method);
             return obj;
+        }
+
+        private void saveTopActivityCache(Method method) {
+
         }
     }
 }

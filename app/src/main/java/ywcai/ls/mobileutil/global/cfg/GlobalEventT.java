@@ -84,4 +84,7 @@ public class GlobalEventT {
     public static final int scan_port_refresh_radar_progress = 90106;
     public static final int scan_port_recovery_radar_data = 90107;
     public static final int scan_port_show_bottom_msg = 90108;
+
+    public static final int sensor_set_snack_tip = 90200;
+    public static final int sensor_recovery_tag_state = 90201;
 }

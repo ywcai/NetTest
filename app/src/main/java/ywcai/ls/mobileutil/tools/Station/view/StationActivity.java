@@ -1,7 +1,7 @@
 package ywcai.ls.mobileutil.tools.Station.view;
 
 
-import android.content.Context;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -9,8 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
+
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -222,7 +221,7 @@ public class StationActivity extends AppCompatActivity {
         Observable.create(new Observable.OnSubscribe<MainStationActionInf>() {
             @Override
             public void call(Subscriber<? super MainStationActionInf> subscriber) {
-                mainStationActionInf = new MainStationAction(StationActivity.this);
+                mainStationActionInf = new MainStationAction(StationActivity.this,StationActivity.this);
                 subscriber.onNext(mainStationActionInf);
             }
         })
@@ -266,6 +265,7 @@ public class StationActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        //非常重要，否则会造成下一次开启后监听数据混乱
         mainStationActionInf.unRegPhoneStateListener();
         super.onDestroy();
     }
@@ -411,7 +411,6 @@ public class StationActivity extends AppCompatActivity {
         String temp = "-----小区原始数据-----\n" + cellLog + "\n----信号强度数据----\n" + signalLog;
         logText.setText(temp);
     }
-
 
 
 }

@@ -45,12 +45,12 @@ public class UpdateFragmentFour implements UpdateFragmentFourInf {
 
     private void sendMsgRefreshLineChart(int[] allChannelSum) {
 
-        MsgHelper.sendEvent(GlobalEventT.wifi_refresh_three_line, "", allChannelSum);
+        MsgHelper.sendStickEvent(GlobalEventT.wifi_refresh_three_line, "", allChannelSum);
 
     }
 
     private void sendMsgSwitchLineChart() {
-        MsgHelper.sendEvent(GlobalEventT.wifi_switch_2d4g, "", wifiState.choose2d4G);
+        MsgHelper.sendStickEvent(GlobalEventT.wifi_switch_2d4g, "", wifiState.choose2d4G);
     }
 
     private void sendMsgMainPopBottomTip(String tip, int color) {

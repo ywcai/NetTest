@@ -77,6 +77,7 @@ public class PingAction implements PingActionInf {
     private void drawDesc(PingState pingState) {
         MsgHelper.sendEvent(GlobalEventT.ping_update_chart_desc, "", pingState);//更新图表描述信息
     }
+
     private void sendMsgPopSnackTip(String tip, boolean success) {
         MsgHelper.sendEvent(GlobalEventT.ping_close_loading_dialog, tip, success);
     }
@@ -273,12 +274,9 @@ public class PingAction implements PingActionInf {
         LogIndex logIndex = new LogIndex();
         logIndex.cacheTypeIndex = AppConfig.INDEX_PING;
         logIndex.cacheFileName = AppConfig.INDEX_PING + "-" + initState.startTime;
-        logIndex.aliasFileName = logIndex.cacheFileName;
+        logIndex.aliasFileName = "PING TEST";
         logIndex.remarks = initState.getFormatMarks();
         logIndex.logTime = initState.startTime;
         cacheProcess.addCacheLogIndex(logIndex);
     }
-
-
-
 }

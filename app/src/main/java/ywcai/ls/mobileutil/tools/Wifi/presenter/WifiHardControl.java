@@ -19,20 +19,7 @@ public class WifiHardControl {
     private WifiManager wifiMg = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
     public int checkScanCount = 0, selfAdd = 0, scanAutoFlag = 0;
 
-    //    public ExecutorService executorService=null;
-    //SERVICE 已经在线程中，这里不再重新开启线程
     public void startWifiScan() {
-//        if(executorService!=null)
-//        {
-////            MsgHelper.sendEvent(GlobalEventT.wifi_set_main_title_tip,"线程已经启动了",null);
-//            return;
-//        }
-//        LsThreadFactory myThreadFactory = new LsThreadFactory();
-//        executorService = Executors.newSingleThreadExecutor(myThreadFactory);
-        //启动扫描线程
-//        executorService.execute(new Runnable() {
-//            @Override
-//            public void run() {
         long timeout = AppConfig.INT_WIFI_AUTO_SCAN_REFRESH;
         //当系统自动扫描的标记大于等于设定的最大值，表明系统是自动刷新的，不需要在手动调度刷新扫描
         while (scanAutoFlag < AppConfig.INT_CHECK_WIFI_AUTO_SCAN_COUNT) {
@@ -56,7 +43,5 @@ public class WifiHardControl {
             //扫描次数+1；
             checkScanCount++;
         }
-//            }
-//        });
     }
 }

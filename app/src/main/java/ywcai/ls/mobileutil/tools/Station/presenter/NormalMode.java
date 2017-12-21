@@ -97,9 +97,10 @@ public class NormalMode {
                 logIndex.cacheFileName = stationState.logName;
                 if (list.size() <= 0) {
                     logIndex.remarks = "本次测试并没有记录到任何数据";
+                } else {
+                    logIndex.remarks = "检测到数据变化 [" + stationEntries.size() + "] 次 " + "最强[" + list.get(list.size() - 1).rsp + "] 最弱[" +
+                            list.get(0).rsp + "]";
                 }
-                logIndex.remarks = "检测到数据变化 [" + stationEntries.size() + "] 次 " + "最强[" + list.get(list.size() - 1).rsp + "] 最弱[" +
-                        list.get(0).rsp + "]";
                 cacheProcess.addCacheLogIndex(logIndex);
                 resetLog();
                 sendMsgSnackBarTip("本地保存成功!", true);

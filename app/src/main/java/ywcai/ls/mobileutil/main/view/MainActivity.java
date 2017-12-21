@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
+
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
@@ -23,6 +24,7 @@ import com.baidu.mobstat.StatService;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.util.statics.SetTitle;
 import ywcai.ls.mobileutil.menu.view.MenuFragment;
@@ -48,15 +50,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         selectFragment(0);
         startCacheActivity();
     }
-    private void checkApkVersion()
-    {
-        progressDialog=new ProgressDialog(this);
+
+    private void checkApkVersion() {
+        progressDialog = new ProgressDialog(this);
         BDAutoUpdateSDK.uiUpdateAction(MainActivity.this, new MyUICheckUpdateCallback());
     }
 
     private void startCacheActivity() {
         //如果不是从桌面第一次打开，则根据缓存的页面进行跳转，暂时没有引用
-        if(!ROUTER_PAGE.equals("First"))
+        if (!ROUTER_PAGE.equals("First"))
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -69,15 +71,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             .navigation();
                 }
             }).start();
-    }
-    @Override
-    public void onBackPressed() {
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     @Override

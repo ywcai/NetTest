@@ -5,11 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ywcai.ls.mobileutil.welcome.view.WelComeActivity">
+
+    <FrameLayout
+        android:id="@+id/splash_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></FrameLayout>
+
     <ImageView
+        android:id="@+id/splash_holder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/splash"
         android:scaleType="centerCrop"
-        tools:ignore="ContentDescription" />
-
+        android:src="@drawable/splash" />
 </RelativeLayout>
