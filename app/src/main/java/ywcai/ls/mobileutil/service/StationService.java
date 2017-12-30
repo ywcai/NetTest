@@ -31,10 +31,8 @@ public class StationService extends Service {
     private void InstallProcess() {
         if (stationProcess != null) {
             //不处理可以直接绑定上一次运行的内存对象恢复渲染UI
-            LsLog.saveLog("old ");
             return;
         }
-        LsLog.saveLog("new ");
         stationProcess = new StationProcess();//构造函数中去初始化数据。
     }
 }

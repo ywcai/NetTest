@@ -58,7 +58,6 @@ public class ScanPortProcess {
                 break;
         }
     }
-
     /*
     response resume activity event
      */

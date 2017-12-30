@@ -95,6 +95,7 @@ public class MenuFragment extends Fragment {
         updatePingMenu();
         updateWifiMenu();
         updateScanPortMenu();
+        updateSpeedTestMenu();
         super.onResume();
     }
 
@@ -210,7 +211,7 @@ public class MenuFragment extends Fragment {
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void updateDeviceList(GlobalEvent event) {
         switch (event.type) {
             case GlobalEventT.ping_update_chart_desc:
@@ -221,6 +222,9 @@ public class MenuFragment extends Fragment {
                 break;
             case GlobalEventT.scan_port_refresh_radar_progress:
                 updateScanPortMenu();
+                break;
+            case GlobalEventT.speed_set_complete:
+                updateSpeedTestMenu();
                 break;
         }
     }
@@ -249,8 +253,16 @@ public class MenuFragment extends Fragment {
         menuList.get(AppConfig.INDEX_PORT).isRunning = taskTotal.state[AppConfig.INDEX_PORT];
         menuAdapter.notifyDataSetChanged();
         updateTitleTip();
-
     }
+
+    private void updateSpeedTestMenu() {
+        TaskTotal taskTotal = CacheProcess.getInstance().getCacheTaskTotal();
+        //更新SpeedTest的上标
+        menuList.get(AppConfig.INDEX_SPEED).isRunning = taskTotal.state[AppConfig.INDEX_SPEED];
+        menuAdapter.notifyDataSetChanged();
+        updateTitleTip();
+    }
+
 
     private void updateTitleTip() {
         //在首页更新显示所有后台任务的情况，所有自活动的变换都会需要对这个页面更新一次

@@ -4,6 +4,7 @@ import ywcai.ls.mobileutil.global.cfg.AppConfig;
 
 
 public class TaskTotal {
+    //saveCount 在保存本地数据索引时被在CacheProcess对象中更新
     public int runCount = 0, waitProcessCount = 0, savedCount = 0;
     public int[] state = new int[10];
 
@@ -13,6 +14,7 @@ public class TaskTotal {
         countPingTask();
         countWifiTask();
         countScanPortTask();
+        countSpeedTestTask();
     }
 
     private void countPingTask() {
@@ -36,4 +38,11 @@ public class TaskTotal {
             waitProcessCount++;
         }
     }
+
+    private void countSpeedTestTask() {
+        if (state[AppConfig.INDEX_SPEED] == 100) {
+            waitProcessCount++;
+        }
+    }
+
 }

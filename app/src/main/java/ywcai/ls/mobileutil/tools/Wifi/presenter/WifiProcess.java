@@ -86,25 +86,20 @@ public class WifiProcess implements Action1 {
         connectWifi();
         synchronized (allList) {
             sendMsgTopBtnStatus();
-//            sendMsgTitleTip("恢复中...");
-//            updateFragmentOne.showSelectEntryInfo(lockEntry);
-
             updateFragmentOne.loadChannelTagStatus();
             updateFragmentOne.loadLockAndSaveVisible();
             updateFragmentOne.loadLockBtnStatus();
             updateFragmentOne.loadTaskBtnStatus();
             updateFragmentOne.loadSignalChangeData(allList, channelSum);
-//            updateFragmentTwo.refreshList(allList);
             updateFragmentTwo.refreshChart();
-//            updateFragmentThree.refreshChannelLineRecord(channelSum);
-//            updateFragmentThree.refreshChannelBarChart(channelSum);
-//            updateFragmentThree.refreshChannelPieChart(channelSum);
         }
     }
 
     //被WIFI核心处理方法调用，不能单独被外部类使用
     private void coreDraw() {
+
         sendMsgTitleTip("共" + allList.size() + "个信号");
+
         updateFragmentOne.loadSignalChangeData(allList, channelSum);
         updateFragmentOne.showSelectEntryInfo(lockEntry);
 
@@ -138,8 +133,10 @@ public class WifiProcess implements Action1 {
                 break;
             case WifiManager.SCAN_RESULTS_AVAILABLE_ACTION:
                 synchronized (allList) {
-                    processWifiResult();
-                    coreDraw();
+                    boolean isPermission = processWifiResult();
+                    if (isPermission) {
+                        coreDraw();
+                    }
                 }
                 break;
             case WifiManager.WIFI_STATE_CHANGED_ACTION:
@@ -241,17 +238,16 @@ public class WifiProcess implements Action1 {
     /*
     处理信号的核心方法
      */
-    private void processWifiResult() {
+    private boolean processWifiResult() {
         clearLastData();
         if (!checkPermission()) {
             sendMsgTitleTip("没有赋予应用使用Wifi权限");
-            return;
+            return false;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!checkGpsStatus()) {
                 sendMsgTitleTip("打开GPS后方可扫描WIFI数据");
-
-                return;
+                return false;
             }
         }
         List<ScanResult> results;
@@ -262,7 +258,7 @@ public class WifiProcess implements Action1 {
         }
         if (results == null) {
 
-            return;
+            return false;
         }
         Observable.from(results).map(
                 new Func1<ScanResult, WifiEntry>() {
@@ -304,6 +300,7 @@ public class WifiProcess implements Action1 {
                         }
                     }
                 });
+        return true;
     }
 
 

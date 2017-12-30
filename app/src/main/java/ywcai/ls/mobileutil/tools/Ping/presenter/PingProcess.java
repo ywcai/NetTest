@@ -88,7 +88,6 @@ public class PingProcess implements PingProcessInf {
         cacheProcess.setCachePingState(pingState);
         actionInf.activityResume();
         pingService.setTaskCompleteTip(1);
-
     }
 
     private void executeTask(PingState pingState) {

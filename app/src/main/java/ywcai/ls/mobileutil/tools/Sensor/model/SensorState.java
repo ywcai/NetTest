@@ -5,5 +5,5 @@ package ywcai.ls.mobileutil.tools.Sensor.model;
  */
 
 public class SensorState {
-    public int[] tags = new int[1];
+    public int[] selects = new int[1];
 }

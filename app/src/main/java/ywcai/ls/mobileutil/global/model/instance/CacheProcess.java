@@ -8,7 +8,6 @@ import com.google.gson.reflect.TypeToken;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,6 +23,7 @@ import ywcai.ls.mobileutil.tools.Ping.model.PingState;
 import ywcai.ls.mobileutil.tools.ScanPort.model.ScanPortResult;
 import ywcai.ls.mobileutil.tools.ScanPort.model.ScanPortState;
 import ywcai.ls.mobileutil.tools.Sensor.model.SensorState;
+import ywcai.ls.mobileutil.tools.Speed.model.SpeedState;
 import ywcai.ls.mobileutil.tools.Station.model.StationEntry;
 import ywcai.ls.mobileutil.tools.Station.model.StationState;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiEntry;
@@ -41,6 +41,8 @@ public class CacheProcess {
     private final String SCAN_PORT_STATE = "SCAN_PORT_STATE";
     private final String SCAN_PORT_RESULT = "SCAN_PORT_RESULT";
     private final String SENSOR_STATE = "SENSOR_STATE";
+    private final String SPEED_STATE = "SPEED_STATE";
+
     private final String USER = "USER";
     private final String LOG_INDEX = "LOG_INDEX";
     private final String TASK_TOTAL = "TASK_TOTAL";
@@ -566,6 +568,44 @@ public class CacheProcess {
             }
         }
         setCache(SENSOR_STATE, cache);
+    }
+
+        /*
+    *SpeedTest Module
+    *--------------------------------------------------------------------------------------------------
+    * */
+
+    public SpeedState getSpeedState() {
+
+        String cache = getCache(SPEED_STATE);
+        if (cache.equals("null")) {
+            return new SpeedState();
+        }
+        Gson gson = new Gson();
+        SpeedState speedState = null;
+        try {
+            speedState = gson.fromJson(cache, SpeedState.class);
+        } catch (Exception e) {
+
+        }
+        if (speedState == null) {
+            return new SpeedState();
+        }
+        return speedState;
+    }
+
+    public void setSpeedState(SpeedState speedState) {
+        String cache = "null";
+        if (speedState == null) {
+            setCache(SPEED_STATE, cache);
+        } else {
+            Gson gson = new Gson();
+            try {
+                cache = gson.toJson(speedState);
+            } catch (Exception e) {
+            }
+        }
+        setCache(SPEED_STATE, cache);
     }
 }
 

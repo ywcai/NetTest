@@ -5,7 +5,7 @@ import java.util.List;
 
 import rx.Observable;
 import rx.functions.Action1;
-import rx.functions.Func1;
+import ywcai.ls.mobileutil.tools.Sensor.model.SensorInfo;
 
 
 public class LsListTransfer {
@@ -39,6 +39,20 @@ public class LsListTransfer {
         return temp + " ]";
     }
 
+    public static String floatString(float[] floats) {
+        String temp = "[ ";
+        for (int i = 0; i < floats.length; i++) {
+            temp += (Math.round(floats[i] * 10)) / 10.0 + "";
+            if (i < floats.length - 1) {
+                temp += ",";
+            }
+            if (i >= 3) {
+                break;
+            }
+        }
+        return temp + " ]";
+    }
+
     public static boolean isHasInteger(List<Integer> list, Integer number) {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).intValue() == number.intValue()) {
@@ -55,6 +69,65 @@ public class LsListTransfer {
         }
         return result;
     }
+
+    public static int[] copyInts(int[] ints) {
+        int[] temp = new int[ints.length];
+        for (int i = 0; i < ints.length; i++) {
+            temp[i] = ints[i];
+        }
+        return temp;
+    }
+
+
+    public static int getIndexWithInteger(List<Integer> list, int find) {
+        int pos = -1;
+        if (list == null) {
+            return pos;
+        }
+        if (list.size() == 0) {
+            return pos;
+        }
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).equals(find)) {
+                return i;
+            }
+        }
+        return pos;
+    }
+
+    public static int getIndexWithString(List<String> list, String find) {
+        int pos = -1;
+        if (list == null) {
+            return pos;
+        }
+        if (list.size() == 0) {
+            return pos;
+        }
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).equals(find)) {
+                return i;
+            }
+        }
+        return pos;
+    }
+
+    public static int getIndexWithSensorName(List<SensorInfo> list, String find) {
+        int pos = -1;
+        if (list == null) {
+            return pos;
+        }
+        if (list.size() == 0) {
+            return pos;
+        }
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).englishName.equals(find)) {
+                return i;
+            }
+        }
+        return pos;
+    }
+
+
 }
 
 

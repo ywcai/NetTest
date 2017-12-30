@@ -28,6 +28,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/gdt_file_path" />
         </provider>
+
         <service
             android:name="com.qq.e.comm.DownloadService"
             android:exported="false" />
@@ -35,6 +36,7 @@
         <activity
             android:name="com.qq.e.ads.ADActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
+
         <meta-data
             android:name="BaiduMobAd_APP_ID"
             android:value="d89b3ac7" />
@@ -106,11 +108,14 @@
             android:launchMode="standard"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".welcome.view.WaitActivity"
+            android:name=".tools.Speed.view.SpeedActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
 
-
+        <activity
+            android:name=".welcome.view.WaitActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

@@ -1,11 +1,11 @@
 package ywcai.ls.mobileutil.tools.Sensor.view;
 
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.baidu.mobstat.StatService;
@@ -14,7 +14,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ywcai.ls.control.flex.FlexButtonLayout;
@@ -23,7 +22,6 @@ import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.GlobalEvent;
-import ywcai.ls.mobileutil.global.util.statics.LsListTransfer;
 import ywcai.ls.mobileutil.global.util.statics.LsSnack;
 import ywcai.ls.mobileutil.global.util.statics.SetTitle;
 import ywcai.ls.mobileutil.tools.Sensor.presenter.SensorAction;
@@ -49,22 +47,51 @@ public class SensorActivity extends AppCompatActivity {
     public void updateSensor(GlobalEvent event) {
         switch (event.type) {
             case GlobalEventT.sensor_recovery_tag_state:
-                setTags((int[]) event.obj);
+                setTagsSelect((int[]) event.obj);
                 break;
             case GlobalEventT.sensor_set_snack_tip:
                 popSnackBar(event.tip);
                 break;
+            case GlobalEventT.sensor_set_tags:
+                setTags((List<String>) event.obj);
+                break;
+            case GlobalEventT.sensor_set_card_info:
+                setCardInfo(event.tip, (int) event.obj);
+                break;
         }
+    }
 
+    private void setCardInfo(String tip, int pos) {
+        TextView text1 = (TextView) findViewById(R.id.sensor_text_1);
+        TextView text2 = (TextView) findViewById(R.id.sensor_text_2);
+        TextView text3 = (TextView) findViewById(R.id.sensor_text_3);
+        switch (pos) {
+            case 1:
+                text1.setText(tip);
+                break;
+            case 2:
+                text2.setText(tip);
+                break;
+            case 3:
+                text3.setText(tip);
+                break;
+        }
+    }
+
+    private void setTags(List<String> obj) {
+        flexButtonLayout.setDataAdapter(obj);
+        int[] temp = new int[obj.size()];
+        flexButtonLayout.setSelectIndex(temp);
+        flexButtonLayout.setVisibility(View.VISIBLE);
     }
 
     private void popSnackBar(String tip) {
         RelativeLayout snack_container = (RelativeLayout) findViewById(R.id.sensor_container);
-        LsSnack.show(this, snack_container, tip, Color.RED);
+        LsSnack.show(this, snack_container, tip, R.color.LRed);
     }
 
-    private void setTags(int[] tags) {
-        flexButtonLayout.setSelectIndex(tags);
+    private void setTagsSelect(int[] selects) {
+        flexButtonLayout.setSelectIndex(selects);
     }
 
     private void initAction() {
@@ -91,8 +118,7 @@ public class SensorActivity extends AppCompatActivity {
         flexButtonLayout.setOnFlexButtonClickListener(new OnFlexButtonClickListener() {
             @Override
             public void clickItem(int i, boolean b) {
-                popSnackBar(LsListTransfer.intToString(flexButtonLayout.getSelectIndex()));
-//                sensorActionInf.clickSensorTag(flexButtonLayout.getSelectIndex());
+                sensorActionInf.clickSensorTag(flexButtonLayout.getSelectIndex());
             }
 
             @Override
@@ -100,16 +126,6 @@ public class SensorActivity extends AppCompatActivity {
 
             }
         });
-        int[] temp = new int[flexButtonLayout.getSelectIndex().length];
-        flexButtonLayout.setSelectIndex(temp);
-        List test = new ArrayList();
-        test.add("tag1");
-        test.add("tag2");
-        test.add("tag3");
-        test.add("tag4");
-        test.add("tag5");
-        test.add("tag6");
-        flexButtonLayout.setDataAdapter(test);
     }
 
 
@@ -135,5 +151,11 @@ public class SensorActivity extends AppCompatActivity {
     protected void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        sensorActionInf.destroyListener();
+        super.onDestroy();
     }
 }

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorMainBg"
+    android:padding="0dp"
+    tools:context="ywcai.ls.mobileutil.tools.Speed.view.SpeedActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/speed_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/holo_orange_light"
+        android:paddingTop="@dimen/toolbar_top"
+        app:popupTheme="@style/LsAppBarOverlay"
+        app:titleTextAppearance="@style/ToolbarTitleSize"
+        app:titleTextColor="@android:color/white" />
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/speed_card_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/speed_toolbar"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:minHeight="200dp"
+        app:cardBackgroundColor="@android:color/white">
+
+        <RelativeLayout
+            android:id="@+id/speed_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:minHeight="200dp"></RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <ImageView
+        android:id="@+id/speed_loading_container"
+        android:layout_width="100dp"
+        android:layout_height="9dp"
+        android:layout_alignBottom="@id/speed_card_container"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:scaleType="centerCrop"
+        android:visibility="invisible" />
+
+    <com.daimajia.numberprogressbar.NumberProgressBar
+        android:id="@+id/speed_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/speed_card_container"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:visibility="invisible"
+        app:progress_current="0"
+        app:progress_max="100"
+        app:progress_text_visibility="invisible" />
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/speed_progress"
+        android:layout_margin="10dp"
+        app:cardBackgroundColor="@android:color/white">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/speed_tip"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:gravity="top|left"
+                android:maxLines="50"
+                android:text=""
+                android:textColor="@color/colorWifiBg"
+                android:visibility="visible" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/speed_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/start"
+        android:visibility="invisible"
+        app:backgroundTint="@android:color/holo_orange_light"
+        app:elevation="5dp"
+        app:fabSize="normal" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/speed_operator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/add_task"
+        android:visibility="invisible"
+        app:backgroundTint="@android:color/holo_orange_light"
+        app:elevation="5dp"
+        app:fabSize="normal" />
+
+    <RelativeLayout
+        android:id="@+id/speed_snack_bar"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_alignParentBottom="true"></RelativeLayout>
+</RelativeLayout>

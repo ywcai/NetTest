@@ -33,36 +33,9 @@ public class ScanPortAction implements ScanPortActionInf {
                 waitService();
             }
         }).start();
-//        Observable ob = Observable.create(new Observable.OnSubscribe<Object>() {
-//            @Override
-//            public void call(Subscriber<? super Object> subscriber) {
-//                bindService();
-//                subscriber.onCompleted();
-//            }
-//        });
-//        ob.delay(1, TimeUnit.SECONDS)
-//                .subscribeOn(Schedulers.newThread())
-//                .subscribe(new Subscriber() {
-//
-//                    @Override
-//                    public void onCompleted() {
-//                        waitService();
-//
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(Object o) {
-//
-//                    }
-//                });
     }
 
-    //自动绑定后台服务？？
+    //自动绑定后台服务
     private void bindService() {
         lsConnection = new LsConnection(new Action1() {
             @Override

@@ -9,23 +9,27 @@
       <w>ehrpd</w>
       <w>evdo</w>
       <w>fileprovider</w>
+      <w>fsname</w>
       <w>gdtdownload</w>
       <w>gprs</w>
       <w>hsdpa</w>
       <w>hspa</w>
       <w>hsupa</w>
       <w>imei</w>
+      <w>imtt</w>
       <w>ipaddr</w>
       <w>mbps</w>
       <w>mobileutil</w>
       <w>proc</w>
       <w>rscp</w>
       <w>rsrp</w>
+      <w>sina</w>
       <w>ssid</w>
       <w>tencent</w>
       <w>umts</w>
       <w>wcdma</w>
       <w>wlan</w>
+      <w>yibiao</w>
       <w>ywcai</w>
     </words>
   </dictionary>

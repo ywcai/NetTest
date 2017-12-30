@@ -87,4 +87,15 @@ public class GlobalEventT {
 
     public static final int sensor_set_snack_tip = 90200;
     public static final int sensor_recovery_tag_state = 90201;
+    public static final int sensor_set_tags = 90202;
+    public static final int sensor_set_card_info = 90203;
+
+    public static final int speed_test_info = 90302;
+    public static final int speed_yibiao_read_data = 90303;
+    public static final int speed_set_progress = 90304;
+    public static final int speed_set_complete = 90305;
+    public static final int speed_set_running_receive_task = 90306;
+    public static final int speed_set_running_wait_task = 90307;
+    public static final int speed_set_ready = 90308;
+    public static final int speed_set_snack_tip = 90309;
 }

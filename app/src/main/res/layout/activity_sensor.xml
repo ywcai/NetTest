@@ -44,9 +44,9 @@
                     android:height="40dp"
                     android:gravity="center_vertical"
                     android:maxLines="1"
-                    android:text="1:同时可显示3个传感器数据"
+                    android:text="同时可显示3个传感器数据"
                     android:textColor="@android:color/white"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/sensor_text_2"
@@ -55,10 +55,10 @@
                     android:layout_margin="5dp"
                     android:height="40dp"
                     android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:text="2:同时可显示3个传感器数据"
+                    android:maxLines="2"
+                    android:text=""
                     android:textColor="@android:color/white"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/sensor_text_3"
@@ -67,10 +67,10 @@
                     android:layout_margin="5dp"
                     android:height="40dp"
                     android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:text="3:同时可显示3个传感器数据"
+                    android:maxLines="2"
+                    android:text=""
                     android:textColor="@android:color/white"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
@@ -80,6 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/sensor_tip"
             android:layout_marginTop="20dp"
+            android:visibility="invisible"
             app:btnBorderSize="2"
             app:btnHeight="80"
             app:btnTextSize="12"

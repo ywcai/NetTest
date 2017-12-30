@@ -10,8 +10,6 @@ import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.global.util.statics.InStallService;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
-import ywcai.ls.mobileutil.http.present.HttpRequest;
-import ywcai.ls.mobileutil.http.present.HttpRequestInf;
 import ywcai.ls.mobileutil.results.model.LogIndex;
 import ywcai.ls.mobileutil.service.LsConnection;
 import ywcai.ls.mobileutil.service.PingService;

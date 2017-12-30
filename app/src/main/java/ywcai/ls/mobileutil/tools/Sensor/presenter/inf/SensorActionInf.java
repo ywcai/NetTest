@@ -12,4 +12,6 @@ public interface SensorActionInf {
     void recoverySensorSelect();
 
     void clickSensorTag(int[] ints);
+
+    void destroyListener();
 }

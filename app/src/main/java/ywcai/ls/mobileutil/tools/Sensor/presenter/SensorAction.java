@@ -5,7 +5,6 @@ import android.content.Context;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.global.util.statics.LsListTransfer;
-import ywcai.ls.mobileutil.global.util.statics.LsLog;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 import ywcai.ls.mobileutil.tools.Sensor.model.SensorProcess;
 import ywcai.ls.mobileutil.tools.Sensor.model.SensorState;
@@ -22,40 +21,50 @@ public class SensorAction implements SensorActionInf {
     }
 
     @Override
-    public void checkDeviceSensors(Context context) {
-
+    public void checkDeviceSensors(final Context context) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                sensorProcess.checkSensorList(context);
+            }
+        }).start();
     }
 
     @Override
     public void recoverySensorSelect() {
-        //
+
     }
 
     @Override
-    public void clickSensorTag(int[] tags) {
-        int count = LsListTransfer.count(tags);
-        LsLog.saveLog(count + "");
-        if (count > 3) {
-            //如果大于3个，恢复上一次选择的状态
-//                    sendMsgRecoverySelectTag();
-            sendMsgSnackTip("同时查看的传感器不能超过3个！");
-
-            //提示超过了3个的错误
-        } else {
-            //do some thing;
-            sensorState.tags = tags;
+    public void clickSensorTag(int[] selects) {
+        int count = LsListTransfer.count(selects);
+        if (count <= 3) {
+            sensorState.selects = LsListTransfer.copyInts(selects);
             cacheProcess.setSensorState(sensorState);
+            sensorProcess.updateListener(selects);
+        } else {
+            int[] temp = LsListTransfer.copyInts(sensorState.selects);
+            sendMsgRecoverySelectTag(temp);
+            sendMsgSnackTip("允许同时监听传感器数量不超过3个！");
         }
     }
 
+    @Override
+    public void destroyListener() {
+        sensorProcess.unregisterAllSensor();
+    }
 
     private void sendMsgSnackTip(String tip) {
         MsgHelper.sendEvent(GlobalEventT.sensor_set_snack_tip, tip, null);
     }
 
-    private void sendMsgRecoverySelectTag() {
-        MsgHelper.sendEvent(GlobalEventT.sensor_recovery_tag_state, "", sensorState.tags);
+    private void sendMsgRecoverySelectTag(int[] temp) {
+        MsgHelper.sendEvent(GlobalEventT.sensor_recovery_tag_state, "", temp);
     }
-
 
 }
