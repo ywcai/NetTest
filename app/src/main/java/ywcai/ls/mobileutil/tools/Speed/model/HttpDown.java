@@ -5,29 +5,22 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
-import ywcai.ls.mobileutil.results.model.TaskTotal;
 import ywcai.ls.mobileutil.tools.Speed.model.inf.DownService;
 
 public class HttpDown {
     SpeedState speedState;
     CacheProcess cacheProcess = CacheProcess.getInstance();
-    String baseUrl = AppConfig.HTTP_TEST_BASE_URL;
-    Retrofit retrofit = new Retrofit.Builder().
-            baseUrl(baseUrl).
-            addConverterFactory(GsonConverterFactory.create()).
-            build();
-    DownService service = retrofit.create(DownService.class);
+    DownService service;
 
-    public HttpDown(SpeedState speedState) {
+
+    public HttpDown(SpeedState speedState, DownService service) {
         this.speedState = speedState;
+        this.service = service;
     }
 
     public void executeDownload(int index) {
-        DownService service = retrofit.create(DownService.class);
         Call<ResponseBody> call = service.getApk(AppConfig.HTTP_TEST_URLS[index]);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -44,10 +37,6 @@ public class HttpDown {
     }
 
     public void executeRead(int index) {
-        if (index == 0) {
-            speedState.start();
-            cacheProcess.setSpeedState(speedState);
-        }
         Call<ResponseBody> call = service.getApk(AppConfig.HTTP_READ_URLS[index]);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -91,6 +80,4 @@ public class HttpDown {
             cacheProcess.setSpeedState(speedState);
         }
     }
-
-
 }

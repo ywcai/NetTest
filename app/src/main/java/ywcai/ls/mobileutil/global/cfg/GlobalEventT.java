@@ -95,7 +95,10 @@ public class GlobalEventT {
     public static final int speed_set_progress = 90304;
     public static final int speed_set_complete = 90305;
     public static final int speed_set_running_receive_task = 90306;
-    public static final int speed_set_running_wait_task = 90307;
     public static final int speed_set_ready = 90308;
     public static final int speed_set_snack_tip = 90309;
+
+    public static final int orientation_refresh = 90400;
+
+
 }

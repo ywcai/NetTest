@@ -19,13 +19,12 @@ public class AppConfig {
     public static final String STATION_ACTIVITY_PATH = "/tools/Station/view/StationActivity";
     public static final String SCAN_LAN_ACTIVITY_PATH = "/tools/ScanLan/view/ScanLanActivity";
     public static final String SCAN_PORT_ACTIVITY_PATH = "/tools/ScanPort/view/ScanPortActivity";
-    public static final String BLE_ACTIVITY_PATH = "/welcome/view/WaitActivity";
-    public static final String GPS_ACTIVITY_PATH = "/welcome/view/WaitActivity";
+    public static final String BLE_ACTIVITY_PATH = WAIT_ACTIVITY_PATH;
+    public static final String GPS_ACTIVITY_PATH = WAIT_ACTIVITY_PATH;
     public static final String SENSOR_ACTIVITY_PATH = "/tools/Sensor/view/SensorActivity";
-    public static final String ORIENTATION_ACTIVITY_PATH = "/welcome/view/WaitActivity";
+    public static final String ORIENTATION_ACTIVITY_PATH = "/tools/Orientation/OrientationActivity";
     public static final String SPEED_ACTIVITY_PATH = "/tools/Speed/view/SpeedActivity";
 
-    public static final String MENU_FRAGMENT_PATH = "/main/view/menuFragment";
 
     public static final String ROUTER_FLAG = "ROUTER_PAGE";
 
@@ -57,8 +56,9 @@ public class AppConfig {
     public static final int INDEX_SPEED = 5;
     public static final int INDEX_SENSOR = 6;
     public static final int INDEX_GPS = 7;
-    public static final int INDEX_BLE = 8;
-    public static final int INDEX_ORIENTATION = 9;
+    public static final int INDEX_ORIENTATION = 8;
+    public static final int INDEX_BLE = 9;
+
 
     public static final int[] INTS_CHANNEL_2D4G = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
     public static final int[] INTS_CHANNEL_5G = new int[]{149, 153, 157, 161, 165};
@@ -149,13 +149,13 @@ public class AppConfig {
                     temp[i] = SCAN_LAN_ACTIVITY_PATH;
                     break;
                 case INDEX_BLE:
-                    temp[i] = WAIT_ACTIVITY_PATH;
+                    temp[i] = BLE_ACTIVITY_PATH;
                     break;
                 case INDEX_PORT:
                     temp[i] = SCAN_PORT_ACTIVITY_PATH;
                     break;
                 case INDEX_GPS:
-                    temp[i] = WAIT_ACTIVITY_PATH;
+                    temp[i] = GPS_ACTIVITY_PATH;
                     break;
                 case INDEX_SENSOR:
                     temp[i] = SENSOR_ACTIVITY_PATH;
@@ -164,7 +164,7 @@ public class AppConfig {
                     temp[i] = SPEED_ACTIVITY_PATH;
                     break;
                 case INDEX_ORIENTATION:
-                    temp[i] = WAIT_ACTIVITY_PATH;
+                    temp[i] = ORIENTATION_ACTIVITY_PATH;
                     break;
             }
         }
@@ -213,6 +213,7 @@ public class AppConfig {
 
     public static final String HTTP_TEST_BASE_URL = "http://p.gdown.baidu.com/";
     public static final String HTTP_TEST_BASE_URL_2 = "http://imtt.dd.qq.com";
+    public static final String HTTP_APP_CONFIG_URL = "https://119.6.204.54/";
 
     public static final String[] HTTP_TEST_URLS = new String[]
             {

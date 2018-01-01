@@ -53,10 +53,11 @@ public class SpeedAction implements SpeedActionInf {
     public void clickSaveForLocal() {
         saveLocal();
         speedState.reset();
+        cacheProcess.setSpeedState(speedState);
         TaskTotal taskTotal = cacheProcess.getCacheTaskTotal();
         taskTotal.state[AppConfig.INDEX_SPEED] = 0;
+        taskTotal.autoCount();
         cacheProcess.setCacheTaskTotal(taskTotal);
-        cacheProcess.setSpeedState(speedState);
         sendMsgReady();
     }
 
@@ -72,10 +73,11 @@ public class SpeedAction implements SpeedActionInf {
     @Override
     public void clickReset() {
         speedState.reset();
+        cacheProcess.setSpeedState(speedState);
         TaskTotal taskTotal = cacheProcess.getCacheTaskTotal();
         taskTotal.state[AppConfig.INDEX_SPEED] = 0;
+        taskTotal.autoCount();
         cacheProcess.setCacheTaskTotal(taskTotal);
-        cacheProcess.setSpeedState(speedState);
         sendMsgReady();
     }
 

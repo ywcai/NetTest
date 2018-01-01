@@ -1,4 +1,4 @@
-package ywcai.ls.mobileutil.tools.Speed.view;
+package ywcai.ls.mobileutil.tools.Orientation;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -14,16 +14,16 @@ import android.view.View;
 
 import ywcai.ls.mobileutil.R;
 
-public class YibiaoView extends View {
+public class OrientationView extends View {
 
     private int mRadius; // 扇形半径
-    private int mStartAngle = 180; // 起始角度
-    private int mSweepAngle = 180; // 绘制角度
+    private int mStartAngle = 0; // 起始角度
+    private int mSweepAngle = 360; // 绘制角度
     private int mMin = 0; // 最小值
-    private int mMax = 100; // 最大值
-    private int mSection = 10; // 值域（mMax-mMin）等分份数
-    private int mPortion = 10; // 一个mSection等分份数
-    private String mHeaderText = "Mbps"; // 单位
+    private int mMax = 360; // 最大值
+    private int mSection = 12; // 值域（mMax-mMin）等分份数
+    private int mPortion = 5; // 一个mSection等分份数
+    private String mHeaderText = "度"; // 单位
     private int progress = -1;//仪表盘的数据处理进度
     private float mRealTimeValue = mMin; // 实时读数
     private boolean isShowProgress = true; // 是否显示实时读数
@@ -42,15 +42,15 @@ public class YibiaoView extends View {
     private Rect mRectText;
     private String[] mTexts;
 
-    public YibiaoView(Context context) {
+    public OrientationView(Context context) {
         this(context, null);
     }
 
-    public YibiaoView(Context context, AttributeSet attrs) {
+    public OrientationView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public YibiaoView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public OrientationView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -104,7 +104,7 @@ public class YibiaoView extends View {
 //                height1,
 //                Math.max(point1[1] + mRadius + mStrokeWidth * 2, point2[1] + mRadius + mStrokeWidth * 2)
 //        );
-        int canvasHeight = (int) (point1[1] + mStrokeWidth * 2 + mRadius / 6);
+        int canvasHeight = (int) (mRadius * 2 + mStrokeWidth * 2);
         setMeasuredDimension(width, canvasHeight + getPaddingTop() + getPaddingBottom());
         mCenterX = mCenterY = getMeasuredWidth() / 2f;
         mRectFArc.set(
@@ -136,6 +136,7 @@ public class YibiaoView extends View {
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(mStrokeWidth);
         mPaint.setColor(ContextCompat.getColor(getContext(), R.color.LBlue));
+
         canvas.drawArc(mRectFArc, mStartAngle, mSweepAngle, false, mPaint);
 
         /**
@@ -183,7 +184,7 @@ public class YibiaoView extends View {
         mPaint.setTextSize(sp2px(10));
         mPaint.setTextAlign(Paint.Align.LEFT);
         mPaint.setStyle(Paint.Style.FILL);
-        for (int i = 0; i < mTexts.length; i++) {
+        for (int i = 0; i < mTexts.length - 1; i++) {
             mPaint.getTextBounds(mTexts[i], 0, mTexts[i].length(), mRectText);
             // 粗略把文字的宽度视为圆心角2*θ对应的弧长，利用弧长公式得到θ，下面用于修正角度
             float θ = (float) (180 * mRectText.width() / 2 /
@@ -192,7 +193,7 @@ public class YibiaoView extends View {
             mPath.addArc(
                     mRectFInnerArc,
                     mStartAngle + i * (mSweepAngle / mSection) - θ, // 正起始角度减去θ使文字居中对准长刻度
-                    mSweepAngle
+                    mStartAngle + (i + 1) * (mSweepAngle / mSection) - θ
             );
             canvas.drawTextOnPath(mTexts[i], mPath, 0, 0, mPaint);
         }
@@ -201,14 +202,22 @@ public class YibiaoView extends View {
          * 画表头
          * 没有表头就不画
          */
-        //仪表盘速度.
-//        if (!TextUtils.isEmpty(mHeaderText)) {
         mPaint.setTextSize(sp2px(16));
         mPaint.setTextAlign(Paint.Align.CENTER);
         mPaint.setColor(ContextCompat.getColor(getContext(), R.color.LBlue));
         mPaint.getTextBounds(mHeaderText, 0, mHeaderText.length(), mRectText);
-        canvas.drawText(mRealTimeValue + " " + mHeaderText, mCenterX, mCenterY / 2f + mRectText.height(), mPaint);
-//        }
+
+        if (mRealTimeValue < 180.5f && mRealTimeValue > 179.5f) {
+            canvas.drawText("南", mCenterX, mCenterY / 2f + mRectText.height(), mPaint);
+        } else if (mRealTimeValue < 0.5f || mRealTimeValue > 359.5f) {
+            canvas.drawText("北", mCenterX, mCenterY / 2f + mRectText.height(), mPaint);
+        } else if (mRealTimeValue > 269.5f && mRealTimeValue < 270.5f) {
+            canvas.drawText("西", mCenterX, mCenterY / 2f + mRectText.height(), mPaint);
+        } else if (mRealTimeValue < 90.5f && mRealTimeValue > 89.5f) {
+            canvas.drawText("东", mCenterX, mCenterY / 2f + mRectText.height(), mPaint);
+        } else {
+            canvas.drawText(mRealTimeValue + "" + mHeaderText, mCenterX, mCenterY / 2f + mRectText.height(), mPaint);
+        }
 
         /**
          * 画指针

@@ -2,7 +2,7 @@ package ywcai.ls.mobileutil.tools.Speed.view;
 
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -10,19 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.baidu.mobstat.StatService;
-import com.bumptech.glide.Glide;
 import com.daimajia.numberprogressbar.NumberProgressBar;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
 
 import me.drakeet.materialdialog.MaterialDialog;
 import ywcai.ls.mobileutil.R;
@@ -40,7 +37,6 @@ public class SpeedActivity extends AppCompatActivity {
     YibiaoView yibiaoView;
     RelativeLayout rl;
     MaterialDialog popSub;
-    ImageView loading;
     MaterialDialog operatorMenu;
     View view;
 
@@ -69,7 +65,6 @@ public class SpeedActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        loading = (ImageView) findViewById(R.id.speed_loading_container);
         popSub = new MaterialDialog(this);
         popSub.setCanceledOnTouchOutside(true);
         TextView textView = new TextView(this);
@@ -202,9 +197,6 @@ public class SpeedActivity extends AppCompatActivity {
             case GlobalEventT.speed_set_ready:
                 initReady();
                 break;
-            case GlobalEventT.speed_set_running_wait_task:
-                loadThread();
-                break;
             case GlobalEventT.speed_set_running_receive_task:
                 loadTask();
                 break;
@@ -219,7 +211,6 @@ public class SpeedActivity extends AppCompatActivity {
 
 
     private void initReady() {
-        loading.setVisibility(View.INVISIBLE);
         setSpeed(0.00f);
         setLsProgress(0);
         setStartBtnVisible(true);
@@ -227,14 +218,9 @@ public class SpeedActivity extends AppCompatActivity {
         showTip("");
     }
 
-    private void loadThread() {
-        loading.setVisibility(View.VISIBLE);
-        Glide.with(this).load(R.drawable.loading).into(loading);
-        setStartBtnVisible(false);
-    }
 
     private void loadTask() {
-        loading.setVisibility(View.INVISIBLE);
+        setStartBtnVisible(false);
         setProgressVisible(true);
     }
 

@@ -12,14 +12,25 @@ import android.widget.ImageView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.baidu.mobstat.StatService;
+
 import com.qq.e.ads.splash.SplashAD;
 import com.qq.e.ads.splash.SplashADListener;
 import com.qq.e.comm.util.AdError;
 
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
+import ywcai.ls.mobileutil.global.model.AppInfo;
+import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.global.model.instance.MainApplication;
 import ywcai.ls.mobileutil.global.util.statics.LsLog;
+import ywcai.ls.mobileutil.tools.Speed.model.inf.DownService;
 
 
 public class WelComeActivity extends AppCompatActivity implements SplashADListener {
@@ -70,8 +81,51 @@ public class WelComeActivity extends AppCompatActivity implements SplashADListen
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//去掉信息栏
         setContentView(R.layout.activity_welcome);
         MainApplication.getInstance().isActivityExist = true;
+
+        //先在本地查看是否有缓存
+//        AppInfo appInfo = CacheProcess.getInstance().getAppInfo();
+//        if (appInfo.isLoadAd) {
         adContainer = (ViewGroup) findViewById(R.id.splash_container);
-        splashAD = new SplashAD(this, adContainer, AppConfig.TENCENT_APP_ID, AppConfig.TENCENT_AD_ID, this);
+        splashAD = new SplashAD(WelComeActivity.this, adContainer, AppConfig.TENCENT_APP_ID, AppConfig.TENCENT_AD_ID, WelComeActivity.this);
+//        }
+//        else {
+//            //如果本地缓存False，则去服务器请求
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    requestAdConfig();
+//                }
+//            }).start();
+//        }
+    }
+
+    private void requestAdConfig() {
+        String baseUrl = AppConfig.HTTP_TEST_BASE_URL_2;
+        String requestUrl = "http://119.6.204.54:8080/NetTest/appinfo";
+        Retrofit retrofit = new Retrofit.Builder().
+                baseUrl(baseUrl).
+                addConverterFactory(GsonConverterFactory.create()).
+                build();
+        ConfigService service = retrofit.create(ConfigService.class);
+        Call<ResponseBody> call = service.getAppInfo(requestUrl);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                //只要请求到接口正常，则初始化广告
+                AppInfo appInfo = new AppInfo();
+                appInfo.isLoadAd = true;
+                CacheProcess.getInstance().setAppInfo(appInfo);
+                adContainer = (ViewGroup) findViewById(R.id.splash_container);
+                splashAD = new SplashAD(WelComeActivity.this, adContainer, AppConfig.TENCENT_APP_ID, AppConfig.TENCENT_AD_ID, WelComeActivity.this);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                //如果服务端接口未打开，则直接进入主界面
+                startMainActivity();
+            }
+        });
+
     }
 
     //跳转到主界面

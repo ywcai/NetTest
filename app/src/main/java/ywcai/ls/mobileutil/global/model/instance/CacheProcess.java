@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
+import ywcai.ls.mobileutil.global.model.AppInfo;
 import ywcai.ls.mobileutil.results.model.LogIndex;
 import ywcai.ls.mobileutil.identity.model.User;
 import ywcai.ls.mobileutil.results.model.ResultState;
@@ -46,6 +47,7 @@ public class CacheProcess {
     private final String USER = "USER";
     private final String LOG_INDEX = "LOG_INDEX";
     private final String TASK_TOTAL = "TASK_TOTAL";
+    private final String APP_INFO = "APP_INFO";
 
 
     File file = MainApplication.getInstance().getFilesDir();
@@ -606,6 +608,39 @@ public class CacheProcess {
             }
         }
         setCache(SPEED_STATE, cache);
+    }
+
+
+    public AppInfo getAppInfo() {
+        String cache = getCache(APP_INFO);
+        if (cache.equals("null")) {
+            return new AppInfo();
+        }
+        Gson gson = new Gson();
+        AppInfo appInfo = null;
+        try {
+            appInfo = gson.fromJson(cache, AppInfo.class);
+        } catch (Exception e) {
+
+        }
+        if (appInfo == null) {
+            return new AppInfo();
+        }
+        return appInfo;
+    }
+
+    public void setAppInfo(AppInfo appInfo) {
+        String cache = "null";
+        if (appInfo == null) {
+            setCache(APP_INFO, cache);
+        } else {
+            Gson gson = new Gson();
+            try {
+                cache = gson.toJson(appInfo);
+            } catch (Exception e) {
+            }
+        }
+        setCache(APP_INFO, cache);
     }
 }
 

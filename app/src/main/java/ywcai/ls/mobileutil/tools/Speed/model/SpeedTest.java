@@ -4,29 +4,37 @@ import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.LsThreadFactory;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 import ywcai.ls.mobileutil.results.model.TaskTotal;
+import ywcai.ls.mobileutil.tools.Speed.model.inf.DownService;
 
 
 public class SpeedTest {
     SpeedState speedState;
     ExecutorService executorService;
     CacheProcess cacheProcess = CacheProcess.getInstance();
+    String baseUrl = AppConfig.HTTP_TEST_BASE_URL;
+    Retrofit retrofit = new Retrofit.Builder().
+            baseUrl(baseUrl).
+            addConverterFactory(GsonConverterFactory.create()).
+            build();
+    DownService service = retrofit.create(DownService.class);
 
     public SpeedTest(SpeedState speedState) {
         this.speedState = speedState;
         LsThreadFactory lsThreadFactory = new LsThreadFactory();
-        executorService = Executors.newFixedThreadPool(30, lsThreadFactory);
+        executorService = Executors.newFixedThreadPool(40, lsThreadFactory);
     }
 
     public void test() {
         speedState.start();
         cacheProcess.setSpeedState(speedState);
-        sendMsgLoadThread();
         requestWeb();
         downloadTestForApk();
         refreshUi();
@@ -46,7 +54,7 @@ public class SpeedTest {
     private void requestWeb() {
         //访问10大门户站首页，每个1次，30线程进行处理
         for (int i = 0; i < speedState.readMaxCount; i++) {
-            DownRunnable runnable = new DownRunnable(speedState, i);
+            ReadRunnable runnable = new ReadRunnable(speedState, i, service);
             executorService.execute(runnable);
         }
     }
@@ -56,13 +64,13 @@ public class SpeedTest {
         //实时保存当前下载的测试数据。
         //当前下载数据，当前时间，平均速度，
         for (int i = 0; i < speedState.downMaxCount; i++) {
-            DownRunnable runnable = new DownRunnable(speedState, i);
+            DownRunnable runnable = new DownRunnable(speedState, i, service);
             executorService.execute(runnable);
         }
     }
 
-
     private void refreshUi() {
+        sendMsgLoadTask();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -72,14 +80,10 @@ public class SpeedTest {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    if (speedState.currentComplete >= 1) {
-                        //取消不确定进度条，显示明确进度条。
-                        sendMsgLoadTask();
-                        speedState.useTime = (int) (Calendar.getInstance().getTimeInMillis() - speedState.startTime);
-                        speedState.realSpeed = (float) ((int) (speedState.payloadSize * 8 / speedState.useTime / 10) / 100.00);
-                        int progress = speedState.currentComplete * 100 / (speedState.readMaxCount + speedState.downMaxCount);
-                        processRun(progress);
-                    }
+                    speedState.useTime = (int) (Calendar.getInstance().getTimeInMillis() - speedState.startTime);
+                    speedState.realSpeed = (float) ((int) (speedState.payloadSize * 8 / speedState.useTime / 10) / 100.00);
+                    int progress = speedState.currentComplete * 100 / (speedState.readMaxCount + speedState.downMaxCount);
+                    processRun(progress);
                 }
                 if (speedState.running == 2) {
                     processComplete();
@@ -117,10 +121,6 @@ public class SpeedTest {
 
     private void sendMsgComplete() {
         MsgHelper.sendStickEvent(GlobalEventT.speed_set_complete, speedState.speedResult, null);
-    }
-
-    private void sendMsgLoadThread() {
-        MsgHelper.sendStickEvent(GlobalEventT.speed_set_running_wait_task, "", null);
     }
 
     private void sendMsgLoadTask() {

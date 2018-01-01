@@ -111,11 +111,18 @@
             android:name=".tools.Speed.view.SpeedActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".welcome.view.WaitActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".tools.ScanBle.BleActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".tools.Orientation.OrientationActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
