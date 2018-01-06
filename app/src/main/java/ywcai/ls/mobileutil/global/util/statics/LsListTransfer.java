@@ -11,43 +11,58 @@ import ywcai.ls.mobileutil.tools.Sensor.model.SensorInfo;
 public class LsListTransfer {
 
 
-    public static String IntegerToString(final List<Integer> list) {
-        final String[] temp = new String[1];
-        temp[0] = "[ ";
-        Observable.from(list)
-                .subscribe(new Action1<Integer>() {
-                    @Override
-                    public void call(Integer integer) {
-                        temp[0] += integer;
-                        if (list.indexOf(integer) < (list.size() - 1)) {
-                            temp[0] += ",";
-                        }
-                    }
-                });
-        return temp[0] + " ]";
-    }
-
-    public static String intToString(int[] ints) {
+    public static String intToString(List<Integer> list, int start, int end) {
+        if (start == end) {
+            return "[ " + list.get(start) + " ]";
+        }
         String temp = "[ ";
-
-        for (int i = 0; i < ints.length; i++) {
-            temp += ints[i] + "";
-            if (i < ints.length - 1) {
+        for (int i = start; i < end; i++) {
+            temp += list.get(i) + "";
+            if (i < end - 1) {
                 temp += ",";
             }
         }
         return temp + " ]";
     }
 
-    public static String floatString(float[] floats) {
+    public static String intToString(int[] ints, int start, int end) {
+        if (start == end) {
+            return "[ " + ints[start] + " ]";
+        }
         String temp = "[ ";
-        for (int i = 0; i < floats.length; i++) {
-            temp += (Math.round(floats[i] * 10)) / 10.0 + "";
-            if (i < floats.length - 1) {
+        for (int i = start; i < end; i++) {
+            temp += ints[i] + "";
+            if (i < end - 1) {
                 temp += ",";
             }
-            if (i >= 3) {
-                break;
+        }
+        return temp + " ]";
+    }
+
+    public static String floatToString(float[] floats, int start, int end) {
+        if (start == end) {
+            return "[ " + floats[start] + " ]";
+        }
+        String temp = "[ ";
+        for (int i = start; i < end; i++) {
+            temp += (Math.round(floats[i] * 10)) / 10.0 + "";
+            if (i < end - 1) {
+                temp += ",";
+            }
+        }
+        return temp + " ]";
+    }
+
+
+    public static String floatToString(List<Float> floats, int start, int end) {
+        if (start == end) {
+            return "[ " + floats.get(start) + " ]";
+        }
+        String temp = "[ ";
+        for (int i = start; i < end; i++) {
+            temp += (Math.round(floats.get(i) * 10)) / 10.0 + "";
+            if (i < end - 1) {
+                temp += ",";
             }
         }
         return temp + " ]";

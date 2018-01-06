@@ -39,6 +39,7 @@ import java.util.List;
 
 import me.drakeet.materialdialog.MaterialDialog;
 import mehdi.sakout.fancybuttons.FancyButton;
+import ywcai.ls.control.LoadingDialog;
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.model.GlobalEvent;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
@@ -55,6 +56,7 @@ public class PingActivity extends AppCompatActivity {
     private LineChart pingResultChart;
     private PingActionInf action = new PingAction();
     private MaterialDialog bottomDialog;
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,6 +73,7 @@ public class PingActivity extends AppCompatActivity {
     private void InitPopView() {
         InitBottomDialog();
         InitFloatingEvent();
+        loadingDialog = new LoadingDialog(this);
     }
 
     private void setFloatingBtnVisible(int visible) {
@@ -414,14 +417,15 @@ public class PingActivity extends AppCompatActivity {
             case GlobalEventT.ping_set_form_pause:
                 updateFormUIPause();
                 break;
-            case GlobalEventT.ping_pop_operator_dialog:
+            case GlobalEventT.global_pop_operator_dialog:
                 popBottomDialog();
                 break;
-            case GlobalEventT.ping_pop_loading_dialog:
-                popLoadingDialog(event.tip);
-                break;
-            case GlobalEventT.ping_close_loading_dialog:
+            case GlobalEventT.global_pop_snack_tip:
+                closeLoadingDialog();
                 popBottomSnackBar(event.tip, (boolean) event.obj);
+                break;
+            case GlobalEventT.global_pop_loading_dialog:
+                popLoadingDialog(event.tip);
                 break;
             case GlobalEventT.ping_set_float_btn_visible:
                 setFloatingBtnVisible((int) event.obj);
@@ -443,5 +447,12 @@ public class PingActivity extends AppCompatActivity {
 
     private void popLoadingDialog(String tip) {
         //// TODO: 2017/10/3 加载窗口
+        loadingDialog.setLoadingText(tip);
+        loadingDialog.show();
+    }
+
+    private void closeLoadingDialog() {
+        //// TODO: 2017/10/3 加载窗口
+        loadingDialog.dismiss();
     }
 }

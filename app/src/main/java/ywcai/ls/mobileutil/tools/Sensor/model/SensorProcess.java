@@ -12,7 +12,6 @@ import java.util.List;
 
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.util.statics.LsListTransfer;
-import ywcai.ls.mobileutil.global.util.statics.LsLog;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 
 
@@ -134,13 +133,20 @@ public class SensorProcess implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        int pos = LsListTransfer.getIndexWithSensorName(list, event.sensor.getName());
-        if (pos == -1) {
-            LsLog.saveLog("未查询到该传感器类型");
+        if (event == null) {
             return;
         }
-        String temp = list.get(pos).englishName + "\n" + list.get(pos).chineseName + ":" + LsListTransfer.floatString(event.values);
+        int pos = LsListTransfer.getIndexWithSensorName(list, event.sensor.getName());
         int index = hashMap.get(list.get(pos).englishName);
+        if (event.values == null) {
+            sendMsgCardTip("none", index);
+            return;
+        }
+        if (pos == -1) {
+//            LsLog.saveLog("未查询到该传感器类型");
+            return;
+        }
+        String temp = list.get(pos).englishName + "\n" + list.get(pos).chineseName + ":" + LsListTransfer.floatToString(event.values, 0, 3);
         sendMsgCardTip(temp, index);
     }
 

@@ -21,9 +21,15 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
-    <style name="LsAppBarOverlay" parent="Widget.AppCompat.PopupMenu.Overflow">
+    <style name="LsAppBarOverlay" parent="@style/ThemeOverlay.AppCompat.Light">
+        <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
+
+    </style>
+
+    <style name="OverflowMenuStyle" parent="Widget.AppCompat.PopupMenu.Overflow">
         <item name="overlapAnchor">false</item>
     </style>
+
 
     <style name="TitleStyle" parent="TextAppearance.AppCompat.Large">
         <item name="android:textSize">24sp</item>
@@ -54,6 +60,10 @@
         <item name="android:textStyle">bold</item>
 
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
 </resources>

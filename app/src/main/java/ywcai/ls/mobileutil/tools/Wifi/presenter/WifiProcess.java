@@ -198,6 +198,7 @@ public class WifiProcess implements Action1 {
             NetworkInfo.State state = networkInfo.getState();
             if (state == NetworkInfo.State.CONNECTED) {
                 connectWifi();
+                sendMsgTitleTip("已连接");
             }
             if (state == NetworkInfo.State.CONNECTING) {
                 sendMsgTitleTip("正在连接WIFI...");
@@ -207,13 +208,13 @@ public class WifiProcess implements Action1 {
             }
             if (state == NetworkInfo.State.DISCONNECTED) {
                 disConnectWifi();
+                sendMsgTitleTip("未连接");
             }
         }
     }
 
     private void disConnectWifi() {
         connWifi.initConnWifi();
-        sendMsgTitleTip("未连接WIFI");
     }
 
     private void connectWifi() {
@@ -223,10 +224,12 @@ public class WifiProcess implements Action1 {
             connWifi.bssid = wifiInfo.getBSSID();
             connWifi.speed = wifiInfo.getLinkSpeed();
             connWifi.ip = ip;
-            sendMsgTitleTip("已连接WIFI");
         } catch (Exception e) {
             disConnectWifi();
+            sendMsgTitleTip("未连接");
+            return;
         }
+        sendMsgTitleTip("已连接");
     }
 
     private void clearLastData() {
@@ -265,6 +268,9 @@ public class WifiProcess implements Action1 {
                     @Override
                     public WifiEntry call(ScanResult result) {
                         WifiEntry wifiEntry = new WifiEntry();
+                        if (result == null) {
+                            return wifiEntry;
+                        }
                         wifiEntry.ssid = result.SSID;
                         wifiEntry.bssid = result.BSSID;
                         wifiEntry.channel = ConvertUtil.ConvertFrequencyToChannel(result.frequency);
@@ -274,10 +280,14 @@ public class WifiProcess implements Action1 {
                         wifiEntry.keyType = result.capabilities;
                         wifiEntry.is2G = wifiEntry.channel <= 13 ? true : false;
                         //过滤频率
-                        if (connWifi.bssid.equals(result.BSSID)) {
-                            wifiEntry.isConnWifi = true;
-                            wifiEntry.device = connWifi.ip;
-                            wifiEntry.speed = connWifi.speed;
+                        if (connWifi != null) {
+                            if (connWifi.bssid != null) {
+                                if (connWifi.bssid.equals(result.BSSID)) {
+                                    wifiEntry.isConnWifi = true;
+                                    wifiEntry.device = connWifi.ip;
+                                    wifiEntry.speed = connWifi.speed;
+                                }
+                            }
                         }
                         //如果当前选择的有高亮显示的，直接更新起其获取到的内容，但如果当前没有获取到该信号，会怎么样？？？？？？
                         if (wifiState.selectEntry != null) {
@@ -420,16 +430,17 @@ public class WifiProcess implements Action1 {
 
 
     public void saveLogForLocal(int pos) {
+        sendMsgPopLoadingDialog(AppConfig.LOG_PROCESS_TIP);
         synchronized (allList) {
             saveLogIndexOnLocal(pos);
             removeTask(pos);
             operatorDraw();
         }
-        sendMsgForPopMainSnack("保存结果成功!", true);
     }
 
+
     public void saveLogForRemote(int pos) {
-        sendMsgForPopMainSnack(AppConfig.TIP_FOR_REMOTE_SAVE, false);
+        sendMsgForPopMainSnack(AppConfig.LOG_REMOTE_SAVE_SUCCESS, false);
     }
 
 
@@ -482,7 +493,7 @@ public class WifiProcess implements Action1 {
                                             "  丢失 [" + (list.size() - integers.size()) + "]次" +
                                             "  丢失率 [" + (list.size() - integers.size()) * 100 / list.size() + "%]";
                         }
-                        cacheProcess.addCacheLogIndex(logIndex);
+                        logIndex.setAddr();
                     }
                 });
     }
@@ -506,6 +517,10 @@ public class WifiProcess implements Action1 {
         cacheProcess.setWifiState(wifiState);
     }
 
+    public void saveBitMap(LineChart wifiChannelRecord) {
+        updateFragmentFour.saveBitMap(wifiChannelRecord);
+    }
+
     /*
     EventBus 发起刷新UI的通知
      */
@@ -515,12 +530,7 @@ public class WifiProcess implements Action1 {
     }
 
     private void sendMsgForPopMainSnack(String tip, boolean success) {
-        if (success) {
-            MsgHelper.sendEvent(GlobalEventT.wifi_main_bottom_tip, tip, -1);
-        } else {
-            MsgHelper.sendEvent(GlobalEventT.wifi_main_bottom_tip, tip, R.color.LRed);
-        }
-
+        MsgHelper.sendEvent(GlobalEventT.global_pop_snack_tip, tip, success);
     }
 
     //操作顶部标题的频率切换按钮
@@ -529,10 +539,8 @@ public class WifiProcess implements Action1 {
     }
 
 
-    public void saveBitMap(LineChart wifiChannelRecord) {
-        updateFragmentFour.saveBitMap(wifiChannelRecord);
-
+    private void sendMsgPopLoadingDialog(String tip) {
+        MsgHelper.sendStickEvent(GlobalEventT.global_pop_loading_dialog, tip, null);
     }
-
 
 }

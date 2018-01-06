@@ -22,6 +22,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import me.drakeet.materialdialog.MaterialDialog;
+import ywcai.ls.control.LoadingDialog;
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
@@ -39,6 +40,7 @@ public class SpeedActivity extends AppCompatActivity {
     MaterialDialog popSub;
     MaterialDialog operatorMenu;
     View view;
+    LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,7 @@ public class SpeedActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        loadingDialog = new LoadingDialog(this);
         popSub = new MaterialDialog(this);
         popSub.setCanceledOnTouchOutside(true);
         TextView textView = new TextView(this);
@@ -203,8 +206,12 @@ public class SpeedActivity extends AppCompatActivity {
             case GlobalEventT.speed_set_complete:
                 completeTask(event.tip);
                 break;
-            case GlobalEventT.speed_set_snack_tip:
+            case GlobalEventT.global_pop_snack_tip:
+                closeLoading();
                 showSnackBar(event.tip, (boolean) event.obj);
+                break;
+            case GlobalEventT.global_pop_loading_dialog:
+                popLoading(event.tip);
                 break;
         }
     }
@@ -285,4 +292,15 @@ public class SpeedActivity extends AppCompatActivity {
             LsSnack.show(this, rl_container, tip, R.color.LRed);
         }
     }
+
+    private void closeLoading() {
+        loadingDialog.dismiss();
+    }
+
+    private void popLoading(String tip) {
+        loadingDialog.setLoadingText(tip);
+        loadingDialog.show();
+    }
+
+
 }

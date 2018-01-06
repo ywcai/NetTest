@@ -219,6 +219,31 @@ public class CacheProcess {
         setCacheTaskTotal(taskTotal);
     }
 
+    public void setCacheLogIndex(List<LogIndex> list) {
+        if (list == null) {
+            //清除所有日志
+            setCache(LOG_INDEX, "null");
+            TaskTotal taskTotal = getCacheTaskTotal();
+            taskTotal.savedCount = 0;
+            setCacheTaskTotal(taskTotal);
+            return;
+        }
+        if (list.size() == 0) {
+            //清除所有日志
+            setCache(LOG_INDEX, "null");
+            TaskTotal taskTotal = getCacheTaskTotal();
+            taskTotal.savedCount = 0;
+            setCacheTaskTotal(taskTotal);
+            return;
+        }
+        Gson gson = new Gson();
+        String cache = gson.toJson(list);
+        setCache(LOG_INDEX, cache);
+        TaskTotal taskTotal = getCacheTaskTotal();
+        taskTotal.savedCount = list.size();
+        setCacheTaskTotal(taskTotal);
+    }
+
     public List<LogIndex> getCacheLogIndex() {
         String strLogIndex = getCache(LOG_INDEX);
         List<LogIndex> indexList = null;

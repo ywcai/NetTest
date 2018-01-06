@@ -54,7 +54,7 @@ public class UpdateFragmentFour implements UpdateFragmentFourInf {
     }
 
     private void sendMsgMainPopBottomTip(String tip, int color) {
-        MsgHelper.sendEvent(GlobalEventT.wifi_main_bottom_tip, tip, color);
+        MsgHelper.sendEvent(GlobalEventT.global_pop_snack_tip, tip, color);
     }
 
 

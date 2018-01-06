@@ -94,14 +94,14 @@ public class SpeedAction implements SpeedActionInf {
 
 
     private void saveLocal() {
+        sendMsgPopLoading(AppConfig.LOG_PROCESS_TIP);
         LogIndex logIndex = new LogIndex();
         logIndex.remarks = speedState.speedResult;
         logIndex.cacheTypeIndex = AppConfig.INDEX_SPEED;
         logIndex.logTime = MyTime.getDetailTime();
         logIndex.aliasFileName = "网络测速";
         logIndex.cacheFileName = "null";
-        cacheProcess.addCacheLogIndex(logIndex);
-        sendMsgSnackBar("本地保存成功!", true);
+        logIndex.setAddr();
     }
 
     private void saveRemote() {
@@ -113,12 +113,15 @@ public class SpeedAction implements SpeedActionInf {
     }
 
     private void sendMsgSnackBar(String tip, boolean success) {
-        MsgHelper.sendStickEvent(GlobalEventT.speed_set_snack_tip, tip, success);
+        MsgHelper.sendStickEvent(GlobalEventT.global_pop_snack_tip, tip, success);
     }
 
     private void sendMsgRefreshRealSpeed() {
         MsgHelper.sendStickEvent(GlobalEventT.speed_yibiao_read_data, "", speedState.realSpeed);
     }
 
+    private void sendMsgPopLoading(String tip) {
+        MsgHelper.sendStickEvent(GlobalEventT.global_pop_loading_dialog, tip, null);
+    }
 
 }

@@ -4,12 +4,9 @@ package ywcai.ls.mobileutil.tools.Station.presenter;
 import android.app.Activity;
 import android.content.Context;
 
-import com.github.mikephil.charting.charts.LineChart;
-
 import rx.functions.Action1;
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
-import ywcai.ls.mobileutil.global.model.instance.MainApplication;
 import ywcai.ls.mobileutil.global.util.statics.InStallService;
 import ywcai.ls.mobileutil.global.util.statics.LsNotification;
 import ywcai.ls.mobileutil.service.LsConnection;
@@ -57,27 +54,6 @@ public class MainStationAction implements MainStationActionInf {
     }
 
     @Override
-    public void addTask() {
-        if (stationService != null) {
-            stationService.stationProcess.addTask();
-        }
-    }
-
-    @Override
-    public void removeTask() {
-        if (stationService != null) {
-            stationService.stationProcess.removeTask();
-        }
-    }
-
-    @Override
-    public void popOperatorMenu(boolean isShow) {
-        if (stationService != null) {
-            stationService.stationProcess.popOperatorMenu(isShow);
-        }
-    }
-
-    @Override
     public void saveLogLocal() {
         if (stationService != null) {
             stationService.stationProcess.saveLogLocal();
@@ -102,27 +78,6 @@ public class MainStationAction implements MainStationActionInf {
     public void selectFlexButton(int pos) {
         if (stationService != null) {
             stationService.stationProcess.setFlexButton(pos);
-        }
-    }
-
-    @Override
-    public void saveBitmap(LineChart lineChart) {
-        if (stationService != null) {
-            stationService.stationProcess.saveBitmap(lineChart);
-        }
-    }
-
-    @Override
-    public void setToDtMode(boolean isDtMode) {
-        if (stationService != null) {
-//            stationService.stationProcess.setToDtMode(isDtMode);
-        }
-    }
-
-    @Override
-    public void sendToRemoteReal(boolean isSend) {
-        if (stationService != null) {
-//            stationService.stationProcess.sendToRemoteReal(isSend);
         }
     }
 

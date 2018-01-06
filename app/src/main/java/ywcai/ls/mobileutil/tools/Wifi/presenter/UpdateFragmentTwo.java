@@ -73,15 +73,12 @@ public class UpdateFragmentTwo implements UpdateFragmentTwoInf {
     }
 
 
-
-
-
     private void sendMsgUpdateTaskList(List<WifiEntry> wifiEntryList) {
         MsgHelper.sendStickEvent(GlobalEventT.wifi_refresh_two_list, "", wifiEntryList);
     }
 
     private void sendMsgPopMenu() {
-        MsgHelper.sendEvent(GlobalEventT.wifi_pop_menu, "", null);
+        MsgHelper.sendEvent(GlobalEventT.global_pop_operator_dialog, "", null);
     }
 
     private void sendMsgRefreshChart() {

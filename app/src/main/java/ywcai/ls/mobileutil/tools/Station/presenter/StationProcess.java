@@ -6,10 +6,9 @@ import android.os.Build;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
-import com.github.mikephil.charting.charts.LineChart;
-
 import java.util.HashMap;
 
+import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.global.model.instance.MainApplication;
@@ -113,34 +112,17 @@ public class StationProcess implements StationChangeListenerInf {
     }
 
 
-    public void addTask() {
-    }
-
-    public void removeTask() {
-    }
-
-    public void popOperatorMenu(boolean isShow) {
-        sendMsgPopMenu(isShow);
-    }
-
-
     public void saveLogLocal() {
         normalMode.saveLocal();
-        sendMsgPopMenu(false);
     }
+
 
     public void saveLogRemote() {
         normalMode.saveRemote();
-        sendMsgPopMenu(false);
     }
 
     public void clearTask() {
         normalMode.clearLog();
-        sendMsgPopMenu(false);
-    }
-
-    public void saveBitmap(LineChart lineChart) {
-
     }
 
     public void setFlexButton(int pos) {
@@ -149,13 +131,8 @@ public class StationProcess implements StationChangeListenerInf {
         sendMsgSwitchTopBtn();
     }
 
-
     private void sendMsgTopTitle(String netTypeName) {
         MsgHelper.sendEvent(GlobalEventT.station_set_toolbar_center_text, netTypeName, null);
-    }
-
-    private void sendMsgPopMenu(boolean isShow) {
-        MsgHelper.sendEvent(GlobalEventT.station_pop_dialog, "", isShow);
     }
 
     private void sendMsgSwitchTopBtn() {
@@ -163,7 +140,10 @@ public class StationProcess implements StationChangeListenerInf {
     }
 
     private void sendMsgSnackBarTip(String tip, boolean isSuccess) {
-        MsgHelper.sendEvent(GlobalEventT.station_bottom_snack_tip, tip, isSuccess);
+        MsgHelper.sendEvent(GlobalEventT.global_pop_snack_tip, tip, isSuccess);
     }
 
+    private void sendMsgPopLoading(String logProcessTip) {
+        MsgHelper.sendEvent(GlobalEventT.global_pop_loading_dialog, logProcessTip, null);
+    }
 }

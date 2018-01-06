@@ -34,6 +34,7 @@ import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.GlobalEvent;
+import ywcai.ls.mobileutil.global.util.statics.LsLog;
 import ywcai.ls.mobileutil.menu.presenter.inf.OnItemClickListener;
 import ywcai.ls.mobileutil.results.model.LogIndex;
 import ywcai.ls.mobileutil.results.model.ResultAdapter;
@@ -41,7 +42,7 @@ import ywcai.ls.mobileutil.results.model.ResultState;
 import ywcai.ls.mobileutil.results.presenter.ResultPresenter;
 import ywcai.ls.mobileutil.results.presenter.inf.ResultPresenterInf;
 
-@Route(path = "/main/resultFragment")
+@Route(path = "/menu_detail_local/resultFragment")
 public class ResultFragment extends Fragment {
     private RecyclerView resultRecyclerView;
     private View view;

@@ -2,8 +2,10 @@
   <dictionary name="zmy_11">
     <words>
       <w>addr</w>
+      <w>baidu</w>
       <w>bssid</w>
       <w>cancal</w>
+      <w>cardview</w>
       <w>cdma</w>
       <w>chooseable</w>
       <w>ehrpd</w>
@@ -18,12 +20,14 @@
       <w>imei</w>
       <w>imtt</w>
       <w>ipaddr</w>
+      <w>lbsapi</w>
       <w>mbps</w>
       <w>mobileutil</w>
       <w>proc</w>
       <w>rscp</w>
       <w>rsrp</w>
       <w>sina</w>
+      <w>sqch</w>
       <w>ssid</w>
       <w>tencent</w>
       <w>umts</w>

@@ -1,7 +1,5 @@
 package ywcai.ls.mobileutil.tools.Station.presenter;
 
-import android.content.Context;
-
 import com.github.mikephil.charting.data.Entry;
 
 import java.util.HashMap;
@@ -32,7 +30,7 @@ public class NormalMode {
     public NormalMode(StationState stationState, StationEntry currentEntry) {
         this.stationState = stationState;
         this.currentEntry = currentEntry;
-        stationEntries = cacheProcess.getStationRecord(stationState.logName);
+        stationEntries = cacheProcess.getStationRecord(AppConfig.INDEX_STATION + "-" + stationState.logTime);
     }
 
     public void refreshInfo(HashMap<String, Integer> cells, HashMap<String, Integer> signals) {
@@ -66,7 +64,7 @@ public class NormalMode {
         StationEntry temp = new StationEntry();
         temp.copy(currentEntry);
         stationEntries.add(0, temp);
-        cacheProcess.setStationRecord(stationState.logName, currentEntry);
+        cacheProcess.setStationRecord(AppConfig.INDEX_STATION + "-" + stationState.logTime, currentEntry);
         recoveryChart();
     }
 
@@ -91,38 +89,37 @@ public class NormalMode {
             @Override
             public void call(List<StationEntry> list) {
                 final LogIndex logIndex = new LogIndex();
-                logIndex.logTime = stationState.logName;
+                logIndex.logTime = stationState.logTime;
                 logIndex.cacheTypeIndex = AppConfig.INDEX_STATION;
                 logIndex.aliasFileName = "基站测试日志";
-                logIndex.cacheFileName = stationState.logName;
+                logIndex.cacheFileName = AppConfig.INDEX_STATION + "-" + stationState.logTime;
                 if (list.size() <= 0) {
                     logIndex.remarks = "本次测试并没有记录到任何数据";
                 } else {
                     logIndex.remarks = "检测到数据变化 [" + stationEntries.size() + "] 次 " + "最强[" + list.get(list.size() - 1).rsp + "] 最弱[" +
                             list.get(0).rsp + "]";
                 }
-                cacheProcess.addCacheLogIndex(logIndex);
+                logIndex.setAddr();
                 resetLog();
-                sendMsgSnackBarTip("本地保存成功!", true);
             }
         });
         //继续开始一个新的任务
     }
 
     public void saveRemote() {
-        sendMsgSnackBarTip(AppConfig.TIP_FOR_REMOTE_SAVE, false);
+        sendMsgSnackBarTip(AppConfig.LOG_REMOTE_SAVE_SUCCESS, false);
     }
 
     public void clearLog() {
         //删除原有的
-        cacheProcess.setStationRecord(stationState.logName, null);
+        cacheProcess.setStationRecord(AppConfig.INDEX_STATION + "-" + stationState.logTime, null);
         resetLog();
         sendMsgSnackBarTip("您成功重置了本地缓存的数据!", true);
     }
 
     private void resetLog() {
         stationEntries.clear();
-        stationState.logName = MyTime.getDetailTime();
+        stationState.logTime = MyTime.getDetailTime();
         cacheProcess.setStationState(stationState);
         sendMsgRefreshLineChart(null);
     }
@@ -163,7 +160,6 @@ public class NormalMode {
     }
 
     private void sendMsgSnackBarTip(String tip, boolean isSuccess) {
-        MsgHelper.sendEvent(GlobalEventT.station_bottom_snack_tip, tip, isSuccess);
+        MsgHelper.sendEvent(GlobalEventT.global_pop_snack_tip, tip, isSuccess);
     }
-
 }

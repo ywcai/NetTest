@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/detail_local_menu1"
+        android:title="@string/detail_local_menu1"></item>
+    <item
+        android:id="@+id/detail_local_menu2"
+        android:title="@string/detail_local_menu2"></item>
+    <item
+        android:id="@+id/detail_local_menu3"
+        android:title="@string/detail_local_menu3"></item>
+    <!--<item-->
+    <!--android:id="@+id/menu4"-->
+
+    <!--android:title="@string/menu4"></item>-->
+</menu>

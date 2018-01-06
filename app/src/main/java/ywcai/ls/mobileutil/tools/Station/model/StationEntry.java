@@ -1,7 +1,8 @@
 package ywcai.ls.mobileutil.tools.Station.model;
 
-import android.os.ParcelUuid;
 import android.telephony.TelephonyManager;
+
+import ywcai.ls.mobileutil.global.util.statics.MyTime;
 
 public class StationEntry {
     public int cid = 0, lac = 0, rsp = 0, netType = -1;
@@ -9,7 +10,8 @@ public class StationEntry {
     //用netTypeName对应发射获取的场强字段
     public String netTypeName = "UNKNOWN", netTypeCn = "UNKNOWN";
     public final String UNKNOWN = "UNKNOWN";
-    public String imei, cardNumber;
+    public String imei = "", cardNumber = "";
+    public String currentTime = MyTime.getDetailTime();
 
     public void setNetTypeName() {
         switch (netType) {
@@ -72,20 +74,6 @@ public class StationEntry {
         }
     }
 
-    @Override
-    public String toString() {
-        return "StationEntry{" +
-                "lac=" + lac +
-                ", cid=" + cid +
-                ", rsp=" + rsp +
-                ", netType=" + netType +
-                ", networkOperator='" + networkOperator + '\'' +
-                ", networkOperatorName='" + networkOperatorName + '\'' +
-                ", netTypeName='" + netTypeName + '\'' +
-                '}';
-    }
-
-
 
     public void copy(StationEntry currentEntry) {
         cid = currentEntry.cid;
@@ -98,5 +86,16 @@ public class StationEntry {
         netTypeCn = currentEntry.netTypeCn;
         imei = currentEntry.imei;
         cardNumber = currentEntry.cardNumber;
+        currentTime = MyTime.getDetailTime();
+    }
+
+    @Override
+    public String toString() {
+        return "[" + currentTime + "]\n" +
+                ", 小区号=" + cid +
+                ", 区域码=" + lac +
+                ", 场强=" + rsp +
+                ", 网络类别='" + netTypeCn;
+
     }
 }

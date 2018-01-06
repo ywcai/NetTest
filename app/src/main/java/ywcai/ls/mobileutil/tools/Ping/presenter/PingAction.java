@@ -5,9 +5,11 @@ import android.view.View;
 import java.util.List;
 
 import rx.functions.Action1;
+import ywcai.ls.control.LoadingDialog;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
+import ywcai.ls.mobileutil.global.model.instance.MainApplication;
 import ywcai.ls.mobileutil.global.util.statics.InStallService;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 import ywcai.ls.mobileutil.results.model.LogIndex;
@@ -57,7 +59,7 @@ public class PingAction implements PingActionInf {
     }
 
     private void popProcessDialog() {
-        MsgHelper.sendEvent(GlobalEventT.ping_pop_operator_dialog, "", null);//弹出任务结果处理框
+        MsgHelper.sendEvent(GlobalEventT.global_pop_operator_dialog, "", null);//弹出任务结果处理框
     }
 
     private void setTaskFree() {
@@ -77,11 +79,11 @@ public class PingAction implements PingActionInf {
     }
 
     private void sendMsgPopSnackTip(String tip, boolean success) {
-        MsgHelper.sendEvent(GlobalEventT.ping_close_loading_dialog, tip, success);
+        MsgHelper.sendEvent(GlobalEventT.global_pop_snack_tip, tip, success);
     }
 
     private void popLoadingWindow(String tip) {
-        MsgHelper.sendEvent(GlobalEventT.ping_pop_loading_dialog, tip, null);
+        MsgHelper.sendEvent(GlobalEventT.global_pop_loading_dialog, tip, null);
     }
 
     private void setFloatBtnVisible(int visible) {
@@ -184,15 +186,15 @@ public class PingAction implements PingActionInf {
 
     @Override
     public void clickBtnSaveLocal() {
+        popLoadingWindow(AppConfig.LOG_PROCESS_TIP);
         PingState initState = cacheProcess.getCachePingState();
         addDataIndex(initState);//创建日志的索引
         resetChart(initState);
-        sendMsgPopSnackTip("数据保存到本地成功", true);
     }
 
     @Override
     public void clickBtnSaveRemote() {
-        sendMsgPopSnackTip(AppConfig.TIP_FOR_REMOTE_SAVE, false);
+        sendMsgPopSnackTip(AppConfig.LOG_REMOTE_SAVE_SUCCESS, false);
     }
 
 
@@ -203,6 +205,7 @@ public class PingAction implements PingActionInf {
         resetChart(initState);
         sendMsgPopSnackTip("清除数据成功", true);
     }
+
 
     @Override
     public void clickBtnSaveCancal() {
@@ -275,6 +278,7 @@ public class PingAction implements PingActionInf {
         logIndex.aliasFileName = "PING TEST";
         logIndex.remarks = initState.getFormatMarks();
         logIndex.logTime = initState.startTime;
-        cacheProcess.addCacheLogIndex(logIndex);
+        logIndex.setAddr();
+//        cacheProcess.addCacheLogIndex(logIndex);
     }
 }

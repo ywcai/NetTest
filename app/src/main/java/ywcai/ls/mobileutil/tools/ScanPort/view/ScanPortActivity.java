@@ -30,6 +30,7 @@ import me.drakeet.materialdialog.MaterialDialog;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import ywcai.ls.control.LoadingDialog;
 import ywcai.ls.control.scan.LsScan;
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
@@ -53,6 +54,7 @@ public class ScanPortActivity extends AppCompatActivity {
     FloatingActionButton popTaskMenu;
     View view;
     LsScan lsScan;
+    LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,6 +71,7 @@ public class ScanPortActivity extends AppCompatActivity {
     }
 
     private void InitView() {
+        loadingDialog = new LoadingDialog(this);
         lsScan = (LsScan) findViewById(R.id.radar_scan_port);
         ImageView btnOperator = (ImageView) findViewById(R.id.btn_scan_port_operator);
         btnOperator.setOnClickListener(new View.OnClickListener() {
@@ -213,10 +216,24 @@ public class ScanPortActivity extends AppCompatActivity {
             case GlobalEventT.scan_port_refresh_radar_progress:
                 setRadarProgress((ScanPortResult) event.obj);
                 break;
-            case GlobalEventT.scan_port_show_bottom_msg:
-                showSnackMsgBox(event.tip);
+            case GlobalEventT.global_pop_snack_tip:
+                setCardNoInfo();
+                closeLoading();
+                showSnackMsgBox(event.tip, (boolean) event.obj);
+                break;
+            case GlobalEventT.global_pop_loading_dialog:
+                popLoading(event.tip);
                 break;
         }
+    }
+
+    private void closeLoading() {
+        loadingDialog.dismiss();
+    }
+
+    private void popLoading(String tip) {
+        loadingDialog.setLoadingText(tip);
+        loadingDialog.show();
     }
 
 
@@ -366,9 +383,14 @@ public class ScanPortActivity extends AppCompatActivity {
         textTaskInfo.setText("共扫描端口[" + scanPortResult.currentScanIndex + "]个，[" + scanPortResult.openPorts.size() + "]个端口处于开启状态!");
     }
 
-    private void showSnackMsgBox(String tip) {
+    private void showSnackMsgBox(String tip, boolean success) {
         RelativeLayout snack_container = (RelativeLayout) findViewById(R.id.scan_port_snack_container);
-        LsSnack.show(this, snack_container, tip);
+        if (success) {
+            LsSnack.show(this, snack_container, tip);
+        } else {
+            LsSnack.show(this, snack_container, tip, R.color.LRed);
+        }
+
     }
 
 }

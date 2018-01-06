@@ -1,12 +1,7 @@
 package ywcai.ls.mobileutil.tools.Wifi.presenter;
 
-
-import android.content.Context;
-
-
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.highlight.Highlight;
-
 import rx.functions.Action1;
 import ywcai.ls.mobileutil.global.util.statics.InStallService;
 import ywcai.ls.mobileutil.service.LsConnection;

@@ -11,22 +11,8 @@ import ywcai.ls.mobileutil.service.StationService;
 
 public interface MainStationActionInf {
 
-    //等待
+
     void startWork();
-
-//    void isDoubleCard();
-//
-//    void isSupportOs();
-//
-//    void addSingleListener(boolean isSupportDouble);
-//
-//    void addCellListener(boolean isSupportDouble);
-
-    void addTask();//设置为前台服务
-
-    void removeTask();//退出前台服务
-
-    void popOperatorMenu(boolean isShow);
 
     void saveLogLocal();
 
@@ -35,13 +21,6 @@ public interface MainStationActionInf {
     void clearTask();
 
     void selectFlexButton(int pos);
-
-    void saveBitmap(LineChart lineChart);
-
-    void setToDtMode(boolean isDtMode);//进入路测模式？。预留
-
-    void sendToRemoteReal(boolean isSend);//实时传输当前测试的数据。预留
-
 
     void unRegPhoneStateListener();
 }

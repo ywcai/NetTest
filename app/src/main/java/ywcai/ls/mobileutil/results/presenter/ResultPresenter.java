@@ -1,5 +1,7 @@
 package ywcai.ls.mobileutil.results.presenter;
 
+import com.alibaba.android.arouter.launcher.ARouter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,16 +51,12 @@ public class ResultPresenter implements ResultPresenterInf {
     }
 
     @Override
-    public void deleteData(int[] logIndex) {
-        if (resultState.isShowLocal) {
-            deleteLocalData(logIndex);
-        } else {
-            deleteRemoteData(logIndex);
-        }
-    }
-
-    @Override
     public void onClickCard(int pos) {
+        if (resultState.isShowLocal) {
+            ARouter.getInstance().build(AppConfig.DETAIL_ACTIVITY_PATH).withInt("pos", pos).navigation();
+        } else {
+
+        }
 
     }
 
@@ -141,15 +139,6 @@ public class ResultPresenter implements ResultPresenterInf {
         //refresh
         updateDataList(new ArrayList<LogIndex>());
     }
-
-    private void deleteLocalData(int[] pos) {
-
-    }
-
-    private void deleteRemoteData(int[] pos) {
-
-    }
-
 
     private void updateDataList(List<LogIndex> showList) {
         MsgHelper.sendEvent(GlobalEventT.result_update_list, "", showList);

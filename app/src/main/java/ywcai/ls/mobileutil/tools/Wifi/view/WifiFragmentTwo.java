@@ -97,13 +97,13 @@ public class WifiFragmentTwo extends Fragment {
         super.onStop();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void update(GlobalEvent event) {
         switch (event.type) {
             case GlobalEventT.wifi_refresh_two_list:
                 updateRecycler((List<WifiEntry>) event.obj);
                 break;
-            case GlobalEventT.wifi_pop_menu:
+            case GlobalEventT.global_pop_operator_dialog:
                 popOperatorMenu();
                 break;
             case GlobalEventT.wifi_refresh_two_chart_line:

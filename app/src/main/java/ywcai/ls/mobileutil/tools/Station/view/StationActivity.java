@@ -1,7 +1,6 @@
 package ywcai.ls.mobileutil.tools.Station.view;
 
 
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -51,6 +50,7 @@ import rx.functions.Action1;
 
 
 import rx.schedulers.Schedulers;
+import ywcai.ls.control.LoadingDialog;
 import ywcai.ls.control.flex.FlexButtonLayout;
 import ywcai.ls.control.flex.OnFlexButtonClickListener;
 import ywcai.ls.mobileutil.R;
@@ -71,6 +71,7 @@ public class StationActivity extends AppCompatActivity {
     private int baseMaxX = 50;
     private String cellLog = "", signalLog = "";
     private FlexButtonLayout topBtn;
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,7 +85,7 @@ public class StationActivity extends AppCompatActivity {
     }
 
     private void InitView() {
-
+        loadingDialog = new LoadingDialog(this);
         popMenu = new MaterialDialog(this);
         View view = LayoutInflater.from(this).inflate(R.layout.pop_dialog_wifi, null);
         popMenu.setContentView(view);
@@ -97,25 +98,29 @@ public class StationActivity extends AppCompatActivity {
         save_local.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                popMenu(false);
+                popLoading(AppConfig.LOG_PROCESS_TIP);
                 mainStationActionInf.saveLogLocal();
             }
         });
         save_remote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                popMenu(false);
                 mainStationActionInf.saveLogRemote();
             }
         });
         clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                popMenu(false);
                 mainStationActionInf.clearTask();
             }
         });
         cancal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainStationActionInf.popOperatorMenu(false);
+                popMenu(false);
             }
         });
 
@@ -139,7 +144,7 @@ public class StationActivity extends AppCompatActivity {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainStationActionInf.popOperatorMenu(true);
+                popMenu(true);
             }
         });
     }
@@ -221,7 +226,7 @@ public class StationActivity extends AppCompatActivity {
         Observable.create(new Observable.OnSubscribe<MainStationActionInf>() {
             @Override
             public void call(Subscriber<? super MainStationActionInf> subscriber) {
-                mainStationActionInf = new MainStationAction(StationActivity.this,StationActivity.this);
+                mainStationActionInf = new MainStationAction(StationActivity.this, StationActivity.this);
                 subscriber.onNext(mainStationActionInf);
             }
         })
@@ -305,16 +310,26 @@ public class StationActivity extends AppCompatActivity {
             case GlobalEventT.station_refresh_chart_entry_record:
                 refreshChartData((List<Entry>) event.obj);
                 break;
-            case GlobalEventT.station_pop_dialog:
+            case GlobalEventT.global_pop_operator_dialog:
                 popMenu((boolean) event.obj);
                 break;
-            case GlobalEventT.station_bottom_snack_tip:
+            case GlobalEventT.global_pop_snack_tip:
+                closeLoading();
                 showSnackTip(event.tip, (boolean) event.obj);
                 break;
             case GlobalEventT.station_switch_top_btn:
                 switchShowContent((boolean) event.obj);
                 break;
         }
+    }
+
+    private void closeLoading() {
+        loadingDialog.dismiss();
+    }
+
+    private void popLoading(String tip) {
+        loadingDialog.setLoadingText(tip);
+        loadingDialog.show();
     }
 
 

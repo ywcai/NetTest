@@ -142,8 +142,8 @@ public class UpdateFragmentOne implements UpdateFragmentOneInf {
     }
 
     //
-    private void sendMsgPopBottomSnack(String tip,int color) {
-        MsgHelper.sendEvent(GlobalEventT.wifi_main_bottom_tip, tip, color);
+    private void sendMsgPopBottomSnack(String tip, int color) {
+        MsgHelper.sendEvent(GlobalEventT.global_pop_snack_tip, tip, color);
     }
 
     private void sendMsgNotification(String tip) {

@@ -9,7 +9,7 @@ import ywcai.ls.mobileutil.R;
 
 public class ResultListViewHolder extends RecyclerView.ViewHolder {
 
-    public TextView result_alias, result_time, result_remarks;
+    public TextView result_alias, result_time, result_remarks,result_addr;
     public ImageView result_type;
 
     public ResultListViewHolder(View itemView) {
@@ -18,6 +18,7 @@ public class ResultListViewHolder extends RecyclerView.ViewHolder {
         result_time = (TextView) itemView.findViewById(R.id.result_time);
         result_remarks = (TextView) itemView.findViewById(R.id.result_remarks);
         result_type = (ImageView) itemView.findViewById(R.id.result_type);
+        result_addr=(TextView) itemView.findViewById(R.id.result_addr);
     }
 }
 

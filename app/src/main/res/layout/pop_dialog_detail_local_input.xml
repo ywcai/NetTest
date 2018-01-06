@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="10dp">
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/detail_local_edit_input_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:hint="输入记录名称"
+        android:inputType="text"
+        android:maxLines="1"
+        android:textCursorDrawable="@null"
+        android:textSize="12sp"
+        app:met_autoValidate="true"
+        app:met_baseColor="#ff000000"
+        app:met_bottomTextSize="8sp"
+        app:met_checkCharactersCountAtBeginning="true"
+        app:met_clearButton="true"
+        app:met_errorColor="@color/LRed"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelTextColor="#8805ad"
+        app:met_helperTextAlwaysShown="true"
+        app:met_helperTextColor="@color/LRed"
+        app:met_maxCharacters="15"
+        app:met_minCharacters="4"
+        app:met_primaryColor="@color/LBlue"
+        app:met_textColorHint="@color/colorWifiBg" />
+</LinearLayout>

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.baidu.mobstat.StatService;
@@ -81,22 +82,8 @@ public class WelComeActivity extends AppCompatActivity implements SplashADListen
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//去掉信息栏
         setContentView(R.layout.activity_welcome);
         MainApplication.getInstance().isActivityExist = true;
-
-        //先在本地查看是否有缓存
-//        AppInfo appInfo = CacheProcess.getInstance().getAppInfo();
-//        if (appInfo.isLoadAd) {
         adContainer = (ViewGroup) findViewById(R.id.splash_container);
         splashAD = new SplashAD(WelComeActivity.this, adContainer, AppConfig.TENCENT_APP_ID, AppConfig.TENCENT_AD_ID, WelComeActivity.this);
-//        }
-//        else {
-//            //如果本地缓存False，则去服务器请求
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    requestAdConfig();
-//                }
-//            }).start();
-//        }
     }
 
     private void requestAdConfig() {
@@ -111,18 +98,17 @@ public class WelComeActivity extends AppCompatActivity implements SplashADListen
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                //只要请求到接口正常，则初始化广告
+                //请求正常，直接进入主页面
+                startMainActivity();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 AppInfo appInfo = new AppInfo();
                 appInfo.isLoadAd = true;
                 CacheProcess.getInstance().setAppInfo(appInfo);
                 adContainer = (ViewGroup) findViewById(R.id.splash_container);
                 splashAD = new SplashAD(WelComeActivity.this, adContainer, AppConfig.TENCENT_APP_ID, AppConfig.TENCENT_AD_ID, WelComeActivity.this);
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                //如果服务端接口未打开，则直接进入主界面
-                startMainActivity();
             }
         });
 
@@ -164,7 +150,8 @@ public class WelComeActivity extends AppCompatActivity implements SplashADListen
     public void onADPresent() {
         //广告被正常弹出
         ImageView log = (ImageView) findViewById(R.id.splash_holder);
-        log.setVisibility(View.INVISIBLE);
+        log.setVisibility(View.GONE);
+        Toast.makeText(this, "点击广告将会直接进入下载页面", Toast.LENGTH_LONG).show();
     }
 
     @Override

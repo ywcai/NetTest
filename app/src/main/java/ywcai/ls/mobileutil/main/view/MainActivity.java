@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
@@ -21,6 +22,11 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.baidu.autoupdatesdk.BDAutoUpdateSDK;
 import com.baidu.autoupdatesdk.UICheckUpdateCallback;
 import com.baidu.mobstat.StatService;
+import com.qq.e.ads.banner.ADSize;
+import com.qq.e.ads.banner.AbstractBannerADListener;
+import com.qq.e.ads.banner.BannerADListener;
+import com.qq.e.ads.banner.BannerView;
+import com.qq.e.comm.util.AdError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +41,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<Fragment> fragments = new ArrayList<>();
     private List<TextView> nav = new ArrayList<>();
     public int currentPage = 3;
+
+    private final String bannerId = "1060320980023408";
+    private final String appID = "1106630142";
+    BannerView banner;
+
     @Autowired()
     public String ROUTER_PAGE;
     private ProgressDialog progressDialog;
+    RelativeLayout ad_container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +61,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         InstallFragment();
         selectFragment(0);
         startCacheActivity();
+        initAD();
+        banner.loadAD();
+        banner.setShowClose(true);
+    }
+
+    private void initAD() {
+        ad_container = (RelativeLayout) findViewById(R.id.main_ad_container);
+        banner = new BannerView(this, ADSize.BANNER, appID, bannerId);
+        //设置广告轮播时间，为0或30~120之间的数字，单位为s,0标识不自动轮播
+        banner.setRefresh(0);
+        banner.setADListener(new AbstractBannerADListener() {
+            @Override
+            public void onNoAD(AdError adError) {
+
+            }
+
+            @Override
+            public void onADReceiv() {
+
+            }
+        });
+        ad_container.addView(banner);
+
     }
 
     private void checkApkVersion() {

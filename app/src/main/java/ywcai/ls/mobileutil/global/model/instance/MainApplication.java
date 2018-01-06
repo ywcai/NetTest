@@ -1,16 +1,21 @@
 package ywcai.ls.mobileutil.global.model.instance;
 
 import android.app.Application;
+
 import com.alibaba.android.arouter.launcher.ARouter;
 
 import cat.ereza.customactivityoncrash.config.CaocConfig;
+import ywcai.ls.mobileutil.global.model.LocationService;
 
 public class MainApplication extends Application {
     private static MainApplication instance;
-    public boolean isActivityExist=false;
+    public LocationService locationService;
+    public boolean isActivityExist = false;
+
     public static MainApplication getInstance() {
         return instance;
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -22,5 +27,6 @@ public class MainApplication extends Application {
                 .apply();
         instance = this;
         ARouter.init(this);
+        locationService = new LocationService(getApplicationContext());
     }
 }

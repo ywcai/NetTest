@@ -8,8 +8,9 @@
     <string name="bot_menu2">记录</string>
     <string name="bot_menu3"></string>
     <string name="bot_menu4"></string>
-    <string name="menu1">分享结果</string>
-    <string name="menu2">检查更新</string>
-    <string name="menu3">使用帮助</string>
+    <string name="detail_local_menu1">上传云端</string>
+    <string name="detail_local_menu2">修改别名</string>
+    <string name="detail_local_menu3">删除记录</string>
     <string name="menu4">赞助作者</string>
+    <string name="title_activity_detail">DetailActivity</string>
 </resources>

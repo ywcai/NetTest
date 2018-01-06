@@ -25,9 +25,16 @@ public class ScanPortProcess {
 
     public void setScanPortService(ScanPortService scanPortService) {
         this.scanPortService = scanPortService;
-        scanPortService.recoveryExecuteTask(scanPortState, scanPortResult);
-        isNeedRecoveryTask();
+        if (scanPortService != null) {
+            scanPortService.recoveryExecuteTask(scanPortState, scanPortResult);
+            isNeedRecoveryTask();
+        } else {
+            sendMsgSnackTip("后台扫描服务启动失败，请关闭页面后重新打开!");
+            //提示后台扫描服务绑定失败了。请关闭页面后重启尝试;
+        }
+
     }
+
 
     /*
     如果当前任务状态是运行状态，测需要进一步检测是否真正有后台TASK执行。
@@ -38,7 +45,9 @@ public class ScanPortProcess {
         //只要没有关闭APP退出，Service始终将任务执行完。
         //如果任务没有执行完退出后又重新打开APP，则直接显示上一次执行到中途的结果。
         if (scanPortState.scanTaskState == 1) {
+
             scanPortService.startTask();
+
         }
     }
 
@@ -58,6 +67,7 @@ public class ScanPortProcess {
                 break;
         }
     }
+
     /*
     response resume activity event
      */
@@ -136,13 +146,13 @@ public class ScanPortProcess {
     }
 
     private void processResult() {
+        sendMsgPopLoading(AppConfig.LOG_PROCESS_TIP);
         saveScanLog();
         scanPortState.reset();
         cacheProcess.setScanPortState(scanPortState);
         scanPortResult.reset();
         cacheProcess.setScanPortResult(scanPortResult);
-        sendMsgTopCardNone();
-        sendMsgPopBottomMsg("结果已在本地保存!");
+//        sendMsgPopBottomMsg("结果已在本地保存!");
     }
 
 
@@ -158,8 +168,8 @@ public class ScanPortProcess {
                 + "-" + scanPortState.endPort
                 + " 扫描数量:" + scanPortResult.maxCounts
                 + " 打开数量:" + scanPortResult.openPorts.size()
-                + " 端口明细:" + LsListTransfer.IntegerToString(scanPortResult.openPorts);
-        cacheProcess.addCacheLogIndex(logIndex);
+                + " 端口明细:" + LsListTransfer.intToString(scanPortResult.openPorts, 0, scanPortResult.openPorts.size());
+        logIndex.setAddr();
         TaskTotal taskTotal = cacheProcess.getCacheTaskTotal();
         taskTotal.state[AppConfig.INDEX_PORT] = 0;
         taskTotal.autoCount();
@@ -192,9 +202,11 @@ public class ScanPortProcess {
         MsgHelper.sendStickEvent(GlobalEventT.scan_port_recovery_radar_data, "", scanPortResult);
     }
 
-    private void sendMsgPopBottomMsg(String tip) {
-        MsgHelper.sendEvent(GlobalEventT.scan_port_show_bottom_msg, tip, null);
+    private void sendMsgPopLoading(String tip) {
+        MsgHelper.sendEvent(GlobalEventT.global_pop_loading_dialog, tip, null);
     }
 
-
+    private void sendMsgSnackTip(String s) {
+        MsgHelper.sendEvent(GlobalEventT.global_pop_snack_tip, s, false);
+    }
 }

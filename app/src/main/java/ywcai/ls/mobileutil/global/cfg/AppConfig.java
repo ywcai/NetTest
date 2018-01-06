@@ -7,12 +7,18 @@ public class AppConfig {
     public static final String TENCENT_AD_ID = "9090328858666334";
     public static final String TENCENT_APP_ID = "1106630142";
 
-    public static final String TIP_FOR_REMOTE_SAVE = "暂时不支持云端保存，请见谅";
+    public static final String LOG_REMOTE_SAVE_SUCCESS = "暂时不支持云端保存，请见谅";
+    public static final String LOG_REMOTE_SAVE_FAIL = "云端保存数据失败";
+    public static final String LOG_LOCAL_SAVE_SUCCESS = "本地保存数据成功";
+    public static final String LOG_LOCAL_SAVE_FAIL = "本地保存数据失败";
+    public static final String LOG_PROCESS_TIP = "正在处理";
+
     public static final String STR_LOCAL_MAC_FILE = "/sys/class/net/wlan0/address";
     public static final String STR_ARP_FILE_PATH = "/proc/net/arp";
 
     public static final String MAIN_ACTIVITY_PATH = "/main/view/MainActivity";
     public static final String WAIT_ACTIVITY_PATH = "/welcome/view/WaitActivity";
+    public static final String DETAIL_ACTIVITY_PATH = "/results/view/DetailLocalActivity";
 
     public static final String PING_ACTIVITY_PATH = "/tools/Ping/view/PingActivity";
     public static final String WIFI_ACTIVITY_PATH = "/tools/Wifi/view/WifiActivity";

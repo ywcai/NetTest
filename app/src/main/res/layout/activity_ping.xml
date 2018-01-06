@@ -201,11 +201,10 @@
         app:fabSize="normal" />
 
     <RelativeLayout
-        android:layout_alignParentBottom="true"
         android:id="@+id/ping_snack_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></RelativeLayout>
-
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"></RelativeLayout>
 </RelativeLayout>
 
 

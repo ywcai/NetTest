@@ -9,6 +9,8 @@ android {
         targetSdkVersion 24
         versionCode 13
         versionName "1.1.2"
+//        versionCode 12
+//        versionName "1.1.1"
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = [moduleName: project.getName()]
@@ -21,12 +23,25 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets
+            {
+                main
+                        {
+                            jniLibs.srcDir "libs"
+                            jni.srcDirs = []
+                        }
+
+            }
 }
 repositories {
     flatDir {
         dirs 'libs'
     }
+
 }
+
+
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     //noinspection GradleCompatible

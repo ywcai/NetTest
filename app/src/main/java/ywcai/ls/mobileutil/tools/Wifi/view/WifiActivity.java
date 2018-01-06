@@ -13,12 +13,16 @@ import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.baidu.mobstat.StatService;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import mehdi.sakout.fancybuttons.FancyButton;
+import ywcai.ls.control.LoadingDialog;
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.GlobalEvent;
@@ -34,6 +38,7 @@ public class WifiActivity extends AppCompatActivity {
     private List<ImageView> list = new ArrayList<>();
     private MainWifiActionInf mainWifiActionInf;
     private RelativeLayout snack_container;
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,7 @@ public class WifiActivity extends AppCompatActivity {
         InitToolBar();
         InitControlBtn();
         InstallFragment();
+        loadingDialog = new LoadingDialog(this);
     }
 
     private void InitControlBtn() {
@@ -140,7 +146,7 @@ public class WifiActivity extends AppCompatActivity {
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void updateDeviceList(GlobalEvent event) {
         switch (event.type) {
             case GlobalEventT.wifi_set_main_title_tip:
@@ -150,10 +156,23 @@ public class WifiActivity extends AppCompatActivity {
             case GlobalEventT.wifi_set_channel_btn_status:
                 set2d4gBtnStatus((Boolean) event.obj);
                 break;
-            case GlobalEventT.wifi_main_bottom_tip:
-                showBottomTip(event.tip, ((int) event.obj));
+            case GlobalEventT.global_pop_snack_tip:
+                closeLoading();
+                showBottomTip(event.tip, ((boolean) event.obj));
+                break;
+            case GlobalEventT.global_pop_loading_dialog:
+                popLoading(event.tip);
                 break;
         }
+    }
+
+    private void closeLoading() {
+        loadingDialog.dismiss();
+    }
+
+    private void popLoading(String tip) {
+        loadingDialog.setLoadingText(tip);
+        loadingDialog.show();
     }
 
     private void set2d4gBtnStatus(Boolean a2d4gBtnStatus) {
@@ -167,8 +186,12 @@ public class WifiActivity extends AppCompatActivity {
         btn5G.setVisibility(View.VISIBLE);
     }
 
-    private void showBottomTip(String tip, int color) {
-        LsSnack.show(this, snack_container, tip, color);
+    private void showBottomTip(String tip, boolean success) {
+        if (success) {
+            LsSnack.show(this, snack_container, tip, -1);
+        } else {
+            LsSnack.show(this, snack_container, tip, R.color.LRed);
+        }
     }
 
     @Override

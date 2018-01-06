@@ -6,7 +6,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.menu.ExpandedMenuView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -17,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
@@ -46,9 +44,8 @@ import ywcai.ls.mobileutil.menu.model.TitleTipAdapter;
 import ywcai.ls.mobileutil.menu.model.TitleTipMenu;
 import ywcai.ls.mobileutil.menu.presenter.inf.OnItemClickListener;
 import ywcai.ls.mobileutil.results.model.TaskTotal;
-import ywcai.ls.mobileutil.tools.ScanPort.model.ScanPortResult;
 
-@Route(path = "/main/menuFragment")
+@Route(path = "/menu_detail_local/menuFragment")
 public class MenuFragment extends Fragment {
     private List<IndexMenu> menuList = new ArrayList();
     private List<TitleTipMenu> titleTipMenuList = new ArrayList();
@@ -108,26 +105,26 @@ public class MenuFragment extends Fragment {
         mToolbar.setTitle("网络测试工具集");
         setHasOptionsMenu(false);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.menu2:
-//                        checkApkVersion();
-                        break;
+//        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                switch (item.getItemId()) {
 //                    case R.id.menu2:
-//
+////                        checkApkVersion();
 //                        break;
-//                    //打开选择应用菜单
-//                    case R.id.menu3:
-//                        break;
-//                    case R.id.menu4:
-////                        cutProcess();
-//                        break;
-                }
-                return false;
-            }
-        });
+////                    case R.id.menu2:
+////
+////                        break;
+////                    //打开选择应用菜单
+////                    case R.id.menu3:
+////                        break;
+////                    case R.id.menu4:
+//////                        cutProcess();
+////                        break;
+//                }
+//                return false;
+//            }
+//        });
     }
 
     private void InitView() {
@@ -278,7 +275,7 @@ public class MenuFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
-        inflater.inflate(R.menu.main, menu);
+        inflater.inflate(R.menu.menu_detail_local, menu);
     }
 
     @Override

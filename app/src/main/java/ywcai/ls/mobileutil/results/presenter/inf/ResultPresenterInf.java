@@ -8,13 +8,16 @@ import java.util.List;
 
 public interface ResultPresenterInf {
     void refreshData();
+
     void pressLocalBtn();
+
     void pressRemoteBtn();
-    void deleteData(int[] logIndex);
+
     void onClickCard(int pos);
 
-
     void selectDataTypeAll();
+
     void selectDataType(int index, boolean b);
+
     void initTagStatus();
 }
