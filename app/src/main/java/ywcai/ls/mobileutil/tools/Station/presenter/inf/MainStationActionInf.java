@@ -12,7 +12,7 @@ import ywcai.ls.mobileutil.service.StationService;
 public interface MainStationActionInf {
 
 
-    void startWork();
+    void setProcess();
 
     void saveLogLocal();
 
@@ -22,5 +22,4 @@ public interface MainStationActionInf {
 
     void selectFlexButton(int pos);
 
-    void unRegPhoneStateListener();
 }

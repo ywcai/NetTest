@@ -19,6 +19,7 @@ import android.widget.ImageView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.baidu.mobstat.StatService;
 import com.bumptech.glide.Glide;
 
 import org.greenrobot.eventbus.EventBus;

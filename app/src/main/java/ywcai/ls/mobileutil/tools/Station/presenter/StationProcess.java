@@ -1,14 +1,12 @@
 package ywcai.ls.mobileutil.tools.Station.presenter;
 
+
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
 import java.util.HashMap;
 
-import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.global.model.instance.MainApplication;
@@ -35,30 +33,20 @@ public class StationProcess implements StationChangeListenerInf {
         stationState = cacheProcess.getStationState();
         normalMode = new NormalMode(stationState, currentEntry);
         detailMode = new DetailMode();
-        recoveryTopBtn();
+        telephonyManager = (TelephonyManager) MainApplication.getInstance().getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+    }
+
+    public void recoveryUi() {
+        setBaseNetInfo();
+        sendMsgSwitchTopBtn();
         normalMode.recoveryChart();
     }
 
-    private void recoveryTopBtn() {
-        sendMsgSwitchTopBtn();
-    }
-
-
-    //开始监听需要的基站数据,如果是新建，才启动，否则仅调用 recoveryAllData();
-    public void startProcess(Context context) {
-        telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+    public void regSingleListener() {
         //检测系统版本，确认是否支持双卡
         //若低于N版本，检测是否有双卡。
         //根据检测的结果选择注册不同的添加监听器;这里要实现监听的接口并处理接口返回的数据
         //场强和小区变化，需要分别注册实体监测，不然会吊死
-        if (!checkNetType()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                sendMsgSnackBarTip("你拒绝了系统的权限申请！", false);
-            } else {
-                sendMsgSnackBarTip("你拒绝了系统的权限申请！", true);
-            }
-            return;
-        }
         if (isOnlyListenerSingleCard()) {
             //这些需要在UI线程注册
             stationListenerFactoryInf1 = new SingleCardStationListener();
@@ -72,11 +60,6 @@ public class StationProcess implements StationChangeListenerInf {
         }
     }
 
-    public void unRegPhoneListener() {
-        telephonyManager.listen((PhoneStateListener) stationListenerFactoryInf1, PhoneStateListener.LISTEN_NONE);
-        telephonyManager.listen((PhoneStateListener) stationListenerFactoryInf2, PhoneStateListener.LISTEN_NONE);
-    }
-
     //检测系统版本，选择哪种监听模式
     private boolean isOnlyListenerSingleCard() {
         return true;
@@ -84,29 +67,18 @@ public class StationProcess implements StationChangeListenerInf {
 
 
     //在外面去用.
-    private boolean checkNetType() {
+    private void setBaseNetInfo() {
         currentEntry.netType = telephonyManager.getNetworkType();
         currentEntry.setNetTypeName();
-        if (PackageManager.PERMISSION_GRANTED !=
-                MainApplication.getInstance().getApplicationContext().
-                        getPackageManager().checkPermission("android.permission.READ_PHONE_STATE", "ywcai.ls.mobileutil")) {
-            return false;
-        }
-        if (PackageManager.PERMISSION_GRANTED !=
-                MainApplication.getInstance().getApplicationContext().
-                        getPackageManager().checkPermission("android.permission.ACCESS_COARSE_LOCATION", "ywcai.ls.mobileutil")) {
-            return false;
-        }
         currentEntry.imei = telephonyManager.getDeviceId();
         currentEntry.cardNumber = telephonyManager.getSimSerialNumber();
         sendMsgTopTitle(currentEntry.netTypeCn);
-        return true;
     }
 
 
     @Override
     public void stationDataChange(HashMap<String, Integer> cells, HashMap<String, Integer> signals) {
-        checkNetType();
+        setBaseNetInfo();
         normalMode.refreshInfo(cells, signals);
         detailMode.refreshInfo(cells, signals);
     }
@@ -137,13 +109,5 @@ public class StationProcess implements StationChangeListenerInf {
 
     private void sendMsgSwitchTopBtn() {
         MsgHelper.sendEvent(GlobalEventT.station_switch_top_btn, "", stationState.isShowFormat);
-    }
-
-    private void sendMsgSnackBarTip(String tip, boolean isSuccess) {
-        MsgHelper.sendEvent(GlobalEventT.global_pop_snack_tip, tip, isSuccess);
-    }
-
-    private void sendMsgPopLoading(String logProcessTip) {
-        MsgHelper.sendEvent(GlobalEventT.global_pop_loading_dialog, logProcessTip, null);
     }
 }

@@ -1,5 +1,6 @@
 package ywcai.ls.mobileutil.results.view;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +10,6 @@ import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -18,6 +18,16 @@ import android.widget.TextView;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.baidu.mobstat.StatService;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 
@@ -25,11 +35,11 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 import me.drakeet.materialdialog.MaterialDialog;
-
 import ywcai.ls.control.LoadingDialog;
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
@@ -40,6 +50,7 @@ import ywcai.ls.mobileutil.global.util.statics.LsListTransfer;
 import ywcai.ls.mobileutil.global.util.statics.LsSnack;
 import ywcai.ls.mobileutil.global.util.statics.SetTitle;
 import ywcai.ls.mobileutil.results.model.LogIndex;
+import ywcai.ls.mobileutil.results.model.ResultState;
 import ywcai.ls.mobileutil.results.presenter.DetailLocalAction;
 import ywcai.ls.mobileutil.results.presenter.inf.DetailLocalActionInf;
 import ywcai.ls.mobileutil.tools.Station.model.StationEntry;
@@ -49,12 +60,15 @@ import ywcai.ls.mobileutil.tools.Station.model.StationEntry;
 public class DetailLocalActivity extends AppCompatActivity {
     @Autowired()
     public int pos = 0;
-    TextView record_remarks, record_detail, logTitle, logTime, logAddr, prev, next;
+    TextView record_remarks, record_detail, logTitle, logTime, logAddr, prev, next, pageNumber;
     LoadingDialog loadingDialog;
     DetailLocalActionInf detailLocalAction;
     MaterialDialog uploadDialog, editDialog, deleteDialog;
     MaterialEditText inputText;
     RelativeLayout rl;
+    LineChart chart;
+    ResultState resultState = CacheProcess.getInstance().getResultState();
+    List<LogIndex> temp = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +83,17 @@ public class DetailLocalActivity extends AppCompatActivity {
         detailLocalAction.loadRecord(pos);
     }
 
+    @Override
+    protected void onPause() {
+        StatService.onPause(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        StatService.onResume(this);
+        super.onResume();
+    }
 
     private void initDialog() {
 
@@ -172,6 +197,7 @@ public class DetailLocalActivity extends AppCompatActivity {
                 finish();
             }
         });
+        pageNumber = (TextView) findViewById(R.id.detail_local_page_number);
         prev = (TextView) findViewById(R.id.detail_local_prev);
         next = (TextView) findViewById(R.id.detail_local_next);
         prev.setOnClickListener(new View.OnClickListener() {
@@ -191,8 +217,29 @@ public class DetailLocalActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        chart = (LineChart) findViewById(R.id.detail_local_chart);
+        chart.setNoDataText("该条记录无详细数据!");
 
-        detailLocalAction = new DetailLocalAction();
+        chart.setDrawGridBackground(false);
+        chart.getAxisRight().setEnabled(false);
+
+        chart.setDescription(null);
+        chart.setDoubleTapToZoomEnabled(false);
+        chart.setHighlightPerTapEnabled(false);
+        chart.setHighlightPerDragEnabled(false);
+        chart.setNoDataTextColor(ContextCompat.getColor(this, R.color.colorWifiBg));
+
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setTextColor(ContextCompat.getColor(this, R.color.colorWifiBg));
+        YAxis yAxis = chart.getAxisLeft();
+        yAxis.setDrawGridLines(false);
+        yAxis.setDrawAxisLine(false);
+        yAxis.setTextColor(ContextCompat.getColor(this, R.color.colorWifiBg));
+
+
+        detailLocalAction = new DetailLocalAction(resultState, temp);
         record_remarks = (TextView) findViewById(R.id.detail_local_text_remark);
         record_detail = (TextView) findViewById(R.id.detail_local_text_detail);
         record_detail.setMovementMethod(new ScrollingMovementMethod());
@@ -240,9 +287,9 @@ public class DetailLocalActivity extends AppCompatActivity {
     public void update(GlobalEvent event) {
         switch (event.type) {
             case GlobalEventT.detail_local_refresh_record:
-                setPos(event.tip);
-                loadRecord((LogIndex) event.obj);
                 loadingDialog.dismiss();
+                setPos(event.tip);
+                loadRecord(event.obj);
                 break;
             case GlobalEventT.global_pop_snack_tip:
                 loadingDialog.dismiss();
@@ -253,8 +300,8 @@ public class DetailLocalActivity extends AppCompatActivity {
 
     private void setPos(String tip) {
         pos = Integer.parseInt(tip);
-        List<LogIndex> list = CacheProcess.getInstance().getCacheLogIndex();
-        if (pos >= list.size() - 1) {
+        pageNumber.setText((pos + 1) + "/" + temp.size());
+        if (pos >= temp.size() - 1) {
             next.setClickable(false);
             next.setTextColor(ContextCompat.getColor(this, R.color.cardview_shadow_start_color));
         } else {
@@ -270,7 +317,16 @@ public class DetailLocalActivity extends AppCompatActivity {
         }
     }
 
-    private void loadRecord(LogIndex logIndex) {
+    private void loadRecord(Object obj) {
+        if (obj == null) {
+            updateNormalInfo(null);
+            chart.setData(null);
+            chart.invalidate();
+            setRemarks("当前无数据");
+            setDetail("当前无数据");
+            return;
+        }
+        LogIndex logIndex = (LogIndex) obj;
         updateNormalInfo(logIndex);
         switch (logIndex.cacheTypeIndex) {
             case AppConfig.INDEX_PING:
@@ -286,31 +342,44 @@ public class DetailLocalActivity extends AppCompatActivity {
                 updateForOther(logIndex);
                 break;
         }
+
     }
 
     private void updateNormalInfo(LogIndex logIndex) {
-        logTitle.setText(logIndex.aliasFileName);
-        logTime.setText(logIndex.logTime);
-        logAddr.setText(logIndex.addr);
+        if (logIndex != null) {
+            logTitle.setText(logIndex.aliasFileName);
+            logTime.setText(logIndex.logTime);
+            logAddr.setText(logIndex.addr);
+            inputText.setText(logIndex.aliasFileName);
+        } else {
+            logTitle.setText("");
+            logTime.setText("");
+            logAddr.setText("");
+            inputText.setText("");
+        }
     }
 
     private void updateForPing(LogIndex logIndex) {
         String remarks = logIndex.remarks;
         List<Float> list = CacheProcess.getInstance().getPingResult(logIndex.cacheFileName);
-        String detail = LsListTransfer.floatToString(list, 0, list.size());
-        detail = detail.replace("-40.0", "loss");
+        String detail = LsListTransfer.floatToString(list, "ms");
+        detail = detail.replace("-40.0ms", "丢包");
+        detail = detail.replace("[", "");
+        detail = detail.replace("]", "");
         setRemarks(remarks);
-        setDetail("详细记录\n\n" + detail);
+        setDetail(detail);
         updateChartForPing(list);
     }
 
     private void updateForWifi(LogIndex logIndex) {
         String remarks = logIndex.remarks;
         List<Integer> list = CacheProcess.getInstance().getWifiTaskResult(logIndex.cacheFileName);
-        String detail = LsListTransfer.intToString(list, 0, list.size());
-        detail = detail.replace("-160", "loss");
+        String detail = LsListTransfer.intToString(list, "db");
+        detail = detail.replace("-160db", "无信号");
+        detail = detail.replace("[", "");
+        detail = detail.replace("]", "");
         setRemarks(remarks);
-        setDetail("详细记录\n\n" + detail);
+        setDetail(detail);
         updateChartForWifi(list);
     }
 
@@ -325,14 +394,14 @@ public class DetailLocalActivity extends AppCompatActivity {
             }
         }
         setRemarks(remarks);
-        setDetail("详细记录\n\n" + detail);
+        setDetail(detail);
         updateChartForStation(list);
     }
 
     private void updateForOther(LogIndex logIndex) {
         String remarks = logIndex.remarks;
         setRemarks(remarks);
-        setDetail("");
+        setDetail("该条记录无详细数据!");
         updateChartForOther();
     }
 
@@ -341,7 +410,7 @@ public class DetailLocalActivity extends AppCompatActivity {
         if (success) {
             LsSnack.show(this, rl, tip);
         } else {
-            LsSnack.show(this, rl, tip, -1);
+            LsSnack.show(this, rl, tip, R.color.LRed);
         }
     }
 
@@ -354,19 +423,126 @@ public class DetailLocalActivity extends AppCompatActivity {
     }
 
     private void updateChartForPing(List<Float> list) {
+        int xMax = list.size();
+        float yMax = LsListTransfer.getFloatMax(list) + 10;
+        LimitLine ll2 = new LimitLine(-40, "丢包");
+        ll2.setLineWidth(0.5f);
+        ll2.setTextSize(8);
+        ll2.setLineColor(Color.RED);
+        ll2.setTextColor(Color.DKGRAY);
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setLabelCount(4);
+        leftAxis.removeAllLimitLines();
+        leftAxis.addLimitLine(ll2);
+        leftAxis.setAxisMaximum(yMax);
+        leftAxis.setAxisMinimum(-40);
+        leftAxis.setTextSize(6);
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setLabelCount(4);
+        xAxis.setTextSize(6);
+        xAxis.removeAllLimitLines();
+        xAxis.enableGridDashedLine(10, 20f, 0);
+        xAxis.setAxisMaximum(xMax);
+        List<Entry> chartData = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            chartData.add(new Entry(i, list.get(i)));
+        }
+        LineDataSet dataSet = new LineDataSet(chartData, "PING");//图列名称
+        dataSet.setDrawCircles(false);
+        dataSet.setColor(Color.GREEN);
+        dataSet.setLineWidth(1.2f);
+        List<ILineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(dataSet);
+        LineData lineData = new LineData(dataSets);
+        lineData.setDrawValues(false);
+        chart.setData(lineData);
+        chart.getLegend().setTextColor(Color.DKGRAY);
+        chart.getLegend().setTextSize(6);
+        chart.invalidate();
 
     }
 
     private void updateChartForWifi(List<Integer> list) {
-
+        int xMax = list.size() - 1;
+        LimitLine ll2 = new LimitLine(-160, "信号丢失");
+        ll2.setLineWidth(0.5f);
+        ll2.setTextSize(8);
+        ll2.setLineColor(Color.RED);
+        ll2.setTextColor(Color.DKGRAY);
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setLabelCount(4);
+        leftAxis.removeAllLimitLines();
+        leftAxis.addLimitLine(ll2);
+        leftAxis.setAxisMaximum(-20);
+        leftAxis.setAxisMinimum(-160);
+        leftAxis.setTextSize(6);
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setLabelCount(4);
+        xAxis.removeAllLimitLines();
+        xAxis.enableGridDashedLine(10, 20f, 0);
+        xAxis.setAxisMaximum(xMax);
+        xAxis.setAxisMinimum(0);
+        xAxis.setTextSize(6);
+        List<Entry> chartData = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            chartData.add(new Entry(i, list.get(i)));
+        }
+        LineDataSet dataSet = new LineDataSet(chartData, "WIFI");//图列名称
+        dataSet.setDrawCircles(false);
+        dataSet.setColor(Color.GREEN);
+        dataSet.setLineWidth(1.2f);
+        List<ILineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(dataSet);
+        LineData lineData = new LineData(dataSets);
+        lineData.setDrawValues(false);
+        chart.setData(lineData);
+        chart.getLegend().setTextColor(Color.DKGRAY);
+        chart.getLegend().setTextSize(6);
+        chart.invalidate();
     }
 
     private void updateChartForStation(List<StationEntry> list) {
-
+        int xMax = list.size() - 1;
+        LimitLine ll2 = new LimitLine(-160, "信号丢失");
+        ll2.setLineWidth(0.5f);
+        ll2.setTextSize(8);
+        ll2.setLineColor(Color.RED);
+        ll2.setTextColor(Color.DKGRAY);
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.removeAllLimitLines();
+        leftAxis.addLimitLine(ll2);
+        leftAxis.setLabelCount(4);
+        leftAxis.setAxisMaximum(-20);
+        leftAxis.setAxisMinimum(-160);
+        leftAxis.setTextSize(6);
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setLabelCount(4);
+        xAxis.removeAllLimitLines();
+        xAxis.setAxisMaximum(xMax);
+        xAxis.setAxisMinimum(0);
+        xAxis.setTextSize(6);
+        List<Entry> chartData = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            int y = list.get(i).rsp == 0 ? -160 : list.get(i).rsp;
+            chartData.add(new Entry(i, y));
+        }
+        LineDataSet dataSet = new LineDataSet(chartData, "基站信号");//图列名称
+        dataSet.setDrawCircles(false);
+        dataSet.setColor(Color.GREEN);
+        dataSet.setLineWidth(1.2f);
+        List<ILineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(dataSet);
+        LineData lineData = new LineData(dataSets);
+        lineData.setDrawValues(false);
+        chart.setData(lineData);
+        chart.getLegend().setTextColor(Color.DKGRAY);
+        chart.getLegend().setTextSize(6);
+        chart.invalidate();
     }
 
     private void updateChartForOther() {
-
+        chart.setData(null);
+        chart.invalidate();
     }
 
 }

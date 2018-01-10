@@ -12,7 +12,6 @@ import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.LocationService;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.global.model.instance.MainApplication;
-import ywcai.ls.mobileutil.global.util.statics.LsLog;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 
 public class LogIndex {
@@ -24,25 +23,17 @@ public class LogIndex {
     public String addr = "未知地址";//最终保存数据时的位置。
 
     public void setAddr() {
-        if (isNeedValid()) {
-            //如果版本大于23
-            if (!isPermission()) {
-                //并且没有赋予权限，则直接返回
-                addr = "未知地址";
-                CacheProcess.getInstance().addCacheLogIndex(LogIndex.this);
-                sendMsgPopSnackTip("本地数据保存成功", true);
-                return;
-            }
-        }
-        LocationService locationService = MainApplication.getInstance().locationService;
-//        //否则启动程序获取地址;
-//        mLocationClient = new LocationClient(MainApplication.getInstance().getApplicationContext());
-//        option.setIsNeedAddress(true);
-//        option.setIgnoreKillProcess(false);
-//        option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving);
-//        mLocationClient.setLocOption(option);
-//        mLocationClient.registerLocationListener(myListener);
-//        mLocationClient.start();
+//        if (isNeedValid()) {
+//            //如果版本大于23
+//            if (!isPermission()) {
+//                //并且没有赋予权限，则直接返回
+//                addr = "未知地址";
+//                CacheProcess.getInstance().addCacheLogIndex(LogIndex.this);
+//                sendMsgPopSnackTip("本地数据保存成功", true);
+//                return;
+//            }
+//        }
+        LocationService locationService = MainApplication.getInstance().getLocationService();
         locationService.registerListener(mListener);
         locationService.start();
     }
@@ -78,7 +69,7 @@ public class LogIndex {
             }
             CacheProcess.getInstance().addCacheLogIndex(LogIndex.this);
             sendMsgPopSnackTip("本地数据保存成功", true);
-            LocationService locationService = MainApplication.getInstance().locationService;
+            LocationService locationService = MainApplication.getInstance().getLocationService();
             locationService.stop();
             locationService.unregisterListener(this);
         }

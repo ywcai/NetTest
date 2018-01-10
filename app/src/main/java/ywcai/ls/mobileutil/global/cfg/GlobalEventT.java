@@ -51,6 +51,7 @@ public class GlobalEventT {
     public static final int wifi_switch_2d4g = 90036;
     public static final int wifi_refresh_channel_level = 90037;
     public static final int wifi_refresh_frequency_level = 90038;
+    public static final int wifi_set_receive_flag = 90039;
 
 
     public static final int station_set_entry_change = 90050;
@@ -97,4 +98,5 @@ public class GlobalEventT {
 
 
     public static final int detail_local_refresh_record = 90600;
+
 }

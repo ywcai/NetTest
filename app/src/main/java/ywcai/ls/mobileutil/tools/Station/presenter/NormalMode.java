@@ -63,8 +63,9 @@ public class NormalMode {
     private void saveTempLog() {
         StationEntry temp = new StationEntry();
         temp.copy(currentEntry);
+        temp.currentTime = MyTime.getDetailTime();
         stationEntries.add(0, temp);
-        cacheProcess.setStationRecord(AppConfig.INDEX_STATION + "-" + stationState.logTime, currentEntry);
+        cacheProcess.setStationRecord(AppConfig.INDEX_STATION + "-" + stationState.logTime, temp);
         recoveryChart();
     }
 
@@ -125,7 +126,7 @@ public class NormalMode {
     }
 
 
-    //单重新创建服务时 渲染UI。
+    //当重新创建服务时 渲染UI。
     public void recoveryChart() {
         Observable.from(stationEntries)
                 .map(new Func1<StationEntry, Entry>() {

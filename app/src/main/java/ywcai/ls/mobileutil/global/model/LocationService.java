@@ -5,25 +5,24 @@ import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
+
 import android.content.Context;
 
 /**
- *
  * @author baidu
- *
  */
 public class LocationService {
     private LocationClient client = null;
-    private LocationClientOption mOption,DIYoption;
-    private Object  objLock = new Object();
+    private LocationClientOption mOption, DIYoption;
+    private Object objLock = new Object();
 
     /***
      *
      * @param locationContext
      */
-    public LocationService(Context locationContext){
+    public LocationService(Context locationContext) {
         synchronized (objLock) {
-            if(client == null){
+            if (client == null) {
                 client = new LocationClient(locationContext);
                 client.setLocOption(getDefaultLocationClientOption());
             }
@@ -36,17 +35,17 @@ public class LocationService {
      * @return
      */
 
-    public boolean registerListener(BDAbstractLocationListener listener){
+    public boolean registerListener(BDAbstractLocationListener listener) {
         boolean isSuccess = false;
-        if(listener != null){
+        if (listener != null) {
             client.registerLocationListener(listener);
             isSuccess = true;
         }
-        return  isSuccess;
+        return isSuccess;
     }
 
-    public void unregisterListener(BDAbstractLocationListener listener){
-        if(listener != null){
+    public void unregisterListener(BDAbstractLocationListener listener) {
+        if (listener != null) {
             client.unRegisterLocationListener(listener);
         }
     }
@@ -56,10 +55,10 @@ public class LocationService {
      * @param option
      * @return isSuccessSetOption
      */
-    public boolean setLocationOption(LocationClientOption option){
+    public boolean setLocationOption(LocationClientOption option) {
         boolean isSuccess = false;
-        if(option != null){
-            if(client.isStarted())
+        if (option != null) {
+            if (client.isStarted())
                 client.stop();
             DIYoption = option;
             client.setLocOption(option);
@@ -71,8 +70,8 @@ public class LocationService {
      *
      * @return DefaultLocationClientOption  默认O设置
      */
-    public LocationClientOption getDefaultLocationClientOption(){
-        if(mOption == null){
+    public LocationClientOption getDefaultLocationClientOption() {
+        if (mOption == null) {
             mOption = new LocationClientOption();
             mOption.setLocationMode(LocationMode.Hight_Accuracy);//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
             mOption.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系，如果配合百度地图使用，建议设置为bd09ll;
@@ -93,26 +92,26 @@ public class LocationService {
 
 
     /**
-     *
      * @return DIYOption 自定义Option设置
      */
-    public LocationClientOption getOption(){
-        if(DIYoption == null) {
+    public LocationClientOption getOption() {
+        if (DIYoption == null) {
             DIYoption = new LocationClientOption();
         }
         return DIYoption;
     }
 
-    public void start(){
+    public void start() {
         synchronized (objLock) {
-            if(client != null && !client.isStarted()){
+            if (client != null && !client.isStarted()) {
                 client.start();
             }
         }
     }
-    public void stop(){
+
+    public void stop() {
         synchronized (objLock) {
-            if(client != null && client.isStarted()){
+            if (client != null && client.isStarted()) {
                 client.stop();
             }
         }
@@ -122,7 +121,7 @@ public class LocationService {
         return client.isStarted();
     }
 
-    public boolean requestHotSpotState(){
+    public boolean requestHotSpotState() {
         return client.requestHotSpotState();
     }
 

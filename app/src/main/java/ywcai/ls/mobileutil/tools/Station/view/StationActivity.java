@@ -1,10 +1,14 @@
 package ywcai.ls.mobileutil.tools.Station.view;
 
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.baidu.mobstat.StatService;
@@ -43,6 +48,12 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import me.drakeet.materialdialog.MaterialDialog;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -63,6 +74,8 @@ import ywcai.ls.mobileutil.tools.Station.model.StationEntry;
 import ywcai.ls.mobileutil.tools.Station.presenter.MainStationAction;
 import ywcai.ls.mobileutil.tools.Station.presenter.inf.MainStationActionInf;
 
+
+@RuntimePermissions
 @Route(path = "/tools/Station/view/StationActivity")
 public class StationActivity extends AppCompatActivity {
     private LineChart stationInfoRecord;
@@ -80,8 +93,8 @@ public class StationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_station);
         InitToolBar();
         InitView();
-        InitAction();
         createLineChart();
+        InitAction();
     }
 
     private void InitView() {
@@ -222,11 +235,12 @@ public class StationActivity extends AppCompatActivity {
         stationInfoRecord.invalidate();
     }
 
-    private void InitAction() {
+
+    public void InitAction() {
         Observable.create(new Observable.OnSubscribe<MainStationActionInf>() {
             @Override
             public void call(Subscriber<? super MainStationActionInf> subscriber) {
-                mainStationActionInf = new MainStationAction(StationActivity.this, StationActivity.this);
+                mainStationActionInf = new MainStationAction();
                 subscriber.onNext(mainStationActionInf);
             }
         })
@@ -236,10 +250,16 @@ public class StationActivity extends AppCompatActivity {
                 .subscribe(new Action1<MainStationActionInf>() {
                     @Override
                     public void call(MainStationActionInf mainStationActionInf) {
-                        mainStationActionInf.startWork();
+                        StationActivityPermissionsDispatcher.startListenerWithPermissionCheck(StationActivity.this);
                     }
                 });
     }
+
+    @NeedsPermission({Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION})
+    public void startListener() {
+        mainStationActionInf.setProcess();
+    }
+
 
     @Override
     protected void onResume() {
@@ -270,8 +290,6 @@ public class StationActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        //非常重要，否则会造成下一次开启后监听数据混乱
-        mainStationActionInf.unRegPhoneStateListener();
         super.onDestroy();
     }
 
@@ -324,6 +342,7 @@ public class StationActivity extends AppCompatActivity {
     }
 
     private void closeLoading() {
+        loadingDialog.show();
         loadingDialog.dismiss();
     }
 
@@ -427,5 +446,39 @@ public class StationActivity extends AppCompatActivity {
         logText.setText(temp);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        StationActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
 
+    @OnShowRationale({Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION})
+    void showWhy(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setMessage("是否授予应用位置和设备信息读取权限?")
+                .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        request.proceed();//再次执行请求
+                    }
+                })
+                .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        request.cancel();//再次执行请求
+                    }
+                })
+                .setCancelable(true)
+                .show();
+    }
+
+    @OnPermissionDenied({Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION})
+    void denied() {
+        showSnackTip("您拒绝了应用权限，应用将无法获取数据!", false);
+    }
+
+    @OnNeverAskAgain({Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION})
+    void notAsk() {
+        showSnackTip("您拒绝了应用权限，请前往系统设置开启权限后方可获取数据", false);
+    }
 }

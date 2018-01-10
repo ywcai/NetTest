@@ -11,6 +11,7 @@ import rx.functions.Func1;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
+import ywcai.ls.mobileutil.global.util.statics.LsLog;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 import ywcai.ls.mobileutil.results.model.LogIndex;
 import ywcai.ls.mobileutil.results.model.ResultState;
@@ -33,7 +34,6 @@ public class ResultPresenter implements ResultPresenterInf {
         } else {
             reqRemoteData();
         }
-
     }
 
     @Override
@@ -118,6 +118,9 @@ public class ResultPresenter implements ResultPresenterInf {
 
     private void reqLocalData() {
         List<LogIndex> temp = CacheProcess.getInstance().getCacheLogIndex();
+        if (temp == null) {
+            temp = new ArrayList<>();
+        }
         Observable.from(temp)
                 .filter(new Func1<LogIndex, Boolean>() {
                     @Override

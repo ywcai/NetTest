@@ -228,6 +228,7 @@ public class ScanPortActivity extends AppCompatActivity {
     }
 
     private void closeLoading() {
+        loadingDialog.show();
         loadingDialog.dismiss();
     }
 

@@ -1,22 +1,16 @@
 package ywcai.ls.mobileutil.tools.Wifi.presenter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiEntry;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiState;
 import ywcai.ls.mobileutil.tools.Wifi.presenter.inf.UpdateFragmentTwoInf;
-
-/**
- * Created by zmy_11 on 2017/10/21.
- */
 
 public class UpdateFragmentTwo implements UpdateFragmentTwoInf {
     WifiState wifiState;

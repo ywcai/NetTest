@@ -1,8 +1,12 @@
 package ywcai.ls.mobileutil.tools.Wifi.view;
 
 
+import android.Manifest;
+import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +26,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mehdi.sakout.fancybuttons.FancyButton;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 import ywcai.ls.control.LoadingDialog;
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
@@ -32,6 +42,8 @@ import ywcai.ls.mobileutil.tools.Wifi.model.WifiPageAdapter;
 import ywcai.ls.mobileutil.tools.Wifi.presenter.MainWifiAction;
 import ywcai.ls.mobileutil.tools.Wifi.presenter.inf.MainWifiActionInf;
 
+
+@RuntimePermissions
 @Route(path = "/tools/Wifi/view/WifiActivity")
 public class WifiActivity extends AppCompatActivity {
     private int nowPage = 1;
@@ -39,6 +51,7 @@ public class WifiActivity extends AppCompatActivity {
     private MainWifiActionInf mainWifiActionInf;
     private RelativeLayout snack_container;
     private LoadingDialog loadingDialog;
+    private boolean isReceiveFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +63,7 @@ public class WifiActivity extends AppCompatActivity {
         InitControlBtn();
         InstallFragment();
         loadingDialog = new LoadingDialog(this);
+        WifiActivityPermissionsDispatcher.permissionTipWithPermissionCheck(this);
     }
 
     private void InitControlBtn() {
@@ -76,6 +90,41 @@ public class WifiActivity extends AppCompatActivity {
 
     private void InitMainAction() {
         mainWifiActionInf = new MainWifiAction();
+    }
+
+    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    public void permissionTip() {
+
+    }
+
+    @OnShowRationale({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    void showWhy(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setMessage("是否授予应用手机WIFI和位置权限?")
+                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        request.proceed();//再次执行请求
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        request.cancel();//再次执行请求
+                    }
+                })
+                .setCancelable(true)
+                .show();
+    }
+
+    @OnPermissionDenied({Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION})
+    void denied() {
+        showBottomTip("您拒绝了应用权限，应用将无法获取WIFI数据!", false);
+    }
+
+    @OnNeverAskAgain({Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION})
+    void notAsk() {
+        showBottomTip("您拒绝了应用权限，请前往系统开启WIFI和位置权限后方可获取WIFI数据", false);
     }
 
     @Override
@@ -150,18 +199,23 @@ public class WifiActivity extends AppCompatActivity {
     public void updateDeviceList(GlobalEvent event) {
         switch (event.type) {
             case GlobalEventT.wifi_set_main_title_tip:
-                TextView textView = (TextView) findViewById(R.id.wifi_toolbar_tip);
-                textView.setText(event.tip);
+                if (isReceiveFlag) {
+                    TextView textView = (TextView) findViewById(R.id.wifi_toolbar_tip);
+                    textView.setText(event.tip);
+                }
                 break;
             case GlobalEventT.wifi_set_channel_btn_status:
                 set2d4gBtnStatus((Boolean) event.obj);
                 break;
             case GlobalEventT.global_pop_snack_tip:
-                closeLoading();
                 showBottomTip(event.tip, ((boolean) event.obj));
+                closeLoading();
                 break;
             case GlobalEventT.global_pop_loading_dialog:
                 popLoading(event.tip);
+                break;
+            case GlobalEventT.wifi_set_receive_flag:
+                isReceiveFlag = true;
                 break;
         }
     }
@@ -188,7 +242,7 @@ public class WifiActivity extends AppCompatActivity {
 
     private void showBottomTip(String tip, boolean success) {
         if (success) {
-            LsSnack.show(this, snack_container, tip, -1);
+            LsSnack.show(this, snack_container, tip);
         } else {
             LsSnack.show(this, snack_container, tip, R.color.LRed);
         }
@@ -204,5 +258,11 @@ public class WifiActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         StatService.onPause(this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        WifiActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 }

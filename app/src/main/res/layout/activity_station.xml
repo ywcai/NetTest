@@ -232,7 +232,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/station_main_entry_container"
         android:layout_margin="4dp"
-        android:visibility="invisible">
+        android:visibility="visible">
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/station_task_record"
@@ -251,7 +251,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/station_main_entry_container"
         android:layout_margin="4dp"
-        android:visibility="visible">
+        android:visibility="invisible">
 
         <LinearLayout
             android:layout_width="match_parent"

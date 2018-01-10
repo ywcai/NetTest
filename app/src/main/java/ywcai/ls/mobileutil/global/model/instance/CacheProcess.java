@@ -16,6 +16,7 @@ import java.util.List;
 
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.model.AppInfo;
+import ywcai.ls.mobileutil.global.util.statics.LsLog;
 import ywcai.ls.mobileutil.results.model.LogIndex;
 import ywcai.ls.mobileutil.identity.model.User;
 import ywcai.ls.mobileutil.results.model.ResultState;
@@ -228,7 +229,7 @@ public class CacheProcess {
             setCacheTaskTotal(taskTotal);
             return;
         }
-        if (list.size() == 0) {
+        if (list.size() <= 0) {
             //清除所有日志
             setCache(LOG_INDEX, "null");
             TaskTotal taskTotal = getCacheTaskTotal();
@@ -253,7 +254,7 @@ public class CacheProcess {
                 indexList = gson.fromJson(strLogIndex, new TypeToken<List<LogIndex>>() {
                 }.getType());
             } catch (Exception e) {
-
+                indexList = new ArrayList<LogIndex>();
             }
         } else {
             indexList = new ArrayList<LogIndex>();

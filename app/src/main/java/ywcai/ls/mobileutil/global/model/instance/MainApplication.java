@@ -9,7 +9,7 @@ import ywcai.ls.mobileutil.global.model.LocationService;
 
 public class MainApplication extends Application {
     private static MainApplication instance;
-    public LocationService locationService;
+    LocationService locationService;
     public boolean isActivityExist = false;
 
     public static MainApplication getInstance() {
@@ -27,6 +27,12 @@ public class MainApplication extends Application {
                 .apply();
         instance = this;
         ARouter.init(this);
-        locationService = new LocationService(getApplicationContext());
+    }
+
+    public LocationService getLocationService() {
+        if (locationService == null) {
+            locationService = new LocationService(this);
+        }
+        return locationService;
     }
 }

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.android.arouter.launcher.ARouter;
@@ -121,18 +122,6 @@ public class WelComeActivity extends AppCompatActivity implements SplashADListen
                 navigation();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        StatService.onResume(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        StatService.onPause(this);
-    }
-
 
     @Override
     public void onADDismissed() {
@@ -151,7 +140,8 @@ public class WelComeActivity extends AppCompatActivity implements SplashADListen
         //广告被正常弹出
         ImageView log = (ImageView) findViewById(R.id.splash_holder);
         log.setVisibility(View.GONE);
-        Toast.makeText(this, "点击广告将会直接进入下载页面", Toast.LENGTH_LONG).show();
+        TextView textTip = (TextView) findViewById(R.id.welcome_bottom_tip);
+        textTip.setVisibility(View.VISIBLE);
     }
 
     @Override

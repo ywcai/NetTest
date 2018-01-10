@@ -446,13 +446,12 @@ public class PingActivity extends AppCompatActivity {
     }
 
     private void popLoadingDialog(String tip) {
-        //// TODO: 2017/10/3 加载窗口
         loadingDialog.setLoadingText(tip);
         loadingDialog.show();
     }
 
     private void closeLoadingDialog() {
-        //// TODO: 2017/10/3 加载窗口
+        loadingDialog.show();
         loadingDialog.dismiss();
     }
 }

@@ -46,6 +46,7 @@ import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.GlobalEvent;
+import ywcai.ls.mobileutil.global.util.statics.LsListTransfer;
 import ywcai.ls.mobileutil.tools.Wifi.model.one.RadarMarkerView;
 import ywcai.ls.mobileutil.tools.Wifi.model.one.WifiDrawDetail;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiEntry;
@@ -57,6 +58,7 @@ public class WifiFragmentOne extends Fragment {
     private RadarChart mChart;
     private MainWifiActionInf mainWifiActionInf;
     private FlexButtonLayout chooseChannel2d4G, chooseChannel5G;
+    private boolean isReceiveFlag = false;
 
     public void setGlobalAction(MainWifiActionInf _mainWifiActionInf) {
         this.mainWifiActionInf = _mainWifiActionInf;
@@ -94,31 +96,42 @@ public class WifiFragmentOne extends Fragment {
     public void updateDeviceList(GlobalEvent event) {
         switch (event.type) {
             case GlobalEventT.wifi_refresh_first_info:
-                refreshUi(event.obj);
+                if (isReceiveFlag) {
+                    refreshUi(event.obj);
+                }
                 break;
             case GlobalEventT.wifi_set_lock_btn_status:
-                lockChart((Boolean) event.obj);
-                setLockBtnStatus((Boolean) event.obj);
+                if (isReceiveFlag) {
+                    lockChart((Boolean) event.obj);
+                    setLockBtnStatus((Boolean) event.obj);
+                }
                 break;
             case GlobalEventT.wifi_recovery_channel_select_2d4g:
-
                 recovery2d4GTags((int[]) event.obj);
                 break;
             case GlobalEventT.wifi_recovery_channel_select_5g:
-
                 recovery5GTags((int[]) event.obj);
                 break;
             case GlobalEventT.wifi_set_channel_btn_status:
                 refreshChannelTagVisible((Boolean) event.obj);
                 break;
             case GlobalEventT.wifi_set_lock_save_btn_visible:
-                updateLockAndSaveBtnVisible((Boolean) event.obj);
+                if (isReceiveFlag) {
+                    updateLockAndSaveBtnVisible((Boolean) event.obj);
+                }
                 break;
             case GlobalEventT.wifi_set_task_btn_status:
-                setTaskBtnStatus((Boolean) event.obj);
+                if (isReceiveFlag) {
+                    setTaskBtnStatus((Boolean) event.obj);
+                }
                 break;
             case GlobalEventT.wifi_set_select_entry_info:
-                showSelectEntryInfo((WifiEntry) event.obj);
+                if (isReceiveFlag) {
+                    showSelectEntryInfo((WifiEntry) event.obj);
+                }
+                break;
+            case GlobalEventT.wifi_set_receive_flag:
+                isReceiveFlag = true;
                 break;
         }
     }
@@ -317,7 +330,6 @@ public class WifiFragmentOne extends Fragment {
         }
     }
 
-    //
     private void recovery2d4GTags(int[] obj) {
         chooseChannel2d4G.setSelectIndex(obj);
     }

@@ -92,10 +92,10 @@ public class StationEntry {
     @Override
     public String toString() {
         return "[" + currentTime + "]\n" +
-                ", 小区号=" + cid +
+                "小区号=" + cid +
                 ", 区域码=" + lac +
                 ", 场强=" + rsp +
-                ", 网络类别='" + netTypeCn;
+                ", 网络类别=" + netTypeCn;
 
     }
 }

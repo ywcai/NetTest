@@ -294,6 +294,7 @@ public class SpeedActivity extends AppCompatActivity {
     }
 
     private void closeLoading() {
+        loadingDialog.show();
         loadingDialog.dismiss();
     }
 

@@ -13,7 +13,7 @@ import ywcai.ls.mobileutil.tools.Station.presenter.StationProcess;
 
 public class StationService extends Service {
     MyBinder binder = new MyBinder();
-    public StationProcess stationProcess;
+    StationProcess stationProcess;
 
     @Nullable
     @Override
@@ -25,14 +25,16 @@ public class StationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        InstallProcess();
     }
 
-    private void InstallProcess() {
-        if (stationProcess != null) {
-            //不处理可以直接绑定上一次运行的内存对象恢复渲染UI
-            return;
+    public StationProcess getStationProcess() {
+        if (stationProcess == null) {
+            stationProcess = new StationProcess();
+            stationProcess.recoveryUi();
+            stationProcess.regSingleListener();
+        } else {
+            stationProcess.recoveryUi();
         }
-        stationProcess = new StationProcess();//构造函数中去初始化数据。
+        return stationProcess;
     }
 }

@@ -22,7 +22,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="1dp"
             android:clickable="false"
             android:src="@drawable/homepage_menu_ping" />
 
@@ -33,12 +33,11 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="1dp"
             android:layout_toLeftOf="@+id/result_time"
             android:layout_toRightOf="@+id/result_type"
             android:clickable="false"
-
-            android:gravity="top|left"
+            android:gravity="center_vertical|left"
             android:text="别名"
             android:textColor="@android:color/holo_red_dark"
             android:textSize="12sp"
@@ -50,9 +49,9 @@
             android:layout_height="25dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="1dp"
             android:clickable="false"
-            android:gravity="top|right"
+            android:gravity="center_vertical|right"
             android:text="2017-12-12"
             android:textColor="@android:color/holo_green_light"
             android:textSize="12sp"
@@ -66,9 +65,9 @@
             android:layout_margin="5dp"
             android:clickable="false"
             android:gravity="left|top"
-            android:lineSpacingMultiplier="2"
+            android:lineSpacingMultiplier="1.5"
             android:padding="5dp"
-            android:text="摘要"
+            android:text="摘要\n摘要"
             android:textColor="@android:color/background_dark"
             android:textSize="12sp" />
 

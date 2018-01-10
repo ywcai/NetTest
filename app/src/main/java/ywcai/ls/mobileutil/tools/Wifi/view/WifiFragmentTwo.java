@@ -64,6 +64,7 @@ public class WifiFragmentTwo extends Fragment {
     private int popTaskPos = 0;
     private int baseMaxX = 100;
     private Button save_local, save_remote, clear, cancal;
+    private boolean isReceiveFlag = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,7 +102,9 @@ public class WifiFragmentTwo extends Fragment {
     public void update(GlobalEvent event) {
         switch (event.type) {
             case GlobalEventT.wifi_refresh_two_list:
-                updateRecycler((List<WifiEntry>) event.obj);
+                if (isReceiveFlag) {
+                    updateRecycler((List<WifiEntry>) event.obj);
+                }
                 break;
             case GlobalEventT.global_pop_operator_dialog:
                 popOperatorMenu();
@@ -115,6 +118,9 @@ public class WifiFragmentTwo extends Fragment {
             case GlobalEventT.wifi_notify_top_notification:
                 popNotification(event.tip);
                 break;
+            case GlobalEventT.wifi_set_receive_flag:
+                isReceiveFlag = true;
+                break;
         }
     }
 
@@ -122,19 +128,6 @@ public class WifiFragmentTwo extends Fragment {
         LsNotification.notification(this.getActivity(), tip, AppConfig.TITLE_WIFI, AppConfig.WIFI_ACTIVITY_PATH,
                 R.drawable.homepage_menu_wifi
                 , AppConfig.INT_NOTIFICATION_PID_WIFI);
-//        NotificationCompat.Builder tipBuilder = new NotificationCompat.Builder(this.getActivity());
-//        LsPendingIntent lsPendingIntent = new LsPendingIntent();
-//        tipBuilder
-//                .setContentIntent(lsPendingIntent.getPendingForStartActivity(this.getActivity(), AppConfig.WIFI_ACTIVITY_PATH))
-//                .setAutoCancel(true)
-//                .setOngoing(false)
-//                .setSmallIcon(R.drawable.homepage_menu_wifi)
-//                .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.mipmap.nav))
-//                .setDefaults(Notification.DEFAULT_SOUND)
-//                .setContentTitle(AppConfig.TITLE_WIFI + " 添加了一个后台监听任务")
-//                .setContentText(AppConfig.TITLE_WIFI + " " + tip);
-//        NotificationManager notificationManager = (NotificationManager) this.getActivity().getSystemService(NOTIFICATION_SERVICE);
-//        notificationManager.notify(AppConfig.INT_NOTIFICATION_PID_WIFI, tipBuilder.build());
     }
 
     private void createPopDialog() {
@@ -220,7 +213,6 @@ public class WifiFragmentTwo extends Fragment {
         leftAxis.setDrawGridLines(false);
         leftAxis.setDrawAxisLine(false);
         leftAxis.setTextColor(Color.WHITE);
-//        leftAxis.enableGridDashedLine(10, 20f, 0);
         XAxis xAxis = wifiTaskChart.getXAxis();
         xAxis.removeAllLimitLines();
         xAxis.setAxisMaximum(baseMaxX);
@@ -297,7 +289,7 @@ public class WifiFragmentTwo extends Fragment {
         wifiTaskRecyclerView = (RecyclerView) view.findViewById(R.id.task_recycler_list);
         List list = CacheProcess.getInstance().getWifiState().saveWifiList;
         wifiTaskList = new ArrayList<>();
-        wifiTaskList.addAll(list);
+//        wifiTaskList.addAll(list);
         wifiTaskAdapter = new WifiTaskAdapter(this.getContext(), wifiTaskList);
         wifiTaskRecyclerView.setAdapter(wifiTaskAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, true);
@@ -318,7 +310,6 @@ public class WifiFragmentTwo extends Fragment {
             }
         });
     }
-
 
     private void popOperatorMenu() {
         bottomDialog.show();

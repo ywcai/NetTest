@@ -1,6 +1,5 @@
 package ywcai.ls.mobileutil.tools.Wifi.presenter;
 
-import android.support.v4.content.ContextCompat;
 
 import java.util.List;
 
@@ -10,7 +9,6 @@ import rx.functions.Func1;
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
-import ywcai.ls.mobileutil.global.util.statics.LsLog;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 import ywcai.ls.mobileutil.tools.Wifi.model.one.WifiDrawDetail;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiEntry;
@@ -113,10 +111,10 @@ public class UpdateFragmentOne implements UpdateFragmentOneInf {
     @Override
     public void addTaskEnd(String tip, boolean success) {
         if (success) {
-            sendMsgPopBottomSnack(tip, -1);
+            sendMsgPopBottomSnack(tip, success);
             sendMsgNotification(tip);
         } else {
-            sendMsgPopBottomSnack(tip, R.color.tipFail);
+            sendMsgPopBottomSnack(tip, success);
         }
     }
 
@@ -142,8 +140,8 @@ public class UpdateFragmentOne implements UpdateFragmentOneInf {
     }
 
     //
-    private void sendMsgPopBottomSnack(String tip, int color) {
-        MsgHelper.sendEvent(GlobalEventT.global_pop_snack_tip, tip, color);
+    private void sendMsgPopBottomSnack(String tip, boolean success) {
+        MsgHelper.sendEvent(GlobalEventT.global_pop_snack_tip, tip, success);
     }
 
     private void sendMsgNotification(String tip) {
@@ -152,11 +150,11 @@ public class UpdateFragmentOne implements UpdateFragmentOneInf {
 
 
     private void sendMsgRecovery2d4gTag() {
-        MsgHelper.sendStickEvent(GlobalEventT.wifi_recovery_channel_select_2d4g, "", wifiState.select2d4G);
+        MsgHelper.sendEvent(GlobalEventT.wifi_recovery_channel_select_2d4g, "", wifiState.select2d4G);
     }
 
     private void sendMsgRecovery5gTag() {
-        MsgHelper.sendStickEvent(GlobalEventT.wifi_recovery_channel_select_5g, "", wifiState.select5G);
+        MsgHelper.sendEvent(GlobalEventT.wifi_recovery_channel_select_5g, "", wifiState.select5G);
     }
 
 

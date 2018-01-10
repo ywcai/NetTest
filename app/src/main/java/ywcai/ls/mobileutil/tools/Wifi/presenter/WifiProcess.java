@@ -21,7 +21,6 @@ import java.util.List;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
@@ -37,7 +36,7 @@ import ywcai.ls.mobileutil.tools.Wifi.model.WifiEntry;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiState;
 import ywcai.ls.mobileutil.tools.Wifi.presenter.inf.UpdateFragmentOneInf;
 
-//大原则，主界面的交互事件在这个类里面响应，各子页面的交互事件在个子页面处理类中响应
+//大原则，主界面的交互事件在这个类里面响应，各子页面的交互事件在各个子页面处理类中响应
 public class WifiProcess implements Action1 {
     private Context context = MainApplication.getInstance().getApplicationContext();
     private CacheProcess cacheProcess = CacheProcess.getInstance();
@@ -54,45 +53,32 @@ public class WifiProcess implements Action1 {
     private WifiService wifiService;
 
     public WifiProcess() {
-        connWifi.initConnWifi();
         wifiState = cacheProcess.getWifiState();
         updateFragmentOne = new UpdateFragmentOne(wifiState);
         updateFragmentTwo = new UpdateFragmentTwo(wifiState);
         updateFragmentThree = new UpdateFragmentThree(wifiState);
         updateFragmentFour = new UpdateFragmentFour(wifiState);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                recoveryAllData();
-            }
-        }).start();
+        sendMsgTopBtnStatus();
     }
-
 
     //绑定WIFI服务并处理
     public void setWifiService(WifiService wifiService) {
         this.wifiService = wifiService;
         if (wifiService != null) {
+            sendMsgOpenReceiveFlag();
+            recoveryAllData();
             wifiService.startWifiScan(this);
+        } else {
+            sendMsgForPopMainSnack("任务启动失败，请重新打开!", true);
         }
     }
 
+
     public void recoveryAllData() {
+        connWifi.initConnWifi();
         connectWifi();
-        synchronized (allList) {
-            sendMsgTopBtnStatus();
-            updateFragmentOne.loadChannelTagStatus();
-            updateFragmentOne.loadLockAndSaveVisible();
-            updateFragmentOne.loadLockBtnStatus();
-            updateFragmentOne.loadTaskBtnStatus();
-            updateFragmentOne.loadSignalChangeData(allList, channelSum);
-            updateFragmentTwo.refreshChart();
-        }
+        updateFragmentOne.loadChannelTagStatus();
+        updateFragmentTwo.refreshChart();
     }
 
     //被WIFI核心处理方法调用，不能单独被外部类使用
@@ -100,6 +86,9 @@ public class WifiProcess implements Action1 {
 
         sendMsgTitleTip("共" + allList.size() + "个信号");
 
+        updateFragmentOne.loadLockAndSaveVisible();
+        updateFragmentOne.loadLockBtnStatus();
+        updateFragmentOne.loadTaskBtnStatus();
         updateFragmentOne.loadSignalChangeData(allList, channelSum);
         updateFragmentOne.showSelectEntryInfo(lockEntry);
 
@@ -198,7 +187,6 @@ public class WifiProcess implements Action1 {
             NetworkInfo.State state = networkInfo.getState();
             if (state == NetworkInfo.State.CONNECTED) {
                 connectWifi();
-                sendMsgTitleTip("已连接");
             }
             if (state == NetworkInfo.State.CONNECTING) {
                 sendMsgTitleTip("正在连接WIFI...");
@@ -227,9 +215,13 @@ public class WifiProcess implements Action1 {
         } catch (Exception e) {
             disConnectWifi();
             sendMsgTitleTip("未连接");
-            return;
         }
-        sendMsgTitleTip("已连接");
+        if ((!connWifi.ip.equals("0.0.0.0")) && (!connWifi.equals("-1"))) {
+            sendMsgTitleTip(connWifi.ip);
+        } else {
+            sendMsgTitleTip("未连接");
+        }
+
     }
 
     private void clearLastData() {
@@ -244,12 +236,12 @@ public class WifiProcess implements Action1 {
     private boolean processWifiResult() {
         clearLastData();
         if (!checkPermission()) {
-            sendMsgTitleTip("没有赋予应用使用Wifi权限");
+            sendMsgForPopMainSnack("Android6.0以上版本需要同时打开WIFI和定位权限", false);
             return false;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!checkGpsStatus()) {
-                sendMsgTitleTip("打开GPS后方可扫描WIFI数据");
+                sendMsgForPopMainSnack("Android6.0以上版本需要打开GPS开关方可获取WIFI数据", false);
                 return false;
             }
         }
@@ -424,8 +416,8 @@ public class WifiProcess implements Action1 {
             deleteLog(pos);
             removeTask(pos);
             operatorDraw();
+            sendMsgForPopMainSnack("清除任务成功!", true);
         }
-        sendMsgForPopMainSnack("清除任务成功!", true);
     }
 
 
@@ -438,9 +430,22 @@ public class WifiProcess implements Action1 {
         }
     }
 
+    public void saveLogForRemote(final int pos) {
+        sendMsgPopLoadingDialog(AppConfig.LOG_PROCESS_TIP);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (requestUpload(pos)) {
+                    sendMsgForPopMainSnack(AppConfig.LOG_REMOTE_SAVE_SUCCESS, true);
+                } else {
+                    sendMsgForPopMainSnack(AppConfig.LOG_REMOTE_SAVE_SUCCESS, false);
+                }
+            }
+        }).start();
+    }
 
-    public void saveLogForRemote(int pos) {
-        sendMsgForPopMainSnack(AppConfig.LOG_REMOTE_SAVE_SUCCESS, false);
+    private boolean requestUpload(int pos) {
+        return false;
     }
 
 
@@ -478,18 +483,20 @@ public class WifiProcess implements Action1 {
                     public void call(List<Integer> integers) {
                         if (integers.size() <= 0) {
                             logIndex.remarks =
-                                    "MAC [" + wifiState.saveWifiList.get(pos).bssid + "]" +
-                                            "  CH" + wifiState.saveWifiList.get(pos).channel +
-                                            "\n扫描 [" + list.size() + "]次" +
+                                    "SSID [" + wifiState.saveWifiList.get(pos).ssid + "]" +
+                                            "  MAC [" + wifiState.saveWifiList.get(pos).bssid + "]" +
+                                            "  信道 [" + wifiState.saveWifiList.get(pos).channel + "]" +
+                                            "  扫描 [" + list.size() + "]次" +
                                             "  丢失 [" + (list.size() - integers.size()) + "]次" +
                                             "  丢失率 [100%]";
                         } else {
                             logIndex.remarks =
-                                    "MAC [" + wifiState.saveWifiList.get(pos).bssid + "]" +
-                                            "  CH" + wifiState.saveWifiList.get(pos).channel +
+                                    "SSID [" + wifiState.saveWifiList.get(pos).ssid + "]" +
+                                            "  MAC [" + wifiState.saveWifiList.get(pos).bssid + "]" +
+                                            "  信道 [" + wifiState.saveWifiList.get(pos).channel + "]" +
                                             "  最弱 [" + integers.get(0) + "db]" +
                                             "  最强 [" + integers.get(integers.size() - 1 <= 0 ? 0 : integers.size() - 1) + "db]" +
-                                            "\n扫描 [" + list.size() + "]次" +
+                                            "  扫描 [" + list.size() + "]次" +
                                             "  丢失 [" + (list.size() - integers.size()) + "]次" +
                                             "  丢失率 [" + (list.size() - integers.size()) * 100 / list.size() + "%]";
                         }
@@ -526,7 +533,7 @@ public class WifiProcess implements Action1 {
      */
     //渲染activity标题
     private void sendMsgTitleTip(String tip) {
-        MsgHelper.sendEvent(GlobalEventT.wifi_set_main_title_tip, tip, null);
+        MsgHelper.sendStickEvent(GlobalEventT.wifi_set_main_title_tip, tip, null);
     }
 
     private void sendMsgForPopMainSnack(String tip, boolean success) {
@@ -535,12 +542,15 @@ public class WifiProcess implements Action1 {
 
     //操作顶部标题的频率切换按钮
     private void sendMsgTopBtnStatus() {
-        MsgHelper.sendStickEvent(GlobalEventT.wifi_set_channel_btn_status, "", wifiState.choose2d4G);
+        MsgHelper.sendEvent(GlobalEventT.wifi_set_channel_btn_status, "", wifiState.choose2d4G);
     }
 
 
     private void sendMsgPopLoadingDialog(String tip) {
-        MsgHelper.sendStickEvent(GlobalEventT.global_pop_loading_dialog, tip, null);
+        MsgHelper.sendEvent(GlobalEventT.global_pop_loading_dialog, tip, null);
     }
 
+    private void sendMsgOpenReceiveFlag() {
+        MsgHelper.sendEvent(GlobalEventT.wifi_set_receive_flag, "", null);
+    }
 }
