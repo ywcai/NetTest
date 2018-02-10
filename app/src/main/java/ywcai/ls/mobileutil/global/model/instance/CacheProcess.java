@@ -15,10 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
-import ywcai.ls.mobileutil.global.model.AppInfo;
-import ywcai.ls.mobileutil.global.util.statics.LsLog;
+import ywcai.ls.mobileutil.login.model.MyUser;
 import ywcai.ls.mobileutil.results.model.LogIndex;
-import ywcai.ls.mobileutil.identity.model.User;
 import ywcai.ls.mobileutil.results.model.ResultState;
 import ywcai.ls.mobileutil.results.model.TaskTotal;
 import ywcai.ls.mobileutil.tools.Ping.model.PingState;
@@ -48,7 +46,6 @@ public class CacheProcess {
     private final String USER = "USER";
     private final String LOG_INDEX = "LOG_INDEX";
     private final String TASK_TOTAL = "TASK_TOTAL";
-    private final String APP_INFO = "APP_INFO";
 
 
     File file = MainApplication.getInstance().getFilesDir();
@@ -71,7 +68,7 @@ public class CacheProcess {
     *GLOBAL Module
     *--------------------------------------------------------------------------------------------------
     * */
-    private void setCache(String fileName, String cache) {
+    public void setCache(String fileName, String cache) {
         File f = new File(file, fileName);
         FileOutputStream fos = null;
         if (!f.exists()) {
@@ -94,7 +91,7 @@ public class CacheProcess {
         }
     }
 
-    private String getCache(String fileName) {
+    public String getCache(String fileName) {
         String cache = "null";
         File f = new File(file, fileName);
         if (f.exists()) {
@@ -115,7 +112,7 @@ public class CacheProcess {
         return cache;
     }
 
-    private void deleteCache(String fileName) {
+    public void deleteCache(String fileName) {
         File f = new File(file, fileName);
         if (f.exists()) {
             try {
@@ -131,26 +128,23 @@ public class CacheProcess {
     *Login Module
     *--------------------------------------------------------------------------------------------------
     * */
-    public void setCacheUser(User user) {
-        user.setSign();
+    public void setCacheUser(MyUser user) {
+        if (user == null) {
+            setCache(USER, "null");
+            return;
+        }
         Gson gson = new Gson();
-        String cache = gson.toJson(user, User.class);
+        String cache = gson.toJson(user, MyUser.class);
         setCache(USER, cache);
     }
 
-    public User getCacheUser() {
+    public MyUser getCacheUser() {
         String cache = getCache(USER);
         if (cache.equals("null")) {
             return null;
         }
         Gson gson = new Gson();
-        User user = gson.fromJson(cache, User.class);
-        if (user == null) {
-            return null;
-        }
-        if (!user.isVal()) {
-            return null;
-        }
+        MyUser user = gson.fromJson(cache, MyUser.class);
         return user;
     }
 
@@ -247,17 +241,19 @@ public class CacheProcess {
 
     public List<LogIndex> getCacheLogIndex() {
         String strLogIndex = getCache(LOG_INDEX);
-        List<LogIndex> indexList = null;
-        if (!strLogIndex.equals("null")) {
-            Gson gson = new Gson();
-            try {
-                indexList = gson.fromJson(strLogIndex, new TypeToken<List<LogIndex>>() {
-                }.getType());
-            } catch (Exception e) {
-                indexList = new ArrayList<LogIndex>();
-            }
-        } else {
-            indexList = new ArrayList<LogIndex>();
+        List<LogIndex> indexList = new ArrayList<LogIndex>();
+        if (strLogIndex.equals("null") || strLogIndex.equals("")) {
+            return indexList;
+        }
+        Gson gson = new Gson();
+        try {
+            indexList = gson.fromJson(strLogIndex, new TypeToken<List<LogIndex>>() {
+            }.getType());
+        } catch (Exception e) {
+        }
+        if(indexList==null)
+        {
+            indexList=new ArrayList<>();
         }
         return indexList;
     }
@@ -298,7 +294,7 @@ public class CacheProcess {
     public PingState getCachePingState() {
         String cache = getCache(PING_STATE);
         if (cache.equals("null")) {
-            return null;
+            return new PingState();
         }
         Gson gson = new Gson();
         PingState pingState = null;
@@ -308,7 +304,7 @@ public class CacheProcess {
 
         }
         if (pingState == null) {
-            return null;
+            return new PingState();
         }
         return pingState;
     }
@@ -406,18 +402,14 @@ public class CacheProcess {
 
     public void setWifiState(WifiState wifiState) {
         String cacheWifiState = "null";
-        if (wifiState == null) {
-            setCache(WIFI_STATE, cacheWifiState);
-        } else {
+        if (wifiState != null) {
             Gson gson = new Gson();
             try {
                 cacheWifiState = gson.toJson(wifiState);
             } catch (Exception e) {
             }
-
         }
         setCache(WIFI_STATE, cacheWifiState);
-
     }
 
 
@@ -634,39 +626,6 @@ public class CacheProcess {
             }
         }
         setCache(SPEED_STATE, cache);
-    }
-
-
-    public AppInfo getAppInfo() {
-        String cache = getCache(APP_INFO);
-        if (cache.equals("null")) {
-            return new AppInfo();
-        }
-        Gson gson = new Gson();
-        AppInfo appInfo = null;
-        try {
-            appInfo = gson.fromJson(cache, AppInfo.class);
-        } catch (Exception e) {
-
-        }
-        if (appInfo == null) {
-            return new AppInfo();
-        }
-        return appInfo;
-    }
-
-    public void setAppInfo(AppInfo appInfo) {
-        String cache = "null";
-        if (appInfo == null) {
-            setCache(APP_INFO, cache);
-        } else {
-            Gson gson = new Gson();
-            try {
-                cache = gson.toJson(appInfo);
-            } catch (Exception e) {
-            }
-        }
-        setCache(APP_INFO, cache);
     }
 }
 

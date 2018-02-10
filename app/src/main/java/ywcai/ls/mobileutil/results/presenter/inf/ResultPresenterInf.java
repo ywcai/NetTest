@@ -20,4 +20,8 @@ public interface ResultPresenterInf {
     void selectDataType(int index, boolean b);
 
     void initTagStatus();
+
+    void pullDownForRemote();
+
+    void selectDataForTag();
 }

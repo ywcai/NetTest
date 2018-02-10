@@ -5,8 +5,10 @@ import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 import ywcai.ls.mobileutil.global.util.statics.MyTime;
+import ywcai.ls.mobileutil.login.model.MyUser;
 import ywcai.ls.mobileutil.results.model.LogIndex;
 import ywcai.ls.mobileutil.results.model.TaskTotal;
+import ywcai.ls.mobileutil.results.presenter.inf.LogIndexInf;
 import ywcai.ls.mobileutil.tools.Speed.model.SpeedState;
 import ywcai.ls.mobileutil.tools.Speed.model.SpeedTest;
 import ywcai.ls.mobileutil.tools.Speed.presenter.inf.SpeedActionInf;
@@ -52,6 +54,10 @@ public class SpeedAction implements SpeedActionInf {
     @Override
     public void clickSaveForLocal() {
         saveLocal();
+        resetView();
+    }
+
+    private void resetView() {
         speedState.reset();
         cacheProcess.setSpeedState(speedState);
         TaskTotal taskTotal = cacheProcess.getCacheTaskTotal();
@@ -105,7 +111,26 @@ public class SpeedAction implements SpeedActionInf {
     }
 
     private void saveRemote() {
-        sendMsgSnackBar("Sorry,暂不支持云端保存!", false);
+        MyUser myUser = cacheProcess.getCacheUser();
+        if (myUser == null) {
+            sendMsgSnackBar("数据上传云端必须请登录APP", false);
+            return;
+        }
+        sendMsgPopLoading(AppConfig.LOG_PROCESS_TIP);
+        LogIndex logIndex = new LogIndex();
+        logIndex.remarks = speedState.speedResult;
+        logIndex.cacheTypeIndex = AppConfig.INDEX_SPEED;
+        logIndex.logTime = MyTime.getDetailTime();
+        logIndex.aliasFileName = "网络测速";
+        logIndex.cacheFileName = "null";
+        logIndex.setListener(new LogIndexInf() {
+            @Override
+            public void complete() {
+                resetView();
+            }
+        });
+        logIndex.setAddrAndUpload();
+
     }
 
     private void sendMsgReady() {

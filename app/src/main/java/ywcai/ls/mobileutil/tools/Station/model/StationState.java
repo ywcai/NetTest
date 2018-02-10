@@ -12,6 +12,5 @@ import ywcai.ls.mobileutil.global.util.statics.MyTime;
 
 public class StationState {
     public boolean isShowFormat = true;
-    //    public boolean isRecordLog = false;
     public String logTime = MyTime.getDetailTime();
 }

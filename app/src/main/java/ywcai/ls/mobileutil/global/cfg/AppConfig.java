@@ -7,6 +7,10 @@ public class AppConfig {
     public static final String TENCENT_AD_ID = "9090328858666334";
     public static final String TENCENT_APP_ID = "1106630142";
 
+
+    public static String QQ_APP_ID="1105582955";
+    public static String MM_APP_ID="";
+
     public static final String LOG_REMOTE_SAVE_SUCCESS = "暂时不支持云端保存，请见谅";
     public static final String LOG_REMOTE_SAVE_FAIL = "云端保存数据失败";
     public static final String LOG_LOCAL_SAVE_SUCCESS = "本地保存数据成功";
@@ -19,6 +23,8 @@ public class AppConfig {
     public static final String MAIN_ACTIVITY_PATH = "/main/view/MainActivity";
     public static final String WAIT_ACTIVITY_PATH = "/welcome/view/WaitActivity";
     public static final String DETAIL_ACTIVITY_PATH = "/results/view/DetailLocalActivity";
+    public static final String DETAIL_ACTIVITY_REMOTE_PATH = "/results/view/DetailRemoteActivity";
+    public static final String WEB_ACTIVITY_PATH="/web/WebActivity";
 
     public static final String PING_ACTIVITY_PATH = "/tools/Ping/view/PingActivity";
     public static final String WIFI_ACTIVITY_PATH = "/tools/Wifi/view/WifiActivity";
@@ -93,6 +99,7 @@ public class AppConfig {
             R.color.chartLineColor0,
 
     };
+    public final static int LOGIN_QQ_CHANNEL=1;
 
 
     //本地最多允许存储500条测试结果记录。
@@ -219,7 +226,7 @@ public class AppConfig {
 
     public static final String HTTP_TEST_BASE_URL = "http://p.gdown.baidu.com/";
     public static final String HTTP_TEST_BASE_URL_2 = "http://imtt.dd.qq.com";
-    public static final String HTTP_APP_CONFIG_URL = "https://119.6.204.54/";
+    public static final String HTTP_APP_CONFIG_URL = "http://119.6.204.54:8080/";
 
     public static final String[] HTTP_TEST_URLS = new String[]
             {

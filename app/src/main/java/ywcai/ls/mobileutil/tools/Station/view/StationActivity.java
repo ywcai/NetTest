@@ -120,6 +120,7 @@ public class StationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 popMenu(false);
+                popLoading(AppConfig.LOG_PROCESS_TIP);
                 mainStationActionInf.saveLogRemote();
             }
         });

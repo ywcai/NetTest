@@ -136,14 +136,19 @@ public class SensorProcess implements SensorEventListener {
         if (event == null) {
             return;
         }
+        if (event.sensor == null) {
+            return;
+        }
+        if (event.sensor.getName().equals("")) {
+            return;
+        }
         int pos = LsListTransfer.getIndexWithSensorName(list, event.sensor.getName());
+        if (pos < 0) {
+            return;
+        }
         int index = hashMap.get(list.get(pos).englishName);
         if (event.values == null) {
             sendMsgCardTip("none", index);
-            return;
-        }
-        if (pos == -1) {
-//            LsLog.saveLog("未查询到该传感器类型");
             return;
         }
         String temp = list.get(pos).englishName + "\n" + list.get(pos).chineseName + ":" + LsListTransfer.floatToString(event.values, 0, 3);

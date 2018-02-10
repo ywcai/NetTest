@@ -29,6 +29,8 @@ public class GlobalEventT {
     public static final int result_update_list = 90016;//更新结果记录列表
     public static final int result_update_tag_status = 90015;//初始化时恢复Tag的选择状态
     public static final int result_update_top_btn_status = 91000;//更新顶部全选按钮状态
+    public static final int result_toast_tip=91001;
+    public static final int result_remote_item_head=91003;//显示remote的item首页
 
     public static final int wifi_set_main_title_tip = 90017;
     public static final int wifi_refresh_first_info = 90018;//更新首页的结果记录列表
@@ -98,5 +100,14 @@ public class GlobalEventT {
 
 
     public static final int detail_local_refresh_record = 90600;
+    public static final int result_local_clear_record = 90601;
+    public static final int detail_remote_refresh_record=90602;
+    public static final int detail_remote_refresh_aliasname=90603;
+
+    public static final int setting_qq_login_success = 90700;
+    public static final int setting_dialog_close=90701;
+    public static final int setting_pop_toast_tip = 90702;
+
+
 
 }

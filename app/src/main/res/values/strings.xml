@@ -1,16 +1,17 @@
 <resources>
-    <string name="app_name">多维网络分析</string>
+    <string name="app_name">网络分析专家</string>
     <string name="password">密码</string>
     <string name="username">用户名</string>
-    <string name="userReg">注册新用户</string>
+    <string name="userReg">手机号注册</string>
     <string name="forgetPassword"><u>忘记密码?</u></string>
     <string name="bot_menu1">工具</string>
     <string name="bot_menu2">记录</string>
-    <string name="bot_menu3"></string>
-    <string name="bot_menu4"></string>
+    <string name="bot_menu3">帮忙</string>
+    <string name="bot_menu4">设置</string>
     <string name="detail_local_menu1">上传云端</string>
     <string name="detail_local_menu2">修改别名</string>
     <string name="detail_local_menu3">删除记录</string>
     <string name="menu4">赞助作者</string>
     <string name="title_activity_detail">DetailActivity</string>
+    <string name="title_activity_web">WebActivity</string>
 </resources>

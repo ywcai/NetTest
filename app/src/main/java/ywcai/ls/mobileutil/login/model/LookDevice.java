@@ -1,4 +1,4 @@
-package ywcai.ls.mobileutil.identity.model;
+package ywcai.ls.mobileutil.login.model;
 
 import android.content.Context;
 import android.os.Build;

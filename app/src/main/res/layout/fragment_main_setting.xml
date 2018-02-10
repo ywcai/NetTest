@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorMainBg"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/setting_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorWifiBg"
+        android:paddingTop="@dimen/toolbar_top"
+        app:popupTheme="@style/LsAppBarOverlay"
+        app:title="@string/app_name"
+        app:titleTextAppearance="@style/ToolbarTitleSize"
+        app:titleTextColor="@android:color/white" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:text="NetTest V1.1.7 Power by Jimi"
+        android:textColor="@color/black_de"
+        android:textSize="14sp"></TextView>
+
+    <RelativeLayout
+        android:id="@+id/setting_head_block"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/setting_toolbar"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="5dp">
+
+        <RelativeLayout
+            android:id="@+id/setting_login_active"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+
+            android:background="@android:color/white"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/setting_head_pic"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/main_menu_top" />
+
+            <TextView
+                android:id="@+id/setting_nickname"
+                android:layout_width="match_parent"
+
+                android:layout_height="30dp"
+                android:layout_alignTop="@+id/setting_head_pic"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/setting_head_pic"
+                android:maxLines="1"
+                android:text="昵称："
+                android:textColor="@color/black_de"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/setting_create_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/setting_head_pic"
+                android:layout_alignLeft="@id/setting_nickname"
+                android:text="create date"
+                android:textColor="@color/LDark" />
+
+            <TextView
+                android:id="@+id/setting_login_out"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:gravity="center"
+                android:text="退出"
+                android:textColor="@color/LBlue"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/setting_un_login"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@android:color/white"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/setting_head_pic_2"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/main_menu_top" />
+
+            <TextView
+                android:id="@+id/setting_nickname_2"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_alignTop="@+id/setting_head_pic_2"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/setting_head_pic_2"
+                android:maxLines="1"
+                android:text="游客"
+                android:textColor="@color/black_de"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/setting_head_pic_2"
+                android:layout_alignLeft="@id/setting_nickname_2"
+                android:text="未认证"
+                android:textColor="@color/LDark" />
+
+            <TextView
+                android:id="@+id/setting_login_in"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:gravity="center"
+                android:text="登录 ＞"
+                android:textColor="@color/lite_blue"
+                android:textSize="18sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/setting_head_block">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/line_space_stroke"
+            android:orientation="vertical"
+            android:showDividers="middle">
+            <RelativeLayout
+                android:id="@+id/setting_edit_nickname"
+                android:background="@android:color/white"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+            <TextView
+                android:id="@+id/setting_edit_nickname_tx"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="20dp"
+                android:text="修改昵称"
+                android:textColor="@color/lite_blue"
+                android:textSize="14sp"
+                android:visibility="visible"></TextView>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_marginTop="10dp"
+                android:background="@android:color/white"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+            <TextView
+                android:id="@+id/setting_del_record"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+
+                android:gravity="left|center_vertical"
+                android:paddingLeft="20dp"
+                android:text="清除本地记录"
+                android:textColor="@color/LRed"
+                android:textSize="14sp"></TextView>
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:background="@android:color/white"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+            <TextView
+                android:id="@+id/setting_update_record"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="20dp"
+                android:text="上传本地记录"
+                android:textColor="@color/LOrange"
+                android:textSize="14sp"></TextView>
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@android:color/white">
+
+                <TextView
+                    android:id="@+id/setting_pop_help"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="20dp"
+                    android:text="使用帮助"
+                    android:textColor="@color/LGreen"
+                    android:textSize="14sp"></TextView>
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:background="@android:color/white"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+            <TextView
+                android:id="@+id/setting_pop_contract"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="20dp"
+                android:text="关于我们"
+                android:textColor="@color/LGreen"
+                android:textSize="14sp"></TextView>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

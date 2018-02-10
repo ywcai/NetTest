@@ -14,19 +14,16 @@ import android.content.Context;
 public class LocationService {
     private LocationClient client = null;
     private LocationClientOption mOption, DIYoption;
-    private Object objLock = new Object();
+    private BDAbstractLocationListener listener = null;
+
 
     /***
      *
      * @param locationContext
      */
     public LocationService(Context locationContext) {
-        synchronized (objLock) {
-            if (client == null) {
-                client = new LocationClient(locationContext);
-                client.setLocOption(getDefaultLocationClientOption());
-            }
-        }
+        client = new LocationClient(locationContext);
+        client.setLocOption(getDefaultLocationClientOption());
     }
 
     /***
@@ -36,6 +33,7 @@ public class LocationService {
      */
 
     public boolean registerListener(BDAbstractLocationListener listener) {
+        this.listener = listener;
         boolean isSuccess = false;
         if (listener != null) {
             client.registerLocationListener(listener);
@@ -44,7 +42,7 @@ public class LocationService {
         return isSuccess;
     }
 
-    public void unregisterListener(BDAbstractLocationListener listener) {
+    public void unregisterListener() {
         if (listener != null) {
             client.unRegisterLocationListener(listener);
         }
@@ -102,18 +100,15 @@ public class LocationService {
     }
 
     public void start() {
-        synchronized (objLock) {
-            if (client != null && !client.isStarted()) {
-                client.start();
-            }
+        if (client != null && !client.isStarted()) {
+            client.start();
         }
     }
 
     public void stop() {
-        synchronized (objLock) {
-            if (client != null && client.isStarted()) {
-                client.stop();
-            }
+        if (client != null && client.isStarted()) {
+            client.stop();
+            client.unRegisterLocationListener(listener);
         }
     }
 
@@ -121,8 +116,5 @@ public class LocationService {
         return client.isStarted();
     }
 
-    public boolean requestHotSpotState() {
-        return client.requestHotSpotState();
-    }
 
 }

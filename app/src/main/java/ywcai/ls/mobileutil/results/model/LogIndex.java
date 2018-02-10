@@ -1,18 +1,21 @@
 package ywcai.ls.mobileutil.results.model;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 
+import rx.schedulers.Schedulers;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.LocationService;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.global.model.instance.MainApplication;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
+import ywcai.ls.mobileutil.http.BaseObserver;
+import ywcai.ls.mobileutil.http.HttpService;
+import ywcai.ls.mobileutil.http.RetrofitFactory;
+import ywcai.ls.mobileutil.http.UploadResult;
+import ywcai.ls.mobileutil.login.model.MyUser;
+import ywcai.ls.mobileutil.results.presenter.inf.LogIndexInf;
+import ywcai.ls.mobileutil.setting.LogEntity;
 
 public class LogIndex {
     public int cacheTypeIndex = 0;//取自AppConfig中的索引
@@ -21,62 +24,87 @@ public class LogIndex {
     public String remarks = "结果摘要";//备注信息。默认为pingState中ip,max,min,avg,loss,total的格式化信息。
     public String logTime = "日志起始日期";
     public String addr = "未知地址";//最终保存数据时的位置。
+    public long recordId=0;
+    public LogIndexInf logIndexInf;
+
+    public void setListener(LogIndexInf _logIndexInf) {
+        logIndexInf = _logIndexInf;
+    }
 
     public void setAddr() {
-//        if (isNeedValid()) {
-//            //如果版本大于23
-//            if (!isPermission()) {
-//                //并且没有赋予权限，则直接返回
-//                addr = "未知地址";
-//                CacheProcess.getInstance().addCacheLogIndex(LogIndex.this);
-//                sendMsgPopSnackTip("本地数据保存成功", true);
-//                return;
-//            }
-//        }
-        LocationService locationService = MainApplication.getInstance().getLocationService();
-        locationService.registerListener(mListener);
+        final LocationService locationService = new LocationService(MainApplication.getInstance().getApplicationContext());
+        locationService.registerListener(new BDAbstractLocationListener() {
+            @Override
+            public void onReceiveLocation(BDLocation bdLocation) {
+                if (bdLocation != null) {
+                    if (bdLocation.getCity() != null) {
+                        if (!bdLocation.getCity().equals("null")) {
+                            addr = bdLocation.getCity() + "" + bdLocation.getDistrict() + "" + bdLocation.getStreet() + "" + bdLocation.getStreetNumber();
+                        }
+                    }
+                }
+                CacheProcess.getInstance().addCacheLogIndex(LogIndex.this);
+                sendMsgPopSnackTip("本地数据保存成功", true);
+                locationService.stop();
+                locationService.unregisterListener();
+            }
+        });
         locationService.start();
     }
 
-    private boolean isNeedValid() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private boolean isPermission() {
-        boolean isPermission = MainApplication.getInstance().getApplicationContext().
-                checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
-        isPermission = isPermission && MainApplication.getInstance().getApplicationContext().
-                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-        isPermission = isPermission && MainApplication.getInstance().getApplicationContext().
-                checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-        isPermission = isPermission && MainApplication.getInstance().getApplicationContext().
-                checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        isPermission = isPermission && MainApplication.getInstance().getApplicationContext().
-                checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        return isPermission;
-    }
-
-    private BDAbstractLocationListener mListener = new BDAbstractLocationListener() {
-        @Override
-        public void onReceiveLocation(BDLocation bdLocation) {
-            if (bdLocation != null) {
-                if (bdLocation.getCity() != null) {
-                    if (!bdLocation.getCity().equals("null")) {
-                        addr = bdLocation.getCity() + "" + bdLocation.getDistrict() + "" + bdLocation.getStreet() + "" + bdLocation.getStreetNumber();
+    public void setAddrAndUpload() {
+        final LocationService locationService = new LocationService(MainApplication.getInstance().getApplicationContext());
+        locationService.registerListener(new BDAbstractLocationListener() {
+            @Override
+            public void onReceiveLocation(BDLocation bdLocation) {
+                if (bdLocation != null) {
+                    if (bdLocation.getCity() != null) {
+                        if (!bdLocation.getCity().equals("null")) {
+                            addr = bdLocation.getCity() + "" + bdLocation.getDistrict() + "" + bdLocation.getStreet() + "" + bdLocation.getStreetNumber();
+                        }
                     }
                 }
+                locationService.stop();
+                locationService.unregisterListener();
+                MyUser myUser = CacheProcess.getInstance().getCacheUser();
+                if (myUser == null) {
+                    sendMsgPopSnackTip("上传到云端必须先登录账户", false);
+                    return;
+                }
+                LogEntity logEntity = new LogEntity();
+                logEntity.logIndex = LogIndex.this;
+                logEntity.data = CacheProcess.getInstance().getCache(cacheFileName);
+                upLoad(myUser.userid, logEntity);
             }
-            CacheProcess.getInstance().addCacheLogIndex(LogIndex.this);
-            sendMsgPopSnackTip("本地数据保存成功", true);
-            LocationService locationService = MainApplication.getInstance().getLocationService();
-            locationService.stop();
-            locationService.unregisterListener(this);
-        }
-    };
+        });
+        locationService.start();
+    }
+
+    private void upLoad(long userid, LogEntity logEntity) {
+        HttpService httpService = RetrofitFactory.getHttpService();
+        httpService.addRecord(userid, logEntity)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new BaseObserver<UploadResult>() {
+                    @Override
+                    protected void success(UploadResult uploadResult) {
+                        logIndexInf.complete();
+                        sendMsgPopSnackTip("成功上传到云端", true);
+                    }
+
+                    @Override
+                    protected void onCodeError(int code, String msg) {
+                        sendMsgPopSnackTip("上传失败:" + msg, false);
+                    }
+
+                    @Override
+                    protected void onNetError(Throwable e) {
+                        sendMsgPopSnackTip("上传失败:" + e.toString(), false);
+                    }
+                });
+
+    }
 
     private void sendMsgPopSnackTip(String tip, boolean success) {
         MsgHelper.sendEvent(GlobalEventT.global_pop_snack_tip, tip, success);
     }
-
 }

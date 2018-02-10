@@ -1,6 +1,6 @@
 package ywcai.ls.mobileutil.global.model.instance;
 
-import ywcai.ls.mobileutil.identity.model.User;
+import ywcai.ls.mobileutil.login.model.User;
 
 public class CoreInstance {
     private static Object lock = new Object();

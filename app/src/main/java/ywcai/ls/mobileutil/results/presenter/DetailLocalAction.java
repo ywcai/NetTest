@@ -1,31 +1,38 @@
 package ywcai.ls.mobileutil.results.presenter;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.global.util.statics.LsListTransfer;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
+import ywcai.ls.mobileutil.http.BaseObserver;
+import ywcai.ls.mobileutil.http.HttpService;
+import ywcai.ls.mobileutil.http.RetrofitFactory;
+import ywcai.ls.mobileutil.http.UploadResult;
+import ywcai.ls.mobileutil.login.model.MyUser;
 import ywcai.ls.mobileutil.results.model.LogIndex;
 import ywcai.ls.mobileutil.results.model.ResultState;
-import ywcai.ls.mobileutil.results.presenter.inf.DetailLocalActionInf;
+import ywcai.ls.mobileutil.results.presenter.inf.DetailActionInf;
+import ywcai.ls.mobileutil.setting.LogEntity;
 
 
-public class DetailLocalAction implements DetailLocalActionInf {
+public class DetailLocalAction implements DetailActionInf {
     CacheProcess cacheProcess = CacheProcess.getInstance();
     ResultState resultState;
     List<LogIndex> temp = null;
     List<LogIndex> all = cacheProcess.getCacheLogIndex();
+    private LogIndex currentLog;
+    HttpService httpService = RetrofitFactory.getHttpService();
 
-    public DetailLocalAction(final ResultState resultState, List<LogIndex> temp) {
+    public DetailLocalAction(final ResultState resultState, List<LogIndex> _temp) {
         this.resultState = resultState;
-        this.temp = temp;
+        this.temp = _temp;
         updateTempList();
     }
 
@@ -41,17 +48,26 @@ public class DetailLocalAction implements DetailLocalActionInf {
                 .subscribe(new Action1<List<LogIndex>>() {
                     @Override
                     public void call(List<LogIndex> logIndices) {
+                        temp.clear();
                         temp.addAll(logIndices);
                     }
                 });
     }
 
-    private int getRealPos(int tempPos) {
-        LogIndex logIndex = temp.get(tempPos);
-        int realPos = LsListTransfer.getIndexWithLogIndex(all, logIndex);
+    private int getRealPos() {
+        int realPos = LsListTransfer.getIndexWithLogIndex(all, currentLog);
         return realPos;
     }
 
+    @Override
+    public void downloadRecordForRemote(int pos) {
+        //不相关的方法
+    }
+
+    @Override
+    public void shareRecordForRemote(int pos) {
+        //不相关的方法
+    }
 
     @Override
     public void uploadRecord(final int pos) {
@@ -59,32 +75,49 @@ public class DetailLocalAction implements DetailLocalActionInf {
             sendMsgSnack("当前已无数据", false);
             return;
         }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean upload = requestUpload();
-                if (upload) {
-                    int realPos = getRealPos(pos);
-                    temp.remove(pos);
-                    all.remove(realPos);
-                    cacheProcess.setCacheLogIndex(all);
-                    int currentPos = temp.size() - 1 >= pos ? pos : temp.size() - 1;
-                    sendMsgSnack("上传成功", true);
-                    loadRecord(currentPos);
-                } else {
-                    sendMsgSnack(AppConfig.LOG_REMOTE_SAVE_SUCCESS, false);
-                }
-            }
-        }).start();
-    }
-
-    private boolean requestUpload() {
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        MyUser myUser = CacheProcess.getInstance().getCacheUser();
+        if (myUser == null) {
+            sendMsgSnack("上传数据请先登录APP", false);
+            return;
         }
-        return false;
+        LogEntity logEntity = new LogEntity();
+        logEntity.logIndex = currentLog;
+        String payload = CacheProcess.getInstance().getCache(currentLog.cacheFileName);
+        if (payload == null) {
+            logEntity.data = "null";
+        } else {
+            logEntity.data = payload;
+        }
+        httpService.addRecord(myUser.userid, logEntity)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new BaseObserver<UploadResult>() {
+                    @Override
+                    protected void success(UploadResult uploadResult) {
+                        int realPos = getRealPos();
+                        temp.remove(pos);
+                        all.remove(realPos);
+                        cacheProcess.setCacheLogIndex(all);
+                        int currentPos = -1;
+                        if (temp.size() == 0) {
+                            currentLog = null;
+                        } else {
+                            currentPos = temp.size() - 1 >= pos ? pos : temp.size() - 1;
+                            currentLog = temp.get(currentPos);
+                        }
+                        sendMsgSnack("上传成功", true);
+                        sendMsgLoadLog(currentPos);
+                    }
+
+                    @Override
+                    protected void onCodeError(int code, String msg) {
+                        sendMsgSnack("上传失败:" + msg, false);
+                    }
+
+                    @Override
+                    protected void onNetError(Throwable e) {
+                        sendMsgSnack("网络连接失败:" + e.toString(), false);
+                    }
+                });
     }
 
 
@@ -94,23 +127,25 @@ public class DetailLocalAction implements DetailLocalActionInf {
             sendMsgSnack("当前已无数据", false);
             return;
         }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                int realPos = getRealPos(pos);
-                temp.remove(pos);
-                all.remove(realPos);
-                cacheProcess.setCacheLogIndex(all);
-                int currentPos = temp.size() - 1 >= pos ? pos : temp.size() - 1;
-                sendMsgSnack("删除成功", true);
-                loadRecord(currentPos);
-            }
-        }).start();
+        Observable.just(pos)
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(new Action1<Integer>() {
+                    @Override
+                    public void call(Integer integer) {
+                        int realPos = getRealPos();
+                        temp.remove(pos);
+                        all.remove(realPos);
+                        cacheProcess.setCacheLogIndex(all);
+                        int currentPos = -1;
+                        if (temp.size() == 0) {
+                            currentLog = null;
+                        } else {
+                            currentPos = temp.size() - 1 >= pos ? pos : temp.size() - 1;
+                            currentLog = temp.get(currentPos);
+                        }
+                        sendMsgLoadLog(currentPos);
+                    }
+                });
     }
 
     @Override
@@ -119,38 +154,32 @@ public class DetailLocalAction implements DetailLocalActionInf {
             sendMsgSnack("当前已无数据", false);
             return;
         }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                LogIndex currentLogIndex = temp.get(pos);
-                int realPos = getRealPos(pos);
-                currentLogIndex.aliasFileName = titleName;
-                all.remove(realPos);
-                all.add(realPos, currentLogIndex);
-                cacheProcess.setCacheLogIndex(all);
-                loadRecord(pos);
-            }
-        }).start();
+        Observable.just(pos)
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(new Action1<Integer>() {
+                    @Override
+                    public void call(Integer integer) {
+                        int realPos = getRealPos();
+                        currentLog.aliasFileName = titleName;
+                        all.remove(realPos);
+                        all.add(realPos, currentLog);
+                        cacheProcess.setCacheLogIndex(all);
+                        sendMsgLoadLog(pos);
+                    }
+                });
     }
 
     @Override
-    public void loadRecord(final int currentPos) {
-        LogIndex logIndex = null;
-        if (currentPos >= 0 && currentPos < temp.size()) {
-            logIndex = temp.get(currentPos);
-        }
-        final LogIndex finalLogIndex = logIndex;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                sendMsgLoadLog(currentPos, finalLogIndex);
-            }
-        }).start();
+    public void loadRecord(int currentPos) {
+        currentLog = temp.get(currentPos);
+        Observable.just(currentPos)
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(new Action1<Integer>() {
+                    @Override
+                    public void call(Integer currentPos) {
+                        sendMsgLoadLog(currentPos);
+                    }
+                });
     }
 
     @Override
@@ -165,8 +194,8 @@ public class DetailLocalAction implements DetailLocalActionInf {
         loadRecord(currentPos);
     }
 
-    private void sendMsgLoadLog(int currentPos, LogIndex logIndex) {
-        MsgHelper.sendStickEvent(GlobalEventT.detail_local_refresh_record, currentPos + "", logIndex);
+    private void sendMsgLoadLog(int currentPos) {
+        MsgHelper.sendStickEvent(GlobalEventT.detail_local_refresh_record, currentPos + "", currentLog);
     }
 
     private void sendMsgSnack(String tip, boolean success) {

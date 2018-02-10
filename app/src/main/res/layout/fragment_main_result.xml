@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorMainBg"
@@ -121,7 +120,7 @@
                         android:layout_toLeftOf="@+id/result_text_record_total"
                         android:layout_toRightOf="@+id/select_remote"
                         android:gravity="right|center_vertical"
-                        android:text="N"
+                        android:text="0"
                         android:textColor="@android:color/holo_red_light"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -166,13 +165,22 @@
     <!--android:layout_marginTop="1dp"-->
     <!--android:background="@color/colorMainBg"-->
     <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/result_list"
+    <RelativeLayout
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="0dp"
-        android:background="@color/colorMainBg"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"></android.support.v7.widget.RecyclerView>
-    <!--</android.support.v4.widget.NestedScrollView>-->
+        android:layout_height="match_parent">
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/result_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/result_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="0dp"
+                android:background="@color/colorMainBg"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"></android.support.v7.widget.RecyclerView>
+            <!--</android.support.v4.widget.NestedScrollView>-->
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

@@ -5,11 +5,9 @@ import android.app.Application;
 import com.alibaba.android.arouter.launcher.ARouter;
 
 import cat.ereza.customactivityoncrash.config.CaocConfig;
-import ywcai.ls.mobileutil.global.model.LocationService;
 
 public class MainApplication extends Application {
     private static MainApplication instance;
-    LocationService locationService;
     public boolean isActivityExist = false;
 
     public static MainApplication getInstance() {
@@ -27,12 +25,5 @@ public class MainApplication extends Application {
                 .apply();
         instance = this;
         ARouter.init(this);
-    }
-
-    public LocationService getLocationService() {
-        if (locationService == null) {
-            locationService = new LocationService(this);
-        }
-        return locationService;
     }
 }

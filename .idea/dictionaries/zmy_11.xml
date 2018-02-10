@@ -2,35 +2,46 @@
   <dictionary name="zmy_11">
     <words>
       <w>addr</w>
+      <w>aliasname</w>
       <w>baidu</w>
       <w>bssid</w>
       <w>cancal</w>
       <w>cardview</w>
       <w>cdma</w>
+      <w>channelid</w>
       <w>chooseable</w>
+      <w>createdate</w>
       <w>ehrpd</w>
       <w>evdo</w>
       <w>fileprovider</w>
       <w>fsname</w>
       <w>gdtdownload</w>
       <w>gprs</w>
+      <w>gson</w>
       <w>hsdpa</w>
       <w>hspa</w>
       <w>hsupa</w>
       <w>imei</w>
       <w>imtt</w>
       <w>ipaddr</w>
+      <w>jimi</w>
       <w>lbsapi</w>
       <w>mbps</w>
+      <w>mobileid</w>
       <w>mobileutil</w>
+      <w>pfkey</w>
       <w>proc</w>
+      <w>recordid</w>
       <w>rscp</w>
       <w>rsrp</w>
       <w>sina</w>
       <w>sqch</w>
       <w>ssid</w>
+      <w>tauth</w>
       <w>tencent</w>
       <w>umts</w>
+      <w>userid</w>
+      <w>userinfo</w>
       <w>wcdma</w>
       <w>wlan</w>
       <w>yibiao</w>

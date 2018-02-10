@@ -103,6 +103,7 @@ public class PingActivity extends AppCompatActivity {
         save_local.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                action.clickBtnSaveCancal();
                 action.clickBtnSaveLocal();
                 bottomDialog.dismiss();
             }

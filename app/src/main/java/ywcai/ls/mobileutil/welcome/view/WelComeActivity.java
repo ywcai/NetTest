@@ -10,10 +10,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.baidu.mobstat.StatService;
 
 import com.qq.e.ads.splash.SplashAD;
 import com.qq.e.ads.splash.SplashADListener;
@@ -28,11 +26,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
-import ywcai.ls.mobileutil.global.model.AppInfo;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.global.model.instance.MainApplication;
-import ywcai.ls.mobileutil.global.util.statics.LsLog;
-import ywcai.ls.mobileutil.tools.Speed.model.inf.DownService;
 
 
 public class WelComeActivity extends AppCompatActivity implements SplashADListener {
@@ -85,34 +80,6 @@ public class WelComeActivity extends AppCompatActivity implements SplashADListen
         MainApplication.getInstance().isActivityExist = true;
         adContainer = (ViewGroup) findViewById(R.id.splash_container);
         splashAD = new SplashAD(WelComeActivity.this, adContainer, AppConfig.TENCENT_APP_ID, AppConfig.TENCENT_AD_ID, WelComeActivity.this);
-    }
-
-    private void requestAdConfig() {
-        String baseUrl = AppConfig.HTTP_TEST_BASE_URL_2;
-        String requestUrl = "http://119.6.204.54:8080/NetTest/appinfo";
-        Retrofit retrofit = new Retrofit.Builder().
-                baseUrl(baseUrl).
-                addConverterFactory(GsonConverterFactory.create()).
-                build();
-        ConfigService service = retrofit.create(ConfigService.class);
-        Call<ResponseBody> call = service.getAppInfo(requestUrl);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                //请求正常，直接进入主页面
-                startMainActivity();
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                AppInfo appInfo = new AppInfo();
-                appInfo.isLoadAd = true;
-                CacheProcess.getInstance().setAppInfo(appInfo);
-                adContainer = (ViewGroup) findViewById(R.id.splash_container);
-                splashAD = new SplashAD(WelComeActivity.this, adContainer, AppConfig.TENCENT_APP_ID, AppConfig.TENCENT_AD_ID, WelComeActivity.this);
-            }
-        });
-
     }
 
     //跳转到主界面

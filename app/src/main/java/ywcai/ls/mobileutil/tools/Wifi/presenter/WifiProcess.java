@@ -26,11 +26,12 @@ import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.global.model.instance.MainApplication;
 import ywcai.ls.mobileutil.global.util.statics.ConvertUtil;
-
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 import ywcai.ls.mobileutil.global.util.statics.MyTime;
+import ywcai.ls.mobileutil.login.model.MyUser;
 import ywcai.ls.mobileutil.results.model.LogIndex;
 import ywcai.ls.mobileutil.results.model.TaskTotal;
+import ywcai.ls.mobileutil.results.presenter.inf.LogIndexInf;
 import ywcai.ls.mobileutil.service.WifiService;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiEntry;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiState;
@@ -58,7 +59,6 @@ public class WifiProcess implements Action1 {
         updateFragmentTwo = new UpdateFragmentTwo(wifiState);
         updateFragmentThree = new UpdateFragmentThree(wifiState);
         updateFragmentFour = new UpdateFragmentFour(wifiState);
-        sendMsgTopBtnStatus();
     }
 
     //绑定WIFI服务并处理
@@ -73,10 +73,10 @@ public class WifiProcess implements Action1 {
         }
     }
 
-
     public void recoveryAllData() {
         connWifi.initConnWifi();
         connectWifi();
+        sendMsgTopBtnStatus();
         updateFragmentOne.loadChannelTagStatus();
         updateFragmentTwo.refreshChart();
     }
@@ -431,21 +431,13 @@ public class WifiProcess implements Action1 {
     }
 
     public void saveLogForRemote(final int pos) {
+        MyUser myUser = cacheProcess.getCacheUser();
+        if (myUser == null) {
+            sendMsgForPopMainSnack("数据上传云端必须请登录APP", false);
+            return;
+        }
         sendMsgPopLoadingDialog(AppConfig.LOG_PROCESS_TIP);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (requestUpload(pos)) {
-                    sendMsgForPopMainSnack(AppConfig.LOG_REMOTE_SAVE_SUCCESS, true);
-                } else {
-                    sendMsgForPopMainSnack(AppConfig.LOG_REMOTE_SAVE_SUCCESS, false);
-                }
-            }
-        }).start();
-    }
-
-    private boolean requestUpload(int pos) {
-        return false;
+        saveLogIndexForRemote(pos);
     }
 
 
@@ -504,6 +496,58 @@ public class WifiProcess implements Action1 {
                     }
                 });
     }
+
+
+    private void saveLogIndexForRemote(final int pos) {
+        final LogIndex logIndex = new LogIndex();
+        logIndex.cacheTypeIndex = AppConfig.INDEX_WIFI;
+        logIndex.logTime = wifiState.saveWifiList.get(pos).logFlag;
+        logIndex.cacheFileName = wifiState.saveWifiList.get(pos).logFlag;
+        logIndex.aliasFileName = wifiState.saveWifiList.get(pos).ssid;
+        final List<Integer> list = cacheProcess.getWifiTaskResult(logIndex.cacheFileName);
+        Observable.from(list)
+                .filter(new Func1<Integer, Boolean>() {
+                    @Override
+                    public Boolean call(Integer integer) {
+                        return integer > -160;
+                    }
+                })
+                .toSortedList()
+                .subscribe(new Action1<List<Integer>>() {
+                    @Override
+                    public void call(List<Integer> integers) {
+                        if (integers.size() <= 0) {
+                            logIndex.remarks =
+                                    "SSID [" + wifiState.saveWifiList.get(pos).ssid + "]" +
+                                            "  MAC [" + wifiState.saveWifiList.get(pos).bssid + "]" +
+                                            "  信道 [" + wifiState.saveWifiList.get(pos).channel + "]" +
+                                            "  扫描 [" + list.size() + "]次" +
+                                            "  丢失 [" + (list.size() - integers.size()) + "]次" +
+                                            "  丢失率 [100%]";
+                        } else {
+                            logIndex.remarks =
+                                    "SSID [" + wifiState.saveWifiList.get(pos).ssid + "]" +
+                                            "  MAC [" + wifiState.saveWifiList.get(pos).bssid + "]" +
+                                            "  信道 [" + wifiState.saveWifiList.get(pos).channel + "]" +
+                                            "  最弱 [" + integers.get(0) + "db]" +
+                                            "  最强 [" + integers.get(integers.size() - 1 <= 0 ? 0 : integers.size() - 1) + "db]" +
+                                            "  扫描 [" + list.size() + "]次" +
+                                            "  丢失 [" + (list.size() - integers.size()) + "]次" +
+                                            "  丢失率 [" + (list.size() - integers.size()) * 100 / list.size() + "%]";
+                        }
+                        logIndex.setListener(new LogIndexInf() {
+                            @Override
+                            public void complete() {
+                                cacheProcess.deleteCache(logIndex.cacheFileName);
+                                removeTask(pos);
+                                operatorDraw();
+                            }
+                        });
+                        logIndex.setAddrAndUpload();
+                    }
+                });
+    }
+
 
     //添加后台数据监听任务
     private void addTask() {

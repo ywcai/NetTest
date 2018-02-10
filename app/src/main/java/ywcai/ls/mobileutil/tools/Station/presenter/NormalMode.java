@@ -9,12 +9,15 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
+import rx.schedulers.Schedulers;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 import ywcai.ls.mobileutil.global.util.statics.MyTime;
+import ywcai.ls.mobileutil.login.model.MyUser;
 import ywcai.ls.mobileutil.results.model.LogIndex;
+import ywcai.ls.mobileutil.results.presenter.inf.LogIndexInf;
 import ywcai.ls.mobileutil.tools.Station.model.StationEntry;
 import ywcai.ls.mobileutil.tools.Station.model.StationState;
 
@@ -107,8 +110,58 @@ public class NormalMode {
         //继续开始一个新的任务
     }
 
+
     public void saveRemote() {
-        sendMsgSnackBarTip(AppConfig.LOG_REMOTE_SAVE_SUCCESS, false);
+        if (stationEntries.size() <= 1) {
+            sendMsgSnackBarTip("还没有数据,无法保存", false);
+            return;
+        }
+        MyUser myUser = cacheProcess.getCacheUser();
+        if (myUser == null) {
+            sendMsgSnackBarTip("数据上传云端必须请登录APP", false);
+            return;
+        }
+
+        Observable.from(stationEntries)
+                .filter(new Func1<StationEntry, Boolean>() {
+                    @Override
+                    public Boolean call(StationEntry stationEntry) {
+                        return stationEntry.rsp < -1;
+                    }
+                }).toSortedList(new Func2<StationEntry, StationEntry, Integer>() {
+            @Override
+            public Integer call(StationEntry stationEntry, StationEntry stationEntry2) {
+                return stationEntry.rsp > stationEntry2.rsp ? 1 : -1;
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Action1<List<StationEntry>>() {
+                    @Override
+                    public void call(List<StationEntry> list) {
+                        final LogIndex logIndex = new LogIndex();
+                        logIndex.logTime = stationState.logTime;
+                        logIndex.cacheTypeIndex = AppConfig.INDEX_STATION;
+                        logIndex.aliasFileName = "基站测试日志";
+                        logIndex.cacheFileName = AppConfig.INDEX_STATION + "-" + stationState.logTime;
+                        if (list.size() <= 0) {
+                            logIndex.remarks = "本次测试并没有记录到任何数据";
+                        } else {
+                            logIndex.remarks = "检测到数据变化 [" + stationEntries.size() + "] 次 " + "最强[" + list.get(list.size() - 1).rsp + "] 最弱[" +
+                                    list.get(0).rsp + "]";
+                        }
+                        logIndex.setListener(new LogIndexInf() {
+                            @Override
+                            public void complete() {
+                                cacheProcess.deleteCache(AppConfig.INDEX_STATION + "-" + stationState.logTime);
+                                resetLog();
+                            }
+                        });
+
+                        logIndex.setAddrAndUpload();
+                    }
+                });
+
+
     }
 
     public void clearLog() {

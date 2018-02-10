@@ -16,11 +16,11 @@
     <TextView
         android:id="@+id/welcome_bottom_tip"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="35dp"
         android:layout_alignParentBottom="true"
         android:background="@android:color/white"
         android:gravity="center"
-        android:text="点击将进入广告下载 : NetTest V1.1.4"
+        android:text="点击将进入广告下载 : NetTest V1.1.7"
         android:textColor="@color/LOrange"
         android:textSize="16dp"
         android:textStyle="bold"

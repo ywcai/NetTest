@@ -20,7 +20,6 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.baidu.mobstat.StatService;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -52,7 +51,7 @@ import ywcai.ls.mobileutil.global.util.statics.SetTitle;
 import ywcai.ls.mobileutil.results.model.LogIndex;
 import ywcai.ls.mobileutil.results.model.ResultState;
 import ywcai.ls.mobileutil.results.presenter.DetailLocalAction;
-import ywcai.ls.mobileutil.results.presenter.inf.DetailLocalActionInf;
+import ywcai.ls.mobileutil.results.presenter.inf.DetailActionInf;
 import ywcai.ls.mobileutil.tools.Station.model.StationEntry;
 
 
@@ -62,7 +61,7 @@ public class DetailLocalActivity extends AppCompatActivity {
     public int pos = 0;
     TextView record_remarks, record_detail, logTitle, logTime, logAddr, prev, next, pageNumber;
     LoadingDialog loadingDialog;
-    DetailLocalActionInf detailLocalAction;
+    DetailActionInf detailLocalAction;
     MaterialDialog uploadDialog, editDialog, deleteDialog;
     MaterialEditText inputText;
     RelativeLayout rl;
@@ -85,14 +84,14 @@ public class DetailLocalActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        StatService.onPause(this);
         super.onPause();
+        StatService.onPause(this);
     }
 
     @Override
     protected void onResume() {
-        StatService.onResume(this);
         super.onResume();
+        StatService.onResume(this);
     }
 
     private void initDialog() {
@@ -150,7 +149,6 @@ public class DetailLocalActivity extends AppCompatActivity {
                     loadingDialog.show();
                     detailLocalAction.editRecordTitle(pos, inputText.getText().toString());
                     inputText.setText("");
-
                 } else {
 
                 }

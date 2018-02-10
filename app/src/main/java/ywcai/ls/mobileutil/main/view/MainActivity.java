@@ -15,7 +15,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
@@ -24,28 +23,24 @@ import com.baidu.autoupdatesdk.UICheckUpdateCallback;
 import com.baidu.mobstat.StatService;
 import com.qq.e.ads.banner.ADSize;
 import com.qq.e.ads.banner.AbstractBannerADListener;
-import com.qq.e.ads.banner.BannerADListener;
 import com.qq.e.ads.banner.BannerView;
 import com.qq.e.comm.util.AdError;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.util.statics.SetTitle;
 import ywcai.ls.mobileutil.menu.view.MenuFragment;
 import ywcai.ls.mobileutil.results.view.ResultFragment;
+import ywcai.ls.mobileutil.setting.SettingFragment;
 
 @Route(path = "/main/view/MainActivity")
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private List<Fragment> fragments = new ArrayList<>();
     private List<TextView> nav = new ArrayList<>();
     public int currentPage = 3;
-
     private final String bannerId = "1060320980023408";
     private final String appID = "1106630142";
     BannerView banner;
-
     @Autowired()
     public String ROUTER_PAGE;
     private ProgressDialog progressDialog;
@@ -150,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         MenuFragment netWorkFragment = new MenuFragment();
         ResultFragment resultFragment = new ResultFragment();
         Fragment reserveFragment2 = new Fragment();
-        Fragment reserveFragment3 = new Fragment();
+        Fragment reserveFragment3 = new SettingFragment();
         transaction.add(R.id.main_fragment_container, netWorkFragment);
         transaction.add(R.id.main_fragment_container, resultFragment);
         transaction.add(R.id.main_fragment_container, reserveFragment2);
@@ -170,8 +165,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TextView nav_4 = (TextView) findViewById(R.id.bot_nav_4);
         nav_1.setOnClickListener(this);
         nav_2.setOnClickListener(this);
-//        nav_3.setOnClickListener(this);
-//        nav_4.setOnClickListener(this);
+        nav_3.setOnClickListener(this);
+        nav_4.setOnClickListener(this);
         nav.add(nav_1);
         nav.add(nav_2);
         nav.add(nav_3);
@@ -206,8 +201,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void onCheckComplete() {
             progressDialog.dismiss();
         }
-
     }
+
+
+
+
+
+
 
     @Override
     protected void onResume() {

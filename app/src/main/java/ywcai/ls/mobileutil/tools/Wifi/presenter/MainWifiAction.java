@@ -85,7 +85,6 @@ public class MainWifiAction implements MainWifiActionInf {
 
     @Override
     public void setChannelFilter(int index, boolean isSelect) {
-
         wifiProcess.setChannelFilter(index, isSelect);
     }
 

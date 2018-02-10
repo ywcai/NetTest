@@ -71,8 +71,8 @@ public class WifiActivity extends AppCompatActivity {
         FancyButton btn5G = (FancyButton) findViewById(R.id.btn_5g);
         btn2d4G.setGhost(true);
         btn2d4G.setEnabled(false);
-        btn5G.setGhost(false);
-        btn5G.setEnabled(true);
+        btn5G.setGhost(true);
+        btn5G.setEnabled(false);
         btn2d4G.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

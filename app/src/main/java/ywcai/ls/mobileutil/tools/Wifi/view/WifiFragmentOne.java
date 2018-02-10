@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -26,7 +26,6 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.google.android.flexbox.FlexboxLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -37,7 +36,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
-import mehdi.sakout.fancybuttons.FancyButton;
 import rx.Observable;
 import rx.functions.Action1;
 import ywcai.ls.control.flex.FlexButtonLayout;
@@ -46,7 +44,7 @@ import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.GlobalEvent;
-import ywcai.ls.mobileutil.global.util.statics.LsListTransfer;
+
 import ywcai.ls.mobileutil.tools.Wifi.model.one.RadarMarkerView;
 import ywcai.ls.mobileutil.tools.Wifi.model.one.WifiDrawDetail;
 import ywcai.ls.mobileutil.tools.Wifi.model.WifiEntry;
@@ -209,6 +207,7 @@ public class WifiFragmentOne extends Fragment {
 
     private void create2d4GTags() {
         chooseChannel2d4G = (FlexButtonLayout) view.findViewById(R.id.channel_list_2d4g);
+        chooseChannel2d4G.setVisibility(View.INVISIBLE);
         List<String> tag2d4g = new ArrayList<>();
         for (int i = 0; i < AppConfig.INTS_CHANNEL_2D4G.length; i++) {
             tag2d4g.add("CH" + AppConfig.INTS_CHANNEL_2D4G[i]);
@@ -222,13 +221,16 @@ public class WifiFragmentOne extends Fragment {
 
             @Override
             public void clickAllBtn(int[] ints, boolean b) {
-                mainWifiActionInf.setAllTagSelectOrCancal(ints);
+                if (mainWifiActionInf != null) {
+                    mainWifiActionInf.setAllTagSelectOrCancal(ints);
+                }
             }
         });
     }
 
     private void create5GTags() {
         chooseChannel5G = (FlexButtonLayout) view.findViewById(R.id.channel_list_5g);
+        chooseChannel5G.setVisibility(View.INVISIBLE);
         List<String> tag5g = new ArrayList<>();
         for (int i = 0; i < AppConfig.INTS_CHANNEL_5G.length; i++) {
             tag5g.add("CH" + AppConfig.INTS_CHANNEL_5G[i]);

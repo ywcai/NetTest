@@ -5,14 +5,16 @@ import android.view.View;
 import java.util.List;
 
 import rx.functions.Action1;
-import ywcai.ls.control.LoadingDialog;
+
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
-import ywcai.ls.mobileutil.global.model.instance.MainApplication;
+
 import ywcai.ls.mobileutil.global.util.statics.InStallService;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
+import ywcai.ls.mobileutil.login.model.MyUser;
 import ywcai.ls.mobileutil.results.model.LogIndex;
+import ywcai.ls.mobileutil.results.presenter.inf.LogIndexInf;
 import ywcai.ls.mobileutil.service.LsConnection;
 import ywcai.ls.mobileutil.service.PingService;
 import ywcai.ls.mobileutil.tools.Ping.model.PingState;
@@ -190,11 +192,19 @@ public class PingAction implements PingActionInf {
         PingState initState = cacheProcess.getCachePingState();
         addDataIndex(initState);//创建日志的索引
         resetChart(initState);
+
     }
 
     @Override
     public void clickBtnSaveRemote() {
-        sendMsgPopSnackTip(AppConfig.LOG_REMOTE_SAVE_SUCCESS, false);
+        MyUser myUser = CacheProcess.getInstance().getCacheUser();
+        if (myUser == null) {
+            sendMsgPopSnackTip("保存失败，云端保存必须先登录APP！", false);
+            return;
+        }
+        popLoadingWindow(AppConfig.LOG_PROCESS_TIP);
+        PingState initState = cacheProcess.getCachePingState();
+        addDataIndexForRemote(initState);//创建日志的索引
     }
 
 
@@ -264,6 +274,7 @@ public class PingAction implements PingActionInf {
         cacheProcess.setCachePingState(initState);//更新缓存
         repairBaseLine(initState.packageCount);//恢复基线宽度
         drawDesc(initState);//恢复描述信息
+        setFloatBtnVisible(View.INVISIBLE);
     }
 
     private void deleteLastData(String startTime) {
@@ -279,6 +290,22 @@ public class PingAction implements PingActionInf {
         logIndex.remarks = initState.getFormatMarks();
         logIndex.logTime = initState.startTime;
         logIndex.setAddr();
-//        cacheProcess.addCacheLogIndex(logIndex);
+    }
+
+    private void addDataIndexForRemote(final PingState initState) {
+        final LogIndex logIndex = new LogIndex();
+        logIndex.cacheTypeIndex = AppConfig.INDEX_PING;
+        logIndex.cacheFileName = AppConfig.INDEX_PING + "-" + initState.startTime;
+        logIndex.aliasFileName = "PING TEST";
+        logIndex.remarks = initState.getFormatMarks();
+        logIndex.logTime = initState.startTime;
+        logIndex.setListener(new LogIndexInf() {
+            @Override
+            public void complete() {
+                CacheProcess.getInstance().deleteCache(logIndex.cacheFileName);
+                resetChart(initState);
+            }
+        });
+        logIndex.setAddrAndUpload();
     }
 }
