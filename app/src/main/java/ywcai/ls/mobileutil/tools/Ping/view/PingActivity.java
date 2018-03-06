@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -41,10 +42,12 @@ import me.drakeet.materialdialog.MaterialDialog;
 import mehdi.sakout.fancybuttons.FancyButton;
 import ywcai.ls.control.LoadingDialog;
 import ywcai.ls.mobileutil.R;
+import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.model.GlobalEvent;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.util.statics.InputValidate;
 import ywcai.ls.mobileutil.global.util.statics.LsSnack;
+import ywcai.ls.mobileutil.global.util.statics.LsToolbar;
 import ywcai.ls.mobileutil.global.util.statics.SetTitle;
 import ywcai.ls.mobileutil.tools.Ping.model.PingState;
 import ywcai.ls.mobileutil.tools.Ping.presenter.PingAction;
@@ -279,17 +282,20 @@ public class PingActivity extends AppCompatActivity {
     }
 
     private void InitToolBar() {
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.ping_toolbar);
-        mToolbar.setTitleMarginStart(0);
-        mToolbar.setTitle("Ping");
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+
+        LsToolbar.initToolbar(this, AppConfig.TITLE_PING);
+//        Toolbar mToolbar = (Toolbar) findViewById(R.id.ping_toolbar);
+//        mToolbar.setTitleMarginStart(0);
+//        TextView title = (TextView) findViewById(R.id.toolbar_title);
+//        title.setText(AppConfig.TITLE_PING);
+//        setSupportActionBar(mToolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
     }
 
     private void InitChart() {

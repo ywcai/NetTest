@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    android:layout_marginTop="5dp"
+    android:background="@android:color/white"
+    android:clickable="true"
+    android:divider="@drawable/line_space_stroke"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="10dp"
+    android:showDividers="middle">
+
+    <RelativeLayout
+        android:id="@+id/article_card_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:clickable="true"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/article_card_top_auth_img"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="5dp"
+            android:clickable="false"
+            android:scaleType="centerCrop"
+            android:src="@drawable/user_login" />
+
+        <TextView
+            android:id="@+id/article_card_top_auth_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_toLeftOf="@+id/article_card_top_create_date"
+            android:layout_toRightOf="@+id/article_card_top_auth_img"
+            android:clickable="false"
+            android:ellipsize="end"
+            android:gravity="center_vertical|left"
+            android:maxLines="1"
+            android:text="Author"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/article_card_top_create_date"
+            android:layout_width="110dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:clickable="false"
+            android:gravity="center_vertical|right"
+            android:text="2017-12-12 09:20"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/article_card_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        android:clickable="false"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/article_card_main_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:ellipsize="end"
+            android:gravity="top|left"
+            android:lineSpacingExtra="5dp"
+            android:maxLines="2"
+            android:text="文章标题"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/article_card_main_thumb"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginTop="5dp"
+            android:clickable="false"
+            android:contentDescription="缩略图"
+            android:scaleType="fitXY"
+            android:src="@drawable/main_menu_top"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/article_card_main_remarks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:clickable="false"
+            android:ellipsize="end"
+            android:gravity="top|left"
+            android:lineSpacingExtra="3dp"
+            android:maxLines="3"
+            android:minHeight="50dp"
+            android:text="内容摘要"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/article_card_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="right|center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/article_card_btn_top"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginLeft="10dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/top" />
+
+        <TextView
+            android:id="@+id/article_card_bottom_top"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="4dp"
+            android:gravity="center_vertical"
+            android:text="13020"
+            android:textColor="@color/LRed"
+            android:textSize="10sp" />
+
+        <ImageView
+            android:id="@+id/article_card_btn_comment"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginLeft="10dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/msg" />
+
+        <TextView
+            android:id="@+id/article_card_bottom_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="4dp"
+            android:gravity="center_vertical"
+            android:text="25129"
+            android:textColor="@color/LGreen"
+            android:textSize="10sp" />
+
+
+    </LinearLayout>
+</LinearLayout>

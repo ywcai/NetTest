@@ -6,12 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import java.util.List;
-
 import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
-import ywcai.ls.mobileutil.global.util.statics.LsLog;
 import ywcai.ls.mobileutil.menu.presenter.inf.OnItemClickListener;
 
 
@@ -21,6 +18,7 @@ public class ResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private OnItemClickListener onItemClickListener;
     private int[] menuImg = AppConfig.getMenuIconRes();
 
+
     public ResultAdapter(Context _context, List<LogIndex> _list) {
         context = _context;
         list = _list;
@@ -28,20 +26,19 @@ public class ResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == -1) {
-            View view = LayoutInflater.from(
-                    context).inflate(R.layout.list_empty_tip, parent,
-                    false);
-            EmptyHolder emptyHolder = new EmptyHolder(view);
-            return emptyHolder;
-        } else {
-            View view = LayoutInflater.from(
-                    context).inflate(R.layout.list_result_main_card, parent,
-                    false);
-            ResultListViewHolder holder = new ResultListViewHolder(view);
-            view.setClickable(true);
-            return holder;
-        }
+//        if (viewType == -1) {
+//            View view = LayoutInflater.from(
+//                    context).inflate(R.layout.list_empty_tip, parent,
+//                    false);
+//            EmptyHolder emptyHolder = new EmptyHolder(view);
+//            return emptyHolder;
+//        }
+        View view = LayoutInflater.from(
+                context).inflate(R.layout.list_result_main_card, parent,
+                false);
+        ResultListViewHolder holder = new ResultListViewHolder(view);
+        view.setClickable(true);
+        return holder;
     }
 
     @Override
@@ -60,15 +57,16 @@ public class ResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemViewType(int position) {
-        if (list.size() == 0) {
-            return -1;
-        }
+//        if (list.size() == 0) {
+//            return -1;
+//        }
         return super.getItemViewType(position);
     }
 
     @Override
     public int getItemCount() {
-        return list.size() > 0 ? list.size() : 1;
+        return list.size();
+//        return list.size() > 0 ? list.size() : 1;
     }
 
     @Override

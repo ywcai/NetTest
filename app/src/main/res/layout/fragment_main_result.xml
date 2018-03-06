@@ -157,14 +157,6 @@
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
-
-    <!--<android.support.v4.widget.NestedScrollView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_marginBottom="1dp"-->
-    <!--android:layout_marginTop="1dp"-->
-    <!--android:background="@color/colorMainBg"-->
-    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
     <RelativeLayout
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
@@ -173,14 +165,21 @@
             android:id="@+id/result_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/result_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="0dp"
                 android:background="@color/colorMainBg"
+
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"></android.support.v7.widget.RecyclerView>
-            <!--</android.support.v4.widget.NestedScrollView>-->
         </android.support.v4.widget.SwipeRefreshLayout>
+        <ywcai.ls.smooth.tip.SmoothTip
+            android:layout_alignParentTop="true"
+            android:visibility="gone"
+            android:id="@+id/result_tip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></ywcai.ls.smooth.tip.SmoothTip>
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

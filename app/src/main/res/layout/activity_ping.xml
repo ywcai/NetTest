@@ -1,28 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorMainBg">
+    android:background="@color/colorMainBg"
+    android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/ping_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:layout_alignParentTop="true"
-        android:background="@android:color/holo_orange_light"
-        android:paddingTop="@dimen/toolbar_top"
-        app:popupTheme="@style/LsAppBarOverlay"
-        app:titleTextAppearance="@style/ToolbarTitleSize"
-        app:titleTextColor="@android:color/white" />
+    <include layout="@layout/toolbar_head"></include>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/ping_toolbar"
         android:layout_marginTop="13dp"
         android:orientation="vertical"
         android:padding="0dp">
@@ -183,29 +174,28 @@
                 app:fb_iconResource="@drawable/start"
                 app:fb_radius="5dp"
                 app:fb_text=""
-                app:fb_textColor="@android:color/white" />
+                app:fb_textColor="@android:color/white">
+            </mehdi.sakout.fancybuttons.FancyButton>
         </RelativeLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/f_btn_show_task"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/add_task"
+            android:visibility="invisible"
+            app:backgroundTint="@android:color/holo_orange_light"
+            app:fabSize="normal" />
     </LinearLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/f_btn_show_task"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="5dp"
-        android:layout_marginRight="5dp"
-        android:src="@drawable/add_task"
-        app:backgroundTint="@android:color/holo_orange_light"
-        app:elevation="5dp"
-        app:fabSize="normal" />
-
     <RelativeLayout
         android:id="@+id/ping_snack_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"></RelativeLayout>
-</RelativeLayout>
+       ></RelativeLayout>
+</LinearLayout>
 
 
 

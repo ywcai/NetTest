@@ -7,7 +7,6 @@ import java.util.List;
  */
 
 public interface ResultPresenterInf {
-    void refreshData();
 
     void pressLocalBtn();
 
@@ -21,7 +20,7 @@ public interface ResultPresenterInf {
 
     void initTagStatus();
 
-    void pullDownForRemote();
+    void filterDataForTag();
 
-    void selectDataForTag();
+    void pullDown();
 }

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/scrollView"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/article_content_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="top|center_horizontal"
+            android:lineSpacingExtra="2dp"
+            android:maxLines="3"
+            android:text="标题标题"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left|top"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/article_content_auth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="top|left"
+
+                android:maxLines="1"
+                android:text="作者"
+                android:textColor="@color/colorWifiBg"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/article_content_pv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:gravity="top|left"
+                android:maxLines="1"
+                android:text="20 访问量"
+                android:textColor="@color/colorWifiBg"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/article_content_create_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:gravity="top|right"
+                android:maxLines="1"
+                android:text="2018-2-2"
+                android:textColor="@color/colorWifiBg"
+                android:textSize="10sp" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_centerInParent="true"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:text="" />
+        <TextView
+            android:ellipsize="end"
+            android:id="@+id/article_content_remarks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/card_shadow"
+            android:gravity="top|left"
+            android:lineSpacingExtra="4dp"
+            android:maxLines="3"
+            android:minLines="3"
+            android:padding="5dp"
+            android:text="摘要"
+            android:textColor="@color/black_de"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/article_content_thumb"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginBottom="10dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/main_menu_top"
+            android:visibility="gone" />
+
+        <WebView
+            android:id="@+id/article_detail_page_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@android:color/white"
+            android:gravity="left|top"
+            android:minHeight="200dp"
+            android:padding="0dp"
+            android:scrollbars="none" />
+
+
+        <RelativeLayout
+            android:background="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center">
+
+            <TextView
+                android:layout_centerInParent="true"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:text="" />
+
+            <TextView
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="延伸阅读"
+                android:textColor="@android:color/background_dark"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/article_detail_page_content_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorMainBg"
+            android:isScrollContainer="false"
+            android:scrollbars="none"></android.support.v7.widget.RecyclerView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="我的底线到了"
+            android:textColor="@color/colorWifiBg"
+            android:textSize="10sp" />
+    </LinearLayout>
+</ScrollView>

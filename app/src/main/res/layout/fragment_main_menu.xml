@@ -48,6 +48,7 @@
                 android:layout_height="@dimen/toolbar_height"
                 android:paddingTop="@dimen/toolbar_top"
                 app:layout_collapseMode="pin"
+                app:contentInsetStart="0dp"
                 app:popupTheme="@style/LsAppBarOverlay" />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>

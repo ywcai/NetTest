@@ -27,6 +27,7 @@ import ywcai.ls.mobileutil.global.cfg.AppConfig;
 
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.GlobalEvent;
+import ywcai.ls.mobileutil.global.util.statics.LsToolbar;
 import ywcai.ls.mobileutil.global.util.statics.SetTitle;
 
 import ywcai.ls.mobileutil.tools.ScanLan.model.ScanLanResult;
@@ -77,17 +78,7 @@ public class ScanLanActivity extends AppCompatActivity {
     }
 
     private void InitToolBar() {
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.scan_lan_toolbar);
-        mToolbar.setTitleMarginStart(0);
-        mToolbar.setTitle(AppConfig.TITLE_LAN);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        LsToolbar.initToolbar(this, AppConfig.TITLE_LAN);
     }
 
 

@@ -1,27 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/scan_lan_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:layout_alignParentTop="true"
-        android:background="@android:color/holo_orange_light"
-        android:paddingTop="@dimen/toolbar_top"
-        app:popupTheme="@style/LsAppBarOverlay"
-        app:titleTextAppearance="@style/ToolbarTitleSize"
-        app:titleTextColor="@android:color/white" />
+    <include layout="@layout/toolbar_head"></include>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/scan_lan_toolbar"
-        android:background="@color/colorWifiBg"
-        android:orientation="vertical">
+        android:background="@color/colorWifiBg">
 
         <TextView
             android:id="@+id/scan_lan_top_tip"
@@ -60,7 +49,7 @@
             android:src="@drawable/refresh" />
     </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>
 
 
 

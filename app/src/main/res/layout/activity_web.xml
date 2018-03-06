@@ -1,37 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="ywcai.ls.mobileutil.web.WebActivity">
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/web_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:layout_alignParentTop="true"
-        android:background="@color/colorWifiBg"
-        android:paddingTop="@dimen/toolbar_top"
-        app:popupTheme="@style/LsAppBarOverlay"
-        app:title="关于"
-        app:titleTextAppearance="@style/ToolbarTitleSize"
-        app:titleTextColor="@android:color/white" />
-    <WebView
-        android:id="@+id/web_container"
-        android:layout_below="@id/web_toolbar"
-        android:background="@android:color/white"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"></WebView>
 
-    <com.daimajia.numberprogressbar.NumberProgressBar
-        android:id="@+id/web_progress"
-        android:layout_below="@+id/web_toolbar"
+    <include layout="@layout/toolbar_head"></include>
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="3dp"
-        app:progress_current="0"
-        app:progress_max="100"
-        app:progress_reached_bar_height="3dp"
-        app:progress_unreached_color="@android:color/white"
-        app:progress_reached_color="@color/lite_blue"
-        app:progress_text_visibility="invisible"/>
-</RelativeLayout>
+        android:layout_height="match_parent">
+
+        <WebView
+            android:id="@+id/web_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:background="@android:color/white"></WebView>
+
+        <com.daimajia.numberprogressbar.NumberProgressBar
+            android:id="@+id/web_progress"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            app:progress_current="0"
+            app:progress_max="100"
+            app:progress_reached_bar_height="3dp"
+            app:progress_reached_color="@color/lite_blue"
+            app:progress_text_visibility="invisible"
+            app:progress_unreached_color="@android:color/white" />
+    </RelativeLayout>
+</LinearLayout>

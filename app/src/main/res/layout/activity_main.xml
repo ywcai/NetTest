@@ -14,13 +14,6 @@
         android:background="@color/colorMainBg"
         android:paddingBottom="1dp" />
 
-
-    <RelativeLayout
-        android:id="@+id/main_ad_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/main_bot_nav"></RelativeLayout>
-
     <RelativeLayout
         android:id="@+id/main_bot_nav"
         android:layout_width="match_parent"

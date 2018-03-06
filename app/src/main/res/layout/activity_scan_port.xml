@@ -1,25 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/scan_port_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:layout_alignParentTop="true"
-        android:background="@android:color/holo_orange_light"
-        android:paddingTop="@dimen/toolbar_top"
-        app:popupTheme="@style/LsAppBarOverlay"
-        app:titleTextAppearance="@style/ToolbarTitleSize"
-        app:titleTextColor="@android:color/white" />
+    <include layout="@layout/toolbar_head"></include>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/scan_port_toolbar"
+
         android:background="@color/colorWifiBg">
 
         <android.support.v7.widget.CardView
@@ -114,7 +106,24 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/scan_port_top_card"
             android:layout_centerVertical="true"
-            android:layout_margin="30dp"></ywcai.ls.control.scan.LsScan>
+            android:layout_margin="30dp">
+
+        </ywcai.ls.control.scan.LsScan>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btn_scan_port_cfg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/add_task"
+            android:visibility="visible"
+            app:backgroundTint="@android:color/holo_orange_light"
+            app:elevation="5dp"
+            app:fabSize="normal" />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -123,21 +132,7 @@
         android:layout_height="30dp"
         android:layout_alignParentBottom="true"></RelativeLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/btn_scan_port_cfg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="5dp"
-        android:layout_marginRight="5dp"
-        android:src="@drawable/add_task"
-        android:visibility="visible"
-        app:backgroundTint="@android:color/holo_orange_light"
-        app:elevation="5dp"
-        app:fabSize="normal" />
-
-</RelativeLayout>
+</LinearLayout>
 
 
 

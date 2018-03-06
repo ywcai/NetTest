@@ -1,11 +1,10 @@
 package ywcai.ls.mobileutil.tools.Station.presenter;
 
 import java.util.HashMap;
-import java.util.List;
+
 
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
-import ywcai.ls.mobileutil.tools.Station.model.StationEntry;
 
 /**
  * Created by zmy_11 on 2017/11/26.

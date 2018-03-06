@@ -1,1 +1,1 @@
-include ':app', ':bDIntegrationSDK_LibProject'
+include ':app', ':bDIntegrationSDK_LibProject', ':tip'

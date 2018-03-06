@@ -201,11 +201,31 @@ public class CacheProcess {
     *--------------------------------------------------------------------------------------------------
     * */
     public void addCacheLogIndex(LogIndex logIndex) {
+        if (logIndex == null) {
+            return;
+        }
         List<LogIndex> temp = getCacheLogIndex();
         if (temp == null) {
             temp = new ArrayList<LogIndex>();
         }
-        temp.add(0, logIndex);
+        temp.add(logIndex);
+        Gson gson = new Gson();
+        String cache = gson.toJson(temp);
+        setCache(LOG_INDEX, cache);
+        TaskTotal taskTotal = getCacheTaskTotal();
+        taskTotal.savedCount = temp.size();
+        setCacheTaskTotal(taskTotal);
+    }
+
+    public void addCacheLogIndex(List<LogIndex> list) {
+        if (list == null) {
+            return;
+        }
+        List<LogIndex> temp = getCacheLogIndex();
+        if (temp == null) {
+            temp = new ArrayList<LogIndex>();
+        }
+        temp.addAll(list);
         Gson gson = new Gson();
         String cache = gson.toJson(temp);
         setCache(LOG_INDEX, cache);
@@ -251,9 +271,8 @@ public class CacheProcess {
             }.getType());
         } catch (Exception e) {
         }
-        if(indexList==null)
-        {
-            indexList=new ArrayList<>();
+        if (indexList == null) {
+            indexList = new ArrayList<>();
         }
         return indexList;
     }

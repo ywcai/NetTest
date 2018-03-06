@@ -78,7 +78,6 @@ public class DetailLocalActivity extends AppCompatActivity {
         initToolBar();
         initView();
         initDialog();
-        loadingDialog.show();
         detailLocalAction.loadRecord(pos);
     }
 

@@ -27,6 +27,7 @@ public class ResultPresenter implements ResultPresenterInf {
     private ResultState resultState;//0代表不显示该类型数据，1代表显示该类型结果
     private CacheProcess cacheProcess = CacheProcess.getInstance();
     private List<LogIndex> remoteTemp = new ArrayList<>();
+    private List<LogIndex> localTemp = new ArrayList<>();
 
     public ResultPresenter() {
         //初始化默认筛选所有的数据
@@ -35,12 +36,30 @@ public class ResultPresenter implements ResultPresenterInf {
 
     //点击标签过滤数据
     @Override
-    public void refreshData() {
+    public void filterDataForTag() {
         if (resultState.isShowLocal) {
-            reqLocalData();
+            filterLocalData();
         } else {
-            pullDownForRemote();
+            filterRemoteData();
         }
+    }
+
+    private void filterLocalData() {
+        Observable.from(localTemp)
+                .filter(new Func1<LogIndex, Boolean>() {
+                    @Override
+                    public Boolean call(LogIndex logIndex) {
+                        return resultState.isShow[logIndex.cacheTypeIndex] == 1 ? true : false;
+                    }
+                })
+                .toList()
+                .subscribe(new Action1<List<LogIndex>>() {
+                    @Override
+                    public void call(List<LogIndex> logIndices) {
+//                        sendMsResultTip("刷新" + logIndices.size() + "条本地记录", true);
+                        updateDataList(logIndices, true);
+                    }
+                });
     }
 
     private void filterRemoteData() {
@@ -55,10 +74,12 @@ public class ResultPresenter implements ResultPresenterInf {
                 .subscribe(new Action1<List<LogIndex>>() {
                     @Override
                     public void call(List<LogIndex> logIndices) {
-                        updateDataList(logIndices);
+//                        sendMsResultTip("刷新" + logIndices.size() + "条远端记录", false);
+                        updateDataList(logIndices, false);
                     }
                 });
     }
+
 
     @Override
     public void pressLocalBtn() {
@@ -81,7 +102,7 @@ public class ResultPresenter implements ResultPresenterInf {
         } else {
             MyUser myUser = cacheProcess.getCacheUser();
             if (myUser == null) {
-                sendMsResultTip("未登录，无法查看远端数据！");
+                sendMsResultTip("未登录，无法查看远端数据！", false);
                 return;
             }
             ARouter.getInstance().build(AppConfig.DETAIL_ACTIVITY_REMOTE_PATH)
@@ -108,8 +129,7 @@ public class ResultPresenter implements ResultPresenterInf {
         sendMsgRecoverySelectAllBtn(isSelectAll);
         //重新设置TAG的选择状态
         recoveryTag();
-        //刷新数据
-        selectDataForTag();
+        filterDataForTag();
     }
 
     @Override
@@ -120,7 +140,7 @@ public class ResultPresenter implements ResultPresenterInf {
         boolean isSelectAll = isSelectAll();
         //更新全选按钮状态
         sendMsgRecoverySelectAllBtn(isSelectAll);
-        selectDataForTag();//更新数据
+        filterDataForTag();
     }
 
     private boolean isSelectAll() {
@@ -140,51 +160,40 @@ public class ResultPresenter implements ResultPresenterInf {
     @Override
     public void initTagStatus() {
         recoveryTag();
-        //更新全选按钮状态
         boolean isSelectAll = isSelectAll();
         sendMsgRecoverySelectAllBtn(isSelectAll);
     }
 
     @Override
-    public void pullDownForRemote() {
-        reqRemoteData();
-    }
-
-    @Override
-    public void selectDataForTag() {
+    public void pullDown() {
         if (resultState.isShowLocal) {
             reqLocalData();
         } else {
-            filterRemoteData();
+            reqRemoteData();
         }
     }
 
-
+    //加载本地数据
     private void reqLocalData() {
-        List<LogIndex> temp = CacheProcess.getInstance().getCacheLogIndex();
-        if (temp == null) {
-            temp = new ArrayList<>();
-        }
-        Observable.from(temp)
-                .filter(new Func1<LogIndex, Boolean>() {
+        Observable.just("")
+                .delay(200, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Action1<String>() {
                     @Override
-                    public Boolean call(LogIndex logIndex) {
-                        return resultState.isShow[logIndex.cacheTypeIndex] == 1 ? true : false;
-                    }
-                })
-                .toList()
-                .subscribe(new Action1<List<LogIndex>>() {
-                    @Override
-                    public void call(List<LogIndex> logIndices) {
-                        updateDataList(logIndices);
+                    public void call(String s) {
+                        List<LogIndex> temp = CacheProcess.getInstance().getCacheLogIndex();
+                        if (temp == null) {
+                            temp = new ArrayList<>();
+                        }
+                        localTemp.clear();
+                        localTemp.addAll(temp);
+                        filterLocalData();
                     }
                 });
     }
 
-
-    //直接加载或者下拉
+    //加载远端数据
     private void reqRemoteData() {
-        remoteTemp.clear();
         MyUser myUser = cacheProcess.getCacheUser();
         if (myUser == null) {
             Observable.just("")
@@ -193,41 +202,45 @@ public class ResultPresenter implements ResultPresenterInf {
                     .subscribe(new Action1<String>() {
                         @Override
                         public void call(String s) {
-                            updateDataList(remoteTemp);
-                            sendMsResultTip("请先登录!");
+                            updateDataList(remoteTemp, false);
+                            sendMsResultTip("请先登录!", false);
                         }
                     });
             return;
         }
         HttpService httpService = RetrofitFactory.getHttpService();
         httpService.getLogList(myUser.userid)
-                .delay(500, TimeUnit.MILLISECONDS)
+                .delay(200, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .subscribe(new BaseObserver<List<LogIndex>>() {
                     @Override
                     protected void success(List<LogIndex> logIndices) {
+                        remoteTemp.clear();
                         remoteTemp.addAll(logIndices);
                         filterRemoteData();
                     }
 
                     @Override
                     protected void onCodeError(int code, String msg) {
-                        filterRemoteData();
-                        sendMsResultTip("服务器拒绝，错误原因：" + msg.toString());
-
+                        if (!resultState.isShowLocal) {
+                            sendMsResultTip("服务器拒绝，错误原因：" + msg.toString(), false);
+                        }
                     }
 
                     @Override
                     protected void onNetError(Throwable e) {
-                        filterRemoteData();
-                        sendMsResultTip("网络连接失败：" + e.toString());
+                        if (!resultState.isShowLocal) {
+                            sendMsResultTip("网络连接失败：" + e.toString(), false);
+                        }
                     }
                 });
 
     }
 
-    private void updateDataList(List<LogIndex> showList) {
-        MsgHelper.sendEvent(GlobalEventT.result_update_list, "", showList);
+    private void updateDataList(List<LogIndex> showList, boolean isShowLocal) {
+        if (resultState.isShowLocal == isShowLocal) {
+            MsgHelper.sendEvent(GlobalEventT.result_update_list, "", showList);
+        }
     }
 
     private void recoveryTag() {
@@ -238,8 +251,10 @@ public class ResultPresenter implements ResultPresenterInf {
         MsgHelper.sendEvent(GlobalEventT.result_update_top_btn_status, "", isSelectAll);
     }
 
-    private void sendMsResultTip(String tip) {
-        MsgHelper.sendEvent(GlobalEventT.result_remote_item_head, tip, null);
+    private void sendMsResultTip(String tip, boolean isShowLocal) {
+        if (resultState.isShowLocal == isShowLocal) {
+            MsgHelper.sendEvent(GlobalEventT.result_remote_item_head, tip, null);
+        }
     }
 
 }

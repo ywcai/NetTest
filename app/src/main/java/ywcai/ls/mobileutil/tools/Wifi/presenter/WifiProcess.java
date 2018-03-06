@@ -236,12 +236,12 @@ public class WifiProcess implements Action1 {
     private boolean processWifiResult() {
         clearLastData();
         if (!checkPermission()) {
-            sendMsgForPopMainSnack("Android6.0以上版本需要同时打开WIFI和定位权限", false);
+            sendMsgForPopMainSnack("未授予应用位置权限，无法获取WIFI数据", false);
             return false;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!checkGpsStatus()) {
-                sendMsgForPopMainSnack("Android6.0以上版本需要打开GPS开关方可获取WIFI数据", false);
+                sendMsgForPopMainSnack("Android6.0以上版本官方要求打开GPS才可以获取WIFI数据，建议开启", false);
                 return false;
             }
         }
@@ -581,7 +581,7 @@ public class WifiProcess implements Action1 {
     }
 
     private void sendMsgForPopMainSnack(String tip, boolean success) {
-        MsgHelper.sendEvent(GlobalEventT.global_pop_snack_tip, tip, success);
+        MsgHelper.sendEvent(GlobalEventT.wifi_pop_snack_tip, tip, success);
     }
 
     //操作顶部标题的频率切换按钮

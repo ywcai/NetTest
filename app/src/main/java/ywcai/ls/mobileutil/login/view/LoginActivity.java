@@ -150,9 +150,8 @@ public class LoginActivity extends AppCompatActivity {
         //保存缓存状态后关闭
         CacheProcess cacheProcess = CacheProcess.getInstance();
         cacheProcess.setCacheUser(myUser);
-        loadingDialog.setLoadingText("登录成功，即将退出登录页面!");
-        MsgHelper.sendStickEvent(GlobalEventT.setting_qq_login_success, "", myUser);
-        Observable.just("").delay(3, TimeUnit.SECONDS)
+        loadingDialog.setLoadingText("登录成功，2秒后自动退出!");
+        Observable.just("").delay(2, TimeUnit.SECONDS)
                 .compose(ObservableTransformer.schedulersTransformer())
                 .subscribe(new Action1<String>() {
                     @Override
@@ -160,7 +159,6 @@ public class LoginActivity extends AppCompatActivity {
                         LoginActivity.this.finish();
                     }
                 });
-
     }
 
     @Override

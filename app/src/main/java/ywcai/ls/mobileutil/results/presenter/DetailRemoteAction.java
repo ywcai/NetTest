@@ -5,6 +5,7 @@ import java.util.List;
 import rx.schedulers.Schedulers;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
+import ywcai.ls.mobileutil.global.util.statics.LsLog;
 import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 import ywcai.ls.mobileutil.http.BaseObserver;
 import ywcai.ls.mobileutil.http.HttpService;
@@ -33,7 +34,7 @@ public class DetailRemoteAction implements DetailActionInf {
             return;
         }
         if (pos == 0) {
-            sendMsgToSnackBar("无效数据!", false);
+//            sendMsgToSnackBar("无效数据!", false);
             return;
         }
         httpService.delRecordForId(myUser.userid, myEntity.logIndex.recordId, pos, resultState)
@@ -71,8 +72,8 @@ public class DetailRemoteAction implements DetailActionInf {
     private void saveEntityToLocal() {
         String data = myEntity.data;
         LogIndex logIndex = myEntity.logIndex;
-        CacheProcess.getInstance().setCache(logIndex.cacheFileName, data);
         CacheProcess.getInstance().addCacheLogIndex(logIndex);
+        CacheProcess.getInstance().setCache(logIndex.cacheFileName, data);
     }
 
 

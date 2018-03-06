@@ -11,6 +11,7 @@
       <w>channelid</w>
       <w>chooseable</w>
       <w>createdate</w>
+      <w>ctype</w>
       <w>ehrpd</w>
       <w>evdo</w>
       <w>fileprovider</w>
@@ -29,6 +30,7 @@
       <w>mbps</w>
       <w>mobileid</w>
       <w>mobileutil</w>
+      <w>objs</w>
       <w>pfkey</w>
       <w>proc</w>
       <w>recordid</w>

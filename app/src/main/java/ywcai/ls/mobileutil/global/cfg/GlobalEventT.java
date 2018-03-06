@@ -31,6 +31,7 @@ public class GlobalEventT {
     public static final int result_update_top_btn_status = 91000;//更新顶部全选按钮状态
     public static final int result_toast_tip=91001;
     public static final int result_remote_item_head=91003;//显示remote的item首页
+    public static final int result_start_pull_refresh = 91017;
 
     public static final int wifi_set_main_title_tip = 90017;
     public static final int wifi_refresh_first_info = 90018;//更新首页的结果记录列表
@@ -54,6 +55,7 @@ public class GlobalEventT {
     public static final int wifi_refresh_channel_level = 90037;
     public static final int wifi_refresh_frequency_level = 90038;
     public static final int wifi_set_receive_flag = 90039;
+    public static final int wifi_pop_snack_tip=90040;
 
 
     public static final int station_set_entry_change = 90050;
@@ -100,7 +102,6 @@ public class GlobalEventT {
 
 
     public static final int detail_local_refresh_record = 90600;
-    public static final int result_local_clear_record = 90601;
     public static final int detail_remote_refresh_record=90602;
     public static final int detail_remote_refresh_aliasname=90603;
 
@@ -109,5 +110,5 @@ public class GlobalEventT {
     public static final int setting_pop_toast_tip = 90702;
 
 
-
+    public static final int article_detail_scroll_y=90801;
 }

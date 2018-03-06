@@ -41,6 +41,7 @@ import ywcai.ls.mobileutil.global.util.statics.InputValidate;
 
 import ywcai.ls.mobileutil.global.util.statics.LsNotification;
 import ywcai.ls.mobileutil.global.util.statics.LsSnack;
+import ywcai.ls.mobileutil.global.util.statics.LsToolbar;
 import ywcai.ls.mobileutil.global.util.statics.SetTitle;
 import ywcai.ls.mobileutil.tools.ScanPort.model.ScanPortResult;
 import ywcai.ls.mobileutil.tools.ScanPort.model.ScanPortState;
@@ -149,17 +150,7 @@ public class ScanPortActivity extends AppCompatActivity {
     }
 
     private void InitToolBar() {
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.scan_port_toolbar);
-        mToolbar.setTitleMarginStart(0);
-        mToolbar.setTitle(AppConfig.TITLE_PORT);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        LsToolbar.initToolbar(this, AppConfig.TITLE_PORT);
     }
 
     @Override

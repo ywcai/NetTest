@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
+        android:id="@+id/article_comment_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <ywcai.ls.smooth.tip.SmoothTip
+        android:id="@+id/article_comment_tip_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:visibility="invisible"></ywcai.ls.smooth.tip.SmoothTip>
+    <RelativeLayout
+        android:id="@+id/article_comment_tip_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="invisible"></RelativeLayout>
+</RelativeLayout>

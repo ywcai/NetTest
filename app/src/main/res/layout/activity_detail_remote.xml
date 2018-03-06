@@ -13,12 +13,10 @@
         android:layout_height="@dimen/toolbar_height"
         android:layout_alignParentTop="true"
         android:background="@android:color/holo_orange_light"
-        android:paddingTop="@dimen/toolbar_top"
-        app:popupTheme="@style/LsAppBarOverlay"
-        app:titleTextAppearance="@style/ToolbarTitleSize"
-        app:titleTextColor="@android:color/white">
+        android:paddingTop="@dimen/toolbar_top">
 
         <RelativeLayout
+            android:layout_marginTop="@dimen/toolbar_title_top"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical">
@@ -31,7 +29,7 @@
                 android:layout_toLeftOf="@+id/detail_remote_prev"
                 android:clickable="false"
                 android:gravity="center"
-                android:text="1/30"
+                android:text="0/0"
                 android:textColor="@color/cardview_light_background"
                 android:textSize="14sp"
                 android:textStyle="bold" />

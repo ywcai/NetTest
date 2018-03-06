@@ -256,12 +256,6 @@ public class StationActivity extends AppCompatActivity {
                 });
     }
 
-    @NeedsPermission({Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION})
-    public void startListener() {
-        mainStationActionInf.setProcess();
-    }
-
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -455,31 +449,20 @@ public class StationActivity extends AppCompatActivity {
 
     @OnShowRationale({Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION})
     void showWhy(final PermissionRequest request) {
-        new AlertDialog.Builder(this)
-                .setMessage("是否授予应用位置和设备信息读取权限?")
-                .setPositiveButton("是", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        request.proceed();//再次执行请求
-                    }
-                })
-                .setNegativeButton("否", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        request.cancel();//再次执行请求
-                    }
-                })
-                .setCancelable(true)
-                .show();
+        request.proceed();//再次执行请求
     }
 
     @OnPermissionDenied({Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION})
     void denied() {
-        showSnackTip("您拒绝了应用权限，应用将无法获取数据!", false);
+        showSnackTip("您拒绝了应用权限，应用将无法获取手机信号数据!", false);
     }
 
     @OnNeverAskAgain({Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION})
     void notAsk() {
-        showSnackTip("您拒绝了应用权限，请前往系统设置开启权限后方可获取数据", false);
+        showSnackTip("您拒绝了应用权限，请前往系统开启位置权限", false);
+    }
+    @NeedsPermission({Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION})
+    public void startListener() {
+        mainStationActionInf.setProcess();
     }
 }

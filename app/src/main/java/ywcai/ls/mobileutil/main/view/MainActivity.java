@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -21,13 +20,11 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.baidu.autoupdatesdk.BDAutoUpdateSDK;
 import com.baidu.autoupdatesdk.UICheckUpdateCallback;
 import com.baidu.mobstat.StatService;
-import com.qq.e.ads.banner.ADSize;
-import com.qq.e.ads.banner.AbstractBannerADListener;
-import com.qq.e.ads.banner.BannerView;
-import com.qq.e.comm.util.AdError;
+
 import java.util.ArrayList;
 import java.util.List;
 import ywcai.ls.mobileutil.R;
+import ywcai.ls.mobileutil.article.view.ArticleFragment;
 import ywcai.ls.mobileutil.global.util.statics.SetTitle;
 import ywcai.ls.mobileutil.menu.view.MenuFragment;
 import ywcai.ls.mobileutil.results.view.ResultFragment;
@@ -38,13 +35,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<Fragment> fragments = new ArrayList<>();
     private List<TextView> nav = new ArrayList<>();
     public int currentPage = 3;
-    private final String bannerId = "1060320980023408";
-    private final String appID = "1106630142";
-    BannerView banner;
+//    private final String bannerId = "1060320980023408";
+//    private final String appID = "1106630142";
+//    BannerView banner;
     @Autowired()
     public String ROUTER_PAGE;
     private ProgressDialog progressDialog;
-    RelativeLayout ad_container;
+//    RelativeLayout ad_container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,30 +53,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         InstallFragment();
         selectFragment(0);
         startCacheActivity();
-        initAD();
-        banner.loadAD();
-        banner.setShowClose(true);
+//        initAD();
+//        banner.loadAD();
+//        banner.setShowClose(true);
     }
 
-    private void initAD() {
-        ad_container = (RelativeLayout) findViewById(R.id.main_ad_container);
-        banner = new BannerView(this, ADSize.BANNER, appID, bannerId);
-        //设置广告轮播时间，为0或30~120之间的数字，单位为s,0标识不自动轮播
-        banner.setRefresh(0);
-        banner.setADListener(new AbstractBannerADListener() {
-            @Override
-            public void onNoAD(AdError adError) {
-
-            }
-
-            @Override
-            public void onADReceiv() {
-
-            }
-        });
-        ad_container.addView(banner);
-
-    }
+//    private void initAD() {
+//        ad_container = (RelativeLayout) findViewById(R.id.main_ad_container);
+//        banner = new BannerView(this, ADSize.BANNER, appID, bannerId);
+//        //设置广告轮播时间，为0或30~120之间的数字，单位为s,0标识不自动轮播
+//        banner.setRefresh(0);
+//        banner.setADListener(new AbstractBannerADListener() {
+//            @Override
+//            public void onNoAD(AdError adError) {
+//
+//            }
+//
+//            @Override
+//            public void onADReceiv() {
+//
+//            }
+//        });
+//        ad_container.addView(banner);
+//
+//    }
 
     private void checkApkVersion() {
         progressDialog = new ProgressDialog(this);
@@ -144,20 +141,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         FragmentTransaction transaction = fm.beginTransaction();
         MenuFragment netWorkFragment = new MenuFragment();
         ResultFragment resultFragment = new ResultFragment();
-        Fragment reserveFragment2 = new Fragment();
-        Fragment reserveFragment3 = new SettingFragment();
-        transaction.add(R.id.main_fragment_container, netWorkFragment);
+        ArticleFragment articleFragment = new ArticleFragment();
+        SettingFragment settingFragment = new SettingFragment();
+        transaction.add(R.id.main_fragment_container, articleFragment);
         transaction.add(R.id.main_fragment_container, resultFragment);
-        transaction.add(R.id.main_fragment_container, reserveFragment2);
-        transaction.add(R.id.main_fragment_container, reserveFragment3);
+        transaction.add(R.id.main_fragment_container, netWorkFragment);
+        transaction.add(R.id.main_fragment_container, settingFragment);
+        fragments.add(articleFragment);
         fragments.add(netWorkFragment);
         fragments.add(resultFragment);
-        fragments.add(reserveFragment2);
-        fragments.add(reserveFragment3);
+        fragments.add(settingFragment);
+        transaction.hide(articleFragment);
         transaction.hide(netWorkFragment);
         transaction.hide(resultFragment);
-        transaction.hide(reserveFragment2);
-        transaction.hide(reserveFragment3);
+        transaction.hide(settingFragment);
         transaction.commit();
         TextView nav_1 = (TextView) findViewById(R.id.bot_nav_1);
         TextView nav_2 = (TextView) findViewById(R.id.bot_nav_2);
@@ -172,13 +169,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         nav.add(nav_3);
         nav.add(nav_4);
         nav_1.setTextColor(0xFF666967);
-        nav_1.setTextSize(12);
+        nav_1.setTextSize(16);
         nav_2.setTextColor(0xFF666967);
-        nav_2.setTextSize(12);
+        nav_2.setTextSize(16);
         nav_3.setTextColor(0xFF666967);
-        nav_3.setTextSize(12);
+        nav_3.setTextSize(16);
         nav_4.setTextColor(0xFF666967);
-        nav_4.setTextSize(12);
+        nav_4.setTextSize(16);
     }
 
     private void selectFragment(int selectPage) {
@@ -190,8 +187,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             transaction.commit();
             nav.get(currentPage).setTextColor(0xFF666967);
             nav.get(selectPage).setTextColor(0xFF3eb875);
-            nav.get(currentPage).setTextSize(12);
-            nav.get(selectPage).setTextSize(14);
+            nav.get(currentPage).setTextSize(16);
+            nav.get(selectPage).setTextSize(16);
             currentPage = selectPage;
         }
     }

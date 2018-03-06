@@ -71,7 +71,6 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -121,14 +120,14 @@
             android:name=".tools.Speed.view.SpeedActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".welcome.view.WaitActivity"
-            android:launchMode="standard"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".tools.ScanBle.BleActivity"
-            android:launchMode="standard"
-            android:screenOrientation="portrait" />
+        <!--<activity-->
+            <!--android:name=".welcome.view.WaitActivity"-->
+            <!--android:launchMode="standard"-->
+            <!--android:screenOrientation="portrait" />-->
+        <!--<activity-->
+            <!--android:name=".tools.Ble.BleActivity"-->
+            <!--android:launchMode="standard"-->
+            <!--android:screenOrientation="portrait" />-->
         <activity
             android:name=".tools.Orientation.OrientationActivity"
             android:launchMode="standard"
@@ -141,7 +140,9 @@
             android:name=".results.view.DetailRemoteActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
-
+        <activity android:name=".article.view.ArticleDetailActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait" ></activity>
         <!-- QQ登录需增加配置 -->
         <activity
             android:name="com.tencent.tauth.AuthActivity"
@@ -149,10 +150,8 @@
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="1105582955" />
             </intent-filter>
         </activity>
@@ -164,6 +163,7 @@
             android:name=".web.WebActivity"
             android:label="@string/title_activity_web"
             android:theme="@style/AppTheme" />
+        <!--<activity android:name=".tools.Gps.GpsActivity" />-->
     </application>
 
 </manifest>

@@ -1,5 +1,7 @@
 package ywcai.ls.mobileutil.global.cfg;
 
+import java.util.HashMap;
+
 import ywcai.ls.mobileutil.R;
 
 public class AppConfig {
@@ -8,8 +10,8 @@ public class AppConfig {
     public static final String TENCENT_APP_ID = "1106630142";
 
 
-    public static String QQ_APP_ID="1105582955";
-    public static String MM_APP_ID="";
+    public static String QQ_APP_ID = "1105582955";
+    public static String MM_APP_ID = "";
 
     public static final String LOG_REMOTE_SAVE_SUCCESS = "暂时不支持云端保存，请见谅";
     public static final String LOG_REMOTE_SAVE_FAIL = "云端保存数据失败";
@@ -21,18 +23,21 @@ public class AppConfig {
     public static final String STR_ARP_FILE_PATH = "/proc/net/arp";
 
     public static final String MAIN_ACTIVITY_PATH = "/main/view/MainActivity";
-    public static final String WAIT_ACTIVITY_PATH = "/welcome/view/WaitActivity";
+    public static final String LOGIN_ACTIVITY_PATH = "/login/view/LoginActivity";
+
+    //    public static final String WAIT_ACTIVITY_PATH = "/welcome/view/WaitActivity";
     public static final String DETAIL_ACTIVITY_PATH = "/results/view/DetailLocalActivity";
     public static final String DETAIL_ACTIVITY_REMOTE_PATH = "/results/view/DetailRemoteActivity";
-    public static final String WEB_ACTIVITY_PATH="/web/WebActivity";
+    public static final String WEB_ACTIVITY_PATH = "/web/WebActivity";
+    public static final String ARTICLE_DETAIL_ACTIVITY_PATH = "/article/view/sub.ArticleDetailActivity";
 
     public static final String PING_ACTIVITY_PATH = "/tools/Ping/view/PingActivity";
     public static final String WIFI_ACTIVITY_PATH = "/tools/Wifi/view/WifiActivity";
     public static final String STATION_ACTIVITY_PATH = "/tools/Station/view/StationActivity";
     public static final String SCAN_LAN_ACTIVITY_PATH = "/tools/ScanLan/view/ScanLanActivity";
     public static final String SCAN_PORT_ACTIVITY_PATH = "/tools/ScanPort/view/ScanPortActivity";
-    public static final String BLE_ACTIVITY_PATH = WAIT_ACTIVITY_PATH;
-    public static final String GPS_ACTIVITY_PATH = WAIT_ACTIVITY_PATH;
+    public static final String BLE_ACTIVITY_PATH = "/tools/Ble/BleActivity";
+    public static final String GPS_ACTIVITY_PATH = "/tools/Gps/GpsActivity";
     public static final String SENSOR_ACTIVITY_PATH = "/tools/Sensor/view/SensorActivity";
     public static final String ORIENTATION_ACTIVITY_PATH = "/tools/Orientation/OrientationActivity";
     public static final String SPEED_ACTIVITY_PATH = "/tools/Speed/view/SpeedActivity";
@@ -67,9 +72,9 @@ public class AppConfig {
     public static final int INDEX_PORT = 4;
     public static final int INDEX_SPEED = 5;
     public static final int INDEX_SENSOR = 6;
-    public static final int INDEX_GPS = 7;
-    public static final int INDEX_ORIENTATION = 8;
-    public static final int INDEX_BLE = 9;
+    public static final int INDEX_GPS = 9;
+    public static final int INDEX_ORIENTATION = 7;
+    public static final int INDEX_BLE = 8;
 
 
     public static final int[] INTS_CHANNEL_2D4G = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
@@ -99,14 +104,14 @@ public class AppConfig {
             R.color.chartLineColor0,
 
     };
-    public final static int LOGIN_QQ_CHANNEL=1;
+    public final static int LOGIN_QQ_CHANNEL = 1;
 
 
     //本地最多允许存储500条测试结果记录。
     public final int MAX_LOCAL_SAVE = 500;
 
     public static String[] getMenuTextStr() {
-        String[] temp = new String[10];
+        String[] temp = new String[8];
         for (int i = 0; i < temp.length; i++) {
             switch (i) {
                 case INDEX_PING:
@@ -146,7 +151,7 @@ public class AppConfig {
 
 
     public static String[] getMenuUrlStr() {
-        String[] temp = new String[10];
+        String[] temp = new String[8];
         for (int i = 0; i < temp.length; i++) {
             switch (i) {
                 case INDEX_PING:
@@ -185,7 +190,7 @@ public class AppConfig {
     }
 
     public static int[] getMenuIconRes() {
-        int[] temp = new int[10];
+        int[] temp = new int[8];
         for (int i = 0; i < temp.length; i++) {
             switch (i) {
                 case INDEX_PING:
@@ -227,6 +232,7 @@ public class AppConfig {
     public static final String HTTP_TEST_BASE_URL = "http://p.gdown.baidu.com/";
     public static final String HTTP_TEST_BASE_URL_2 = "http://imtt.dd.qq.com";
     public static final String HTTP_APP_CONFIG_URL = "http://119.6.204.54:8080/";
+//    public static final String HTTP_APP_CONFIG_URL = "http://qchengstar.xyz:8080/";
 
     public static final String[] HTTP_TEST_URLS = new String[]
             {
@@ -254,6 +260,58 @@ public class AppConfig {
                     AppConfig.HTTP_READ_WEB_8,
                     AppConfig.HTTP_READ_WEB_9
             };
+
+
+    public static final int ARTICLE_TYPE_MSG = 1;
+    public static final int ARTICLE_TYPE_AI = 2;
+    public static final int ARTICLE_TYPE_BLOCK_LINK = 3;
+    public static final int ARTICLE_TYPE_CLOUD = 4;
+    public static final int ARTICLE_TYPE_BIG_DATA = 5;
+    public static final int ARTICLE_TYPE_IOT = 6;
+    public static final int ARTICLE_TYPE_MOBILE_UI = 7;
+    public static final int ARTICLE_TYPE_WEB = 8;
+    public static final int ARTICLE_TYPE_SERVER_PROGRAM = 9;
+    public static final int ARTICLE_TYPE_DATABASE = 10;
+    public static final String[] ARTICLE_TAG_NAME = new String[]
+            {
+                    "IT资讯",//1
+                    "人工智能",//2
+                    "区块链",//3
+                    "云计算",//4
+//                    "大数据",//5
+                    "物联网",//6
+                    "移动开发",//7
+                    "WEB前端",//8
+                    "编程基础",//9
+                    "数据库",//10
+            };
+    public static final int[] ARTICLE_TAG_TYPE = new int[]
+            {
+                    AppConfig.ARTICLE_TYPE_MSG,
+                    AppConfig.ARTICLE_TYPE_AI,
+                    AppConfig.ARTICLE_TYPE_BLOCK_LINK,
+                    AppConfig.ARTICLE_TYPE_CLOUD,
+//                    AppConfig.ARTICLE_TYPE_BIG_DATA,
+                    AppConfig.ARTICLE_TYPE_IOT,
+                    AppConfig.ARTICLE_TYPE_MOBILE_UI,
+                    AppConfig.ARTICLE_TYPE_WEB,
+                    AppConfig.ARTICLE_TYPE_SERVER_PROGRAM,
+                    AppConfig.ARTICLE_TYPE_DATABASE
+            };
+    public static HashMap<String, Integer> getArticleHashMap() {
+        HashMap hashMap = new HashMap();
+        for (int i = 0; i < ARTICLE_TAG_NAME.length; i++) {
+            hashMap.put(ARTICLE_TAG_NAME[i], ARTICLE_TAG_TYPE[i]);
+        }
+        return hashMap;
+    }
+
+
+
+
+
+
+
     //    public static final String HTTP_TEST_1 = "http://p.gdown.baidu.com/f09287872f321491812d7632055be79e1d3a01b8dbc741f6049e8fe8f79d2c38a0b884344ae8908652651f73c5d0e634ae84a19c5e6e93b50ca337a73035f41dea373b0966ae57a30fe0d425a13693ab9306694acea457e312cf8d50ae6e5b8385895c39fe2cfc061cf4913986497d8ee99370402c8f1340da991e7527b8aa48b8420f96f1a4d67c";
     public static final String HTTP_TEST_1 = "http://imtt.dd.qq.com/16891/86A54AE973137F4665DA4E33A06518D6.apk?fsname=ywcai.ls.mobileutil_1.1.1_12.apk&csr=1bbd";
     public static final String HTTP_TEST_2 = "http://p.gdown.baidu.com/f09287872f321491812d7632055be79e1d3a01b8dbc741f6049e8fe8f79d2c38a0b884344ae8908652651f73c5d0e634ae84a19c5e6e93b50ca337a73035f41dea373b0966ae57a30fe0d425a13693ab9306694acea457e312cf8d50ae6e5b8385895c39fe2cfc061cf4913986497d8ee99370402c8f1340da991e7527b8aa48b8420f96f1a4d67c";

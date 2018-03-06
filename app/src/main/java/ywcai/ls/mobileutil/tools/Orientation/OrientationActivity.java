@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.baidu.mobstat.StatService;
@@ -24,6 +25,7 @@ import ywcai.ls.mobileutil.R;
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.GlobalEvent;
+import ywcai.ls.mobileutil.global.util.statics.LsToolbar;
 import ywcai.ls.mobileutil.global.util.statics.SetTitle;
 
 
@@ -50,23 +52,12 @@ public class OrientationActivity extends AppCompatActivity {
         rl = (RelativeLayout) findViewById(R.id.orientation_container);
         orientationView = new OrientationView(this);
         RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        layout.setMargins(0, 0, 0, 0);
         orientationView.setLayoutParams(layout);
         rl.addView(orientationView, 0);
     }
 
     private void InitToolBar() {
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.orientation_toolbar);
-        mToolbar.setTitleMarginStart(0);
-        mToolbar.setTitle(AppConfig.TITLE_ORIENTATION);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        LsToolbar.initToolbar(this, AppConfig.TITLE_ORIENTATION);
     }
 
     @Override

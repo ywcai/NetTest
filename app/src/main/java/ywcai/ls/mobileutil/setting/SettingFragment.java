@@ -1,11 +1,10 @@
 package ywcai.ls.mobileutil.setting;
 
 
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -22,6 +21,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import me.drakeet.materialdialog.MaterialDialog;
 import ywcai.ls.control.LoadingDialog;
 import ywcai.ls.mobileutil.R;
+import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.GlobalEvent;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
@@ -33,7 +33,14 @@ public class SettingFragment extends Fragment {
     private View view, view2;
     private SetActionInf setActionInf;
     private int clickTemp = 0;
-    private final int EDIT_NICKNAME = 1, DEL_RECORD = 2, UPDATE_RECORD = 3, POP_HELP = 4, POP_CONTRACT = 5, LOGIN_OUT = 6;
+    private final int EDIT_NICKNAME = 1,
+            DEL_RECORD = 2,
+            UPDATE_RECORD = 3,
+            POP_HELP = 4,
+            POP_CONTRACT = 5,
+            LOGIN_OUT = 6,
+            DEL_REMOTE = 7,
+            DOWNLOAD_RECORD = 8;
     private LoadingDialog loadingDialog;
     private CacheProcess cacheProcess = CacheProcess.getInstance();
     private MaterialDialog editDialog;
@@ -57,8 +64,6 @@ public class SettingFragment extends Fragment {
     }
 
     private void initView() {
-        final MyUser myUser = cacheProcess.getCacheUser();
-        updateUserInfo(myUser);
         view2 = LayoutInflater.from(this.getContext()).inflate(R.layout.pop_dialog_detail_local_input, null);
         editDialog = new MaterialDialog(this.getContext());
         editDialog.setContentView(view2);
@@ -75,13 +80,14 @@ public class SettingFragment extends Fragment {
             public void onClick(View v) {
                 if (inputText.length() >= inputText.getMinCharacters() && inputText.length() <= inputText.getMaxCharacters()) {
                     editDialog.dismiss();
+                    MyUser myUser = cacheProcess.getCacheUser();
                     setActionInf.editNickName(myUser, inputText.getEditableText().toString());
                     loadingDialog.show();
-                    inputText.setText("");
                 }
             }
         });
     }
+
 
     private void popInputMask() {
         editDialog.show();
@@ -90,7 +96,30 @@ public class SettingFragment extends Fragment {
     private void initAction() {
         TextView edit_nickname = (TextView) view.findViewById(R.id.setting_edit_nickname_tx);
         TextView del = (TextView) view.findViewById(R.id.setting_del_record);
+        TextView del_remote = (TextView) view.findViewById(R.id.setting_del_record_remote);
+        del_remote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cacheProcess.getCacheUser() == null) {
+                    popMaskTip("还未登录!");
+                    return;
+                }
+                click(DEL_REMOTE);
+            }
+        });
         TextView update = (TextView) view.findViewById(R.id.setting_update_record);
+        TextView download = (TextView) view.findViewById(R.id.setting_download_record);
+        download.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cacheProcess.getCacheUser() != null) {
+                    click(DOWNLOAD_RECORD);
+                } else {
+                    popMaskTip("还未登录!");
+                }
+            }
+        });
+
         TextView pop_help = (TextView) view.findViewById(R.id.setting_pop_help);
         TextView pop_contract = (TextView) view.findViewById(R.id.setting_pop_contract);
         setActionInf = new SetAction();
@@ -107,7 +136,7 @@ public class SettingFragment extends Fragment {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ARouter.getInstance().build("/login/view/LoginActivity").navigation();
+                ARouter.getInstance().build(AppConfig.LOGIN_ACTIVITY_PATH).navigation();
             }
         });
         out.setOnClickListener(new View.OnClickListener() {
@@ -176,9 +205,14 @@ public class SettingFragment extends Fragment {
             case LOGIN_OUT:
                 popMask("确定要退出当前账号?");
                 break;
+            case DEL_REMOTE:
+                popMask("确定删除所有云端数据?");
+                break;
+            case DOWNLOAD_RECORD:
+                popMask("下载到本地后云端数据将被清除\n确定下载到本地?");
+                break;
         }
     }
-
 
     private void popMask(String tip) {
         final MaterialDialog dialog = new MaterialDialog(this.getActivity());
@@ -194,10 +228,10 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                CacheProcess cacheProcess = CacheProcess.getInstance();
+                MyUser myUser = cacheProcess.getCacheUser();
                 switch (clickTemp) {
                     case UPDATE_RECORD:
-                        CacheProcess cacheProcess = CacheProcess.getInstance();
-                        MyUser myUser = cacheProcess.getCacheUser();
                         if (myUser != null) {
                             loadingDialog.show();
                             setActionInf.updateRecord(myUser);
@@ -208,8 +242,20 @@ public class SettingFragment extends Fragment {
                         setActionInf.clearRecord();
                         break;
                     case LOGIN_OUT:
-                        loadingDialog.show();
-                        setActionInf.loginOut();
+                        cacheProcess.setCacheUser(null);
+                        updateUserInfo(null);
+                        break;
+                    case DEL_REMOTE:
+                        if (myUser != null) {
+                            loadingDialog.show();
+                            setActionInf.delRemote(myUser.userid);
+                        }
+                        break;
+                    case DOWNLOAD_RECORD:
+                        if (myUser != null) {
+                            loadingDialog.show();
+                            setActionInf.downLoad(myUser.userid);
+                        }
                         break;
                 }
             }
@@ -245,6 +291,8 @@ public class SettingFragment extends Fragment {
 
     @Override
     public void onResume() {
+        MyUser myUser = cacheProcess.getCacheUser();
+        updateUserInfo(myUser);
         super.onResume();
     }
 
@@ -276,29 +324,21 @@ public class SettingFragment extends Fragment {
         TextView nickname = (TextView) view.findViewById(R.id.setting_nickname);
         TextView date = (TextView) view.findViewById(R.id.setting_create_date);
         RelativeLayout edit_nickname = (RelativeLayout) view.findViewById(R.id.setting_edit_nickname);
+        final MaterialEditText inputText = (MaterialEditText) view2.findViewById(R.id.detail_local_edit_input_text);
         if (myUser != null) {
             rl_login.setVisibility(View.VISIBLE);
             rl_out.setVisibility(View.GONE);
             nickname.setText(myUser.nickname);
+            inputText.setText(myUser.nickname);
             date.setText(myUser.createdate);
             edit_nickname.setVisibility(View.VISIBLE);
         } else {
+            inputText.setText("");
             rl_login.setVisibility(View.GONE);
             rl_out.setVisibility(View.VISIBLE);
             nickname.setText("");
             date.setText("");
             edit_nickname.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 }

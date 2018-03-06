@@ -4,9 +4,9 @@
     <string name="username">用户名</string>
     <string name="userReg">手机号注册</string>
     <string name="forgetPassword"><u>忘记密码?</u></string>
-    <string name="bot_menu1">工具</string>
-    <string name="bot_menu2">记录</string>
-    <string name="bot_menu3">帮忙</string>
+    <string name="bot_menu1">看看</string>
+    <string name="bot_menu2">工具</string>
+    <string name="bot_menu3">记录</string>
     <string name="bot_menu4">设置</string>
     <string name="detail_local_menu1">上传云端</string>
     <string name="detail_local_menu2">修改别名</string>

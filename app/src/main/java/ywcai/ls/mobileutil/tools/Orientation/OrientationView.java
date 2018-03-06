@@ -15,7 +15,6 @@ import android.view.View;
 import ywcai.ls.mobileutil.R;
 
 public class OrientationView extends View {
-
     private int mRadius; // 扇形半径
     private int mStartAngle = 0; // 起始角度
     private int mSweepAngle = 360; // 绘制角度

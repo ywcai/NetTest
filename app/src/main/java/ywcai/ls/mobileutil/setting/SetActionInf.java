@@ -12,6 +12,6 @@ public interface SetActionInf {
     void editNickName(MyUser myUser,String nickname);
     void popHelpMsg();
     void popContract();
-
-    void loginOut();
+    void delRemote(long userid);
+    void downLoad(long userid);
 }

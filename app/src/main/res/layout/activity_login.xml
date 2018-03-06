@@ -31,7 +31,7 @@
                 android:id="@+id/login_qq"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:alpha="0.7"
+                android:alpha="1"
                 android:src="@drawable/qq_login" />
 
             <android.support.v7.widget.AppCompatImageView
@@ -39,7 +39,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginLeft="40dp"
-                android:alpha="0.7"
+                android:alpha="0.3"
                 android:src="@drawable/mm_login" />
         </LinearLayout>
 
@@ -48,12 +48,23 @@
         android:layout_below="@+id/login_block"
         android:id="@+id/login_tip"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
         android:text="一键登录"
-        android:textColor="@android:color/holo_blue_bright"
-        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        tools:ignore="HardcodedText" />
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_below="@+id/login_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:text="当前仅支持QQ登录，请见谅！"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp"
         tools:ignore="HardcodedText" />
     <RelativeLayout
         android:layout_alignParentBottom="true"

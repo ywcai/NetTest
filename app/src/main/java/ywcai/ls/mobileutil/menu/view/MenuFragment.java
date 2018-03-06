@@ -106,26 +106,6 @@ public class MenuFragment extends Fragment {
         mToolbar.setTitle("网络测试工具集");
         setHasOptionsMenu(false);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-//        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                switch (item.getItemId()) {
-//                    case R.id.menu2:
-////                        checkApkVersion();
-//                        break;
-////                    case R.id.menu2:
-////
-////                        break;
-////                    //打开选择应用菜单
-////                    case R.id.menu3:
-////                        break;
-////                    case R.id.menu4:
-//////                        cutProcess();
-////                        break;
-//                }
-//                return false;
-//            }
-//        });
     }
 
     private void InitView() {

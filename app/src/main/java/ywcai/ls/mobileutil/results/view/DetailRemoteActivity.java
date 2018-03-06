@@ -74,7 +74,6 @@ public class DetailRemoteActivity extends AppCompatActivity {
         initToolBar();
         initView();
         initDialog();
-        loadingDialog.show();
         detailRemoteAction.loadRecord(pos);
     }
 
@@ -286,19 +285,19 @@ public class DetailRemoteActivity extends AppCompatActivity {
     public void update(GlobalEvent event) {
         switch (event.type) {
             case GlobalEventT.detail_remote_refresh_record:
+                loadRecord(event.tip, event.obj);
                 loadingDialog.show();
                 loadingDialog.dismiss();
-                loadRecord(event.tip, event.obj);
                 break;
             case GlobalEventT.global_pop_snack_tip:
+                showSnackBar(event.tip, (boolean) event.obj);
                 loadingDialog.show();
                 loadingDialog.dismiss();
-                showSnackBar(event.tip, (boolean) event.obj);
                 break;
             case GlobalEventT.detail_remote_refresh_aliasname:
+                logTitle.setText(event.tip);
                 loadingDialog.show();
                 loadingDialog.dismiss();
-                logTitle.setText(event.tip);
                 break;
         }
     }
@@ -406,7 +405,6 @@ public class DetailRemoteActivity extends AppCompatActivity {
     }
 
     private void updateForStation(LogEntity logEntity) {
-
         Gson gson = new Gson();
         List<StationEntry> list = null;
         String detail = "";

@@ -8,16 +8,7 @@
     android:orientation="vertical"
     tools:context="ywcai.ls.mobileutil.tools.Sensor.view.SensorActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/sensor_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:layout_alignParentTop="true"
-        android:background="@android:color/holo_orange_light"
-        android:paddingTop="@dimen/toolbar_top"
-        app:popupTheme="@style/LsAppBarOverlay"
-        app:titleTextAppearance="@style/ToolbarTitleSize"
-        app:titleTextColor="@android:color/white" />
+    <include layout="@layout/toolbar_head"></include>
 
     <RelativeLayout
         android:layout_width="match_parent"

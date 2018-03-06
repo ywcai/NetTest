@@ -1,8 +1,10 @@
 package ywcai.ls.mobileutil.results.view;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -50,6 +52,7 @@ import ywcai.ls.mobileutil.results.model.ResultAdapter;
 import ywcai.ls.mobileutil.results.model.ResultState;
 import ywcai.ls.mobileutil.results.presenter.ResultPresenter;
 import ywcai.ls.mobileutil.results.presenter.inf.ResultPresenterInf;
+import ywcai.ls.smooth.tip.SmoothTip;
 
 @Route(path = "/menu_detail_local/resultFragment")
 public class ResultFragment extends Fragment {
@@ -60,22 +63,25 @@ public class ResultFragment extends Fragment {
     private ResultAdapter resultAdapter;
     private FlexButtonLayout flexButtonLayout;
     private FancyButton btnType, btnLocal, btnRemote;
-    private LoadingDialog loading;
     SwipeRefreshLayout swl;
+    SmoothTip resultTip;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    private void initAddRefreshEvent() {
-        loading = new LoadingDialog(this.getContext());
-        loading.setLoadingText("正在请求远端数据");
+    private void InitSwl() {
+        resultTip = (SmoothTip) view.findViewById(R.id.result_tip);
         swl = (SwipeRefreshLayout) view.findViewById(R.id.result_refresh);
+        swl.setEnabled(true);
+        swl.setProgressViewOffset(false, 0, 130);
+        swl.setColorSchemeResources(R.color.LOrange);
+        swl.setProgressBackgroundColorSchemeResource(R.color.card_background);
         swl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                resultPresenterInf.pullDownForRemote();
+                resultPresenterInf.pullDown();
             }
         });
     }
@@ -88,10 +94,15 @@ public class ResultFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        refreshData();
+    }
+
+    private void refreshData() {
+        swl.setRefreshing(true);
         //从缓存初始化恢复Tag选择状态
         resultPresenterInf.initTagStatus();
-        //刷新业务数据
-        resultPresenterInf.refreshData();
+        //自动刷新数据
+        resultPresenterInf.pullDown();
     }
 
     @Override
@@ -101,10 +112,10 @@ public class ResultFragment extends Fragment {
         //安装网格化选择菜单
         InitImage();
         InitBtn();
+        InitSwl();
         createTag();
-        initDataList();
+        createListItem();
         setTitleText();
-        initAddRefreshEvent();
         return view;
     }
 
@@ -135,19 +146,18 @@ public class ResultFragment extends Fragment {
         btnLocal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                swl.setRefreshing(true);
                 btnRemote.setEnabled(true);
                 btnLocal.setEnabled(false);
-                swl.setEnabled(false);
                 resultPresenterInf.pressLocalBtn();
             }
         });
         btnRemote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loading.show();
+                swl.setRefreshing(true);
                 btnRemote.setEnabled(false);
                 btnLocal.setEnabled(true);
-                swl.setEnabled(true);
                 resultPresenterInf.pressRemoteBtn();
             }
         });
@@ -161,46 +171,15 @@ public class ResultFragment extends Fragment {
         });
     }
 
-    private void initDataList() {
-        resultRecyclerView = (RecyclerView) view.findViewById(R.id.result_list);
-        listCurrent = new ArrayList<>();
-        resultAdapter = new ResultAdapter(this.getContext(), listCurrent);
-        resultRecyclerView.setAdapter(resultAdapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, true);
-        layoutManager.setStackFromEnd(false);
-        layoutManager.setReverseLayout(false);
-        resultRecyclerView.setLayoutManager(layoutManager);
-        resultAdapter.setOnclickListener(new OnItemClickListener() {
-            @Override
-            public void OnClickItem(View v, int pos) {
-                resultPresenterInf.onClickCard(pos);
-            }
-        });
+    private void setTitleText() {
+        CollapsingToolbarLayout toolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar_result);
+        toolbarLayout.setTitleEnabled(true);
+        toolbarLayout.setEnabled(true);
+        toolbarLayout.setTitle("");
+        toolbarLayout.setCollapsedTitleGravity(Gravity.RIGHT);
+        Toolbar mToolbar = (Toolbar) view.findViewById(R.id.result_toolbar_1);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
     }
-
-    private void recoveryTag(ResultState status) {
-        flexButtonLayout.setSelectIndex(status.isShow);
-        if (status.isShowLocal) {
-            btnLocal.setEnabled(false);
-            btnRemote.setEnabled(true);
-            swl.setEnabled(false);
-        } else {
-            btnLocal.setEnabled(true);
-            btnRemote.setEnabled(false);
-            swl.setEnabled(true);
-        }
-    }
-
-    private void setSelectAllBtnStatus(boolean isCurrentSelectAll) {
-        if (isCurrentSelectAll) {
-            btnType.setText("取消");
-            btnType.setGhost(false);
-        } else {
-            btnType.setText("全选");
-            btnType.setGhost(true);
-        }
-    }
-
 
     private void createTag() {
         flexButtonLayout = (FlexButtonLayout) view.findViewById(R.id.flowLayout);
@@ -223,15 +202,42 @@ public class ResultFragment extends Fragment {
         });
     }
 
+    private void createListItem() {
+        resultRecyclerView = (RecyclerView) view.findViewById(R.id.result_list);
+        listCurrent = new ArrayList<>();
+        resultAdapter = new ResultAdapter(this.getContext(), listCurrent);
+        resultRecyclerView.setAdapter(resultAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, true);
+        layoutManager.setStackFromEnd(false);
+        layoutManager.setReverseLayout(false);
+        resultRecyclerView.setLayoutManager(layoutManager);
+        resultAdapter.setOnclickListener(new OnItemClickListener() {
+            @Override
+            public void OnClickItem(View v, int pos) {
+                resultPresenterInf.onClickCard(pos);
+            }
+        });
+    }
 
-    private void setTitleText() {
-        CollapsingToolbarLayout toolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar_result);
-        toolbarLayout.setTitleEnabled(true);
-        toolbarLayout.setEnabled(true);
-        toolbarLayout.setTitle("");
-        toolbarLayout.setCollapsedTitleGravity(Gravity.RIGHT);
-        Toolbar mToolbar = (Toolbar) view.findViewById(R.id.result_toolbar_1);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+    private void recoveryTag(ResultState status) {
+        flexButtonLayout.setSelectIndex(status.isShow);
+        if (status.isShowLocal) {
+            btnLocal.setEnabled(false);
+            btnRemote.setEnabled(true);
+        } else {
+            btnLocal.setEnabled(true);
+            btnRemote.setEnabled(false);
+        }
+    }
+
+    private void setSelectAllBtnStatus(boolean isCurrentSelectAll) {
+        if (isCurrentSelectAll) {
+            btnType.setText("取消");
+            btnType.setGhost(false);
+        } else {
+            btnType.setText("全选");
+            btnType.setGhost(true);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -246,20 +252,13 @@ public class ResultFragment extends Fragment {
             case GlobalEventT.result_update_top_btn_status:
                 setSelectAllBtnStatus((boolean) event.obj);
                 break;
-            case GlobalEventT.result_local_clear_record:
-                clearRecord();
+            case GlobalEventT.result_start_pull_refresh:
+                refreshData();
                 break;
             case GlobalEventT.result_remote_item_head:
-                showToast(event.tip);
+                resultTip.showTip(event.tip, 1000, SmoothTip.SMOOTH_ORIENTATION_TOP);
                 break;
         }
-    }
-
-    private void clearRecord() {
-        listCurrent.clear();
-        resultAdapter.notifyDataSetChanged();
-        TextView totalNum = (TextView) view.findViewById(R.id.result_text_tip);
-        totalNum.setText("0");
     }
 
     private void updateRecordList(List<LogIndex> obj) {
@@ -268,21 +267,6 @@ public class ResultFragment extends Fragment {
         resultAdapter.notifyDataSetChanged();
         TextView totalNum = (TextView) view.findViewById(R.id.result_text_tip);
         totalNum.setText(listCurrent.size() + "");
-        ResultState resultState = CacheProcess.getInstance().getResultState();
-        if (resultState.isShowLocal) {
-            swl.setEnabled(false);
-        } else {
-            swl.setEnabled(true);
-        }
-        loading.show();
-        loading.dismiss();
         swl.setRefreshing(false);
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-
 }

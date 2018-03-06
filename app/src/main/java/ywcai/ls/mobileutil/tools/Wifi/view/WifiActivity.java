@@ -2,11 +2,9 @@ package ywcai.ls.mobileutil.tools.Wifi.view;
 
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +23,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.drakeet.materialdialog.MaterialDialog;
 import mehdi.sakout.fancybuttons.FancyButton;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnNeverAskAgain;
@@ -58,10 +57,10 @@ public class WifiActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         SetTitle.setTitleTransparent(getWindow());//沉静式状态栏
         setContentView(R.layout.activity_wifi);
-        InitMainAction();
         InitToolBar();
         InitControlBtn();
         InstallFragment();
+        InitMainAction();
         loadingDialog = new LoadingDialog(this);
         WifiActivityPermissionsDispatcher.permissionTipWithPermissionCheck(this);
     }
@@ -94,37 +93,22 @@ public class WifiActivity extends AppCompatActivity {
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     public void permissionTip() {
-
+        //不能删除，用于编译生成权限检测类。通过注释来启动权限检查
     }
 
     @OnShowRationale({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     void showWhy(final PermissionRequest request) {
-        new AlertDialog.Builder(this)
-                .setMessage("是否授予应用手机WIFI和位置权限?")
-                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        request.proceed();//再次执行请求
-                    }
-                })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        request.cancel();//再次执行请求
-                    }
-                })
-                .setCancelable(true)
-                .show();
+        request.proceed();//直接弹出权限请求框
     }
 
-    @OnPermissionDenied({Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION})
+    @OnPermissionDenied({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     void denied() {
         showBottomTip("您拒绝了应用权限，应用将无法获取WIFI数据!", false);
     }
 
-    @OnNeverAskAgain({Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION})
+    @OnNeverAskAgain({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     void notAsk() {
-        showBottomTip("您拒绝了应用权限，请前往系统开启WIFI和位置权限后方可获取WIFI数据", false);
+        showBottomTip("您拒绝了应用权限，请前往系统开启位置权限", false);
     }
 
     @Override
@@ -207,7 +191,7 @@ public class WifiActivity extends AppCompatActivity {
             case GlobalEventT.wifi_set_channel_btn_status:
                 set2d4gBtnStatus((Boolean) event.obj);
                 break;
-            case GlobalEventT.global_pop_snack_tip:
+            case GlobalEventT.wifi_pop_snack_tip:
                 showBottomTip(event.tip, ((boolean) event.obj));
                 closeLoading();
                 break;

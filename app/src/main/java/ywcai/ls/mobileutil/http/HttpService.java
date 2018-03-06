@@ -8,6 +8,8 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
+import ywcai.ls.mobileutil.article.model.ArticleIndex;
+import ywcai.ls.mobileutil.article.model.UserComment;
 import ywcai.ls.mobileutil.login.model.MyUser;
 import ywcai.ls.mobileutil.results.model.LogIndex;
 import ywcai.ls.mobileutil.results.model.ResultState;
@@ -60,10 +62,46 @@ public interface HttpService {
             @Path("pos") int pos,
             @Body ResultState resultState);
 
-//    @POST("NetTest/record/down/{userid}/{recordid}/{pos}")
-//    Observable<HttpBaseEntity<LogEntity>> downloadRecordForId(
-//            @Path("userid") long userid,
-//            @Path("recordid") long recordid,
-//            @Path("recordid") int pos,
-//            @Body ResultState resultState);
+    @POST("NetTest/record/del/{userid}")
+    Observable<HttpBaseEntity<List<LogEntity>>> delRecords(
+            @Path("userid") long userid);
+
+    @GET("NetTest/article/get/new/{type}/{size}/{startId}")
+    Observable<HttpBaseEntity<List<ArticleIndex>>> getNewArticleList(
+            @Path("type") int type,
+            @Path("size") int size,
+            @Path("startId") long startId);
+
+    @GET("NetTest/article/get/old/{type}/{size}/{endId}")
+    Observable<HttpBaseEntity<List<ArticleIndex>>> getOldArticleList(
+            @Path("type") int type,
+            @Path("size") int size,
+            @Path("endId") long endId);
+
+
+    @GET("NetTest/article/get/near/{type}/{size}/{centerId}")
+    Observable<HttpBaseEntity<List<ArticleIndex>>> getNearArticleList(
+            @Path("type") int type,
+            @Path("size") int size,
+            @Path("centerId") long centerId);
+
+    @POST("NetTest/article/post/comment")
+    Observable<HttpBaseEntity<UploadResult>> postComment(@Body UserComment userComment);
+
+    @GET("NetTest/article/get/new/comment/{articleId}/{startId}")
+    Observable<HttpBaseEntity<List<UserComment>>> getNewComment(
+            @Path("articleId") long articleId,
+            @Path("startId") long startId);
+
+    //第一次获取数据，按照20个获取
+    @GET("NetTest/article/get/great/comment/{articleId}")
+    Observable<HttpBaseEntity<List<UserComment>>> getGreatComment(
+            @Path("articleId") long articleId);
+
+    //第一次获取数据，按照20个获取
+    @GET("NetTest/article/get/old/comment/{articleId}/{endId}")
+    Observable<HttpBaseEntity<List<UserComment>>> getOldComment(
+            @Path("articleId") long articleId,
+            @Path("endId") long endId
+    );
 }

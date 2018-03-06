@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorMainBg"
+    android:clickable="true"
+    android:layout_marginBottom="5dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:clickable="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:id="@+id/article_comment_user_img"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginRight="5dp"
+                android:clickable="false"
+                android:scaleType="centerCrop"
+                android:src="@drawable/user_login" />
+
+            <TextView
+                android:id="@+id/article_comment_user_nickname"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="5dp"
+                android:clickable="false"
+                android:ellipsize="end"
+                android:gravity="center_vertical|left"
+                android:maxLines="1"
+                android:text="Author"
+                android:textColor="@color/colorWifiBg"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/article_comment_create_time"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:clickable="false"
+                android:gravity="center_vertical|right"
+                android:text="2017-12-12 00:00"
+                android:textColor="@color/colorWifiBg"
+                android:textSize="10sp"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:layout_marginBottom="2dp"
+            android:background="@color/LBlue" />
+
+        <TextView
+            android:id="@+id/article_comment_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="20000"
+            android:minLines="3"
+            android:padding="2dp"
+            android:textSize="12sp" />
+
+        <!--<TextView-->
+        <!--android:layout_marginBottom="2dp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="@color/colorMainBg" />-->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/article_comment_create_addr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/article_comment_praise_btn"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:text="发表于：xxxxxxx"
+                android:textColor="@color/LDarkLight"
+                android:textSize="12sp" />
+
+            <ImageView
+
+                android:id="@+id/article_comment_praise_btn"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toLeftOf="@+id/article_comment_praise_number"
+                android:scaleType="fitXY"
+                android:src="@drawable/top" />
+
+            <TextView
+                android:id="@+id/article_comment_praise_number"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="4dp"
+                android:gravity="right|center_vertical"
+                android:text="13020"
+                android:textColor="@color/LRed"
+                android:textSize="10sp" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -28,6 +28,7 @@ import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.GlobalEvent;
 import ywcai.ls.mobileutil.global.util.statics.LsSnack;
+import ywcai.ls.mobileutil.global.util.statics.LsToolbar;
 import ywcai.ls.mobileutil.global.util.statics.SetTitle;
 import ywcai.ls.mobileutil.tools.Speed.presenter.SpeedAction;
 import ywcai.ls.mobileutil.tools.Speed.presenter.inf.SpeedActionInf;
@@ -53,17 +54,7 @@ public class SpeedActivity extends AppCompatActivity {
     }
 
     private void intToolBar() {
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.speed_toolbar);
-        mToolbar.setTitleMarginStart(0);
-        mToolbar.setTitle(AppConfig.TITLE_SPEED);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        LsToolbar.initToolbar(this, AppConfig.TITLE_SPEED);
     }
 
     private void initView() {

@@ -6,7 +6,6 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-import ywcai.ls.mobileutil.global.cfg.AppConfig;
 import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
 import ywcai.ls.mobileutil.global.model.instance.CacheProcess;
 import ywcai.ls.mobileutil.global.util.statics.LsListTransfer;
@@ -72,7 +71,7 @@ public class DetailLocalAction implements DetailActionInf {
     @Override
     public void uploadRecord(final int pos) {
         if (pos < 0) {
-            sendMsgSnack("当前已无数据", false);
+            sendMsgSnack("当前无数据", false);
             return;
         }
         MyUser myUser = CacheProcess.getInstance().getCacheUser();
@@ -95,7 +94,11 @@ public class DetailLocalAction implements DetailActionInf {
                     protected void success(UploadResult uploadResult) {
                         int realPos = getRealPos();
                         temp.remove(pos);
-                        all.remove(realPos);
+                        try {
+                            all.remove(realPos);
+                        } catch (Exception e) {
+
+                        }
                         cacheProcess.setCacheLogIndex(all);
                         int currentPos = -1;
                         if (temp.size() == 0) {
@@ -124,7 +127,7 @@ public class DetailLocalAction implements DetailActionInf {
     @Override
     public void deleteRecord(final int pos) {
         if (pos < 0) {
-            sendMsgSnack("当前已无数据", false);
+            sendMsgSnack("当前无数据", false);
             return;
         }
         Observable.just(pos)
@@ -134,7 +137,11 @@ public class DetailLocalAction implements DetailActionInf {
                     public void call(Integer integer) {
                         int realPos = getRealPos();
                         temp.remove(pos);
-                        all.remove(realPos);
+                        try {
+                            all.remove(realPos);
+                        } catch (Exception e) {
+
+                        }
                         cacheProcess.setCacheLogIndex(all);
                         int currentPos = -1;
                         if (temp.size() == 0) {
@@ -151,7 +158,7 @@ public class DetailLocalAction implements DetailActionInf {
     @Override
     public void editRecordTitle(final int pos, final String titleName) {
         if (pos < 0) {
-            sendMsgSnack("当前已无数据", false);
+            sendMsgSnack("当前无数据", false);
             return;
         }
         Observable.just(pos)
@@ -171,12 +178,17 @@ public class DetailLocalAction implements DetailActionInf {
 
     @Override
     public void loadRecord(int currentPos) {
-        currentLog = temp.get(currentPos);
         Observable.just(currentPos)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .subscribe(new Action1<Integer>() {
                     @Override
                     public void call(Integer currentPos) {
+                        try {
+                            currentLog = temp.get(currentPos);
+                        } catch (Exception e) {
+                            currentLog = null;
+                            sendMsgSnack("没有数据，数据可能已经被删除", false);
+                        }
                         sendMsgLoadLog(currentPos);
                     }
                 });
