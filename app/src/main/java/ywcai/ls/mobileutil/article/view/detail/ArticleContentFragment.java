@@ -76,13 +76,11 @@ public class ArticleContentFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         view = inflater.inflate(R.layout.fragment_article_content, container, false);
         InitView();
-        loadRemoteData();
         loadNearList();
         return view;
     }
 
     private void InitView() {
-
         httpService = RetrofitFactory.getHttpService();
         htmlTextView = (WebView) view.findViewById(R.id.article_detail_page_content);
         titleText = (TextView) view.findViewById(R.id.article_content_title);
@@ -97,7 +95,6 @@ public class ArticleContentFragment extends Fragment {
         ws.setJavaScriptEnabled(true);
         ws.setJavaScriptCanOpenWindowsAutomatically(true);
         ws.setUseWideViewPort(true);
-
         htmlTextView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -110,7 +107,7 @@ public class ArticleContentFragment extends Fragment {
             }
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                return false;
+                return true;
             }
         });
 
@@ -154,14 +151,6 @@ public class ArticleContentFragment extends Fragment {
         });
     }
 
-    private void loadRemoteData() {
-        titleText.setText(articleIndex.title);
-        authText.setText(articleIndex.authNickname);
-        pvText.setText(articleIndex.pv + "访问量");
-        remarksText.setText(articleIndex.remarks);
-        createTimeText.setText(articleIndex.createTime);
-    }
-
     private void loadNearList() {
         httpService.getNearArticleList(articleIndex.articleType, 2, articleIndex.articleId)
                 .delay(200, TimeUnit.MILLISECONDS)
@@ -190,6 +179,11 @@ public class ArticleContentFragment extends Fragment {
 
 
     private void updateContent(ArticleIndex articleIndex) {
+        titleText.setText(articleIndex.title);
+        authText.setText(articleIndex.authNickname);
+        pvText.setText(articleIndex.pv + "访问量");
+        remarksText.setText(articleIndex.remarks);
+        createTimeText.setText(articleIndex.createTime);
         String meta = "<html>" +
                 "<meta name='viewport' content='width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'/>"+
                 "<head>";
@@ -208,17 +202,6 @@ public class ArticleContentFragment extends Fragment {
         String textSizeStyleStart = "<body style='padding:0px;margin:0px;overflow:scroll;font-size:14px;word-break:break-all'>";
         String divTagEnd = "</body></html>";
         htmlTextView.loadDataWithBaseURL(null, meta + textSizeStyleStart + articleIndex.articleContent + divTagEnd, "text/html", "UTF-8", null);
-        Observable.just("")
-                .delay(1000,TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<String>() {
-                    @Override
-                    public void call(String str) {
-
-                    }
-                });
-
     }
 
     public void setArticleIndex(ArticleIndex articleIndex) {

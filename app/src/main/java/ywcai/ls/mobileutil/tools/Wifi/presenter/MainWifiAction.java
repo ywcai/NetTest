@@ -52,9 +52,7 @@ public class MainWifiAction implements MainWifiActionInf {
 
     @Override
     public void lockWifi() {
-
         wifiProcess.lock();
-
     }
 
     @Override

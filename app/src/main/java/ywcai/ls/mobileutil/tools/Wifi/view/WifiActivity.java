@@ -59,8 +59,8 @@ public class WifiActivity extends AppCompatActivity {
         setContentView(R.layout.activity_wifi);
         InitToolBar();
         InitControlBtn();
-        InstallFragment();
         InitMainAction();
+        InstallFragment();
         loadingDialog = new LoadingDialog(this);
         WifiActivityPermissionsDispatcher.permissionTipWithPermissionCheck(this);
     }
@@ -197,6 +197,10 @@ public class WifiActivity extends AppCompatActivity {
                 break;
             case GlobalEventT.global_pop_loading_dialog:
                 popLoading(event.tip);
+                break;
+            case GlobalEventT.global_pop_snack_tip:
+                closeLoading();
+                showBottomTip(event.tip, ((boolean) event.obj));
                 break;
             case GlobalEventT.wifi_set_receive_flag:
                 isReceiveFlag = true;

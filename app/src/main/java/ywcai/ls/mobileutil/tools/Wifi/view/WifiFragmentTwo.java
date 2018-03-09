@@ -119,6 +119,7 @@ public class WifiFragmentTwo extends Fragment {
                 popNotification(event.tip);
                 break;
             case GlobalEventT.wifi_set_receive_flag:
+                //避免前一次打开的对象无法销毁，增加该标识
                 isReceiveFlag = true;
                 break;
         }

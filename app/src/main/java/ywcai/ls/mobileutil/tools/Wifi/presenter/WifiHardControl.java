@@ -2,16 +2,8 @@ package ywcai.ls.mobileutil.tools.Wifi.presenter;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import ywcai.ls.mobileutil.global.cfg.AppConfig;
-import ywcai.ls.mobileutil.global.cfg.GlobalEventT;
-import ywcai.ls.mobileutil.global.model.LsThreadFactory;
 import ywcai.ls.mobileutil.global.model.instance.MainApplication;
-import ywcai.ls.mobileutil.global.util.statics.LsLog;
-import ywcai.ls.mobileutil.global.util.statics.MsgHelper;
 
 
 public class WifiHardControl {

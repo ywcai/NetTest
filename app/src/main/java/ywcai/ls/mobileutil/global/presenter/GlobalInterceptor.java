@@ -19,14 +19,14 @@ public class GlobalInterceptor implements IInterceptor {
     HookUtil hookUtil;
     @Override
     public void process(Postcard postcard, InterceptorCallback callback) {
-        setHookClass(postcard.getPath());
+//        setHookClass(postcard.getPath());
         callback.onContinue(postcard);
     }
 
     @Override
     public void init(Context context) {
         //拦截器初始化方法，仅仅会在第一次初始化时调用一次
-        hookUtil =new HookUtil(context);
+//        hookUtil =new HookUtil(context);
     }
     public void setHookClass(String path) {
         Class<?> clazz= null;

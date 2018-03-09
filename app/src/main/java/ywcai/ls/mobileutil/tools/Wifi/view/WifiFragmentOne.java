@@ -216,7 +216,9 @@ public class WifiFragmentOne extends Fragment {
         chooseChannel2d4G.setOnFlexButtonClickListener(new OnFlexButtonClickListener() {
             @Override
             public void clickItem(int i, boolean b) {
-                mainWifiActionInf.setChannelFilter(i, b);
+                if (mainWifiActionInf != null) {
+                    mainWifiActionInf.setChannelFilter(i, b);
+                }
             }
 
             @Override
